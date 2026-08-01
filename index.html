@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- EDIT: ページタイトル（Discordに貼ったときのリンク名になります） -->
+<title>ねっこ杯 ポカジャン大会 ｜ ねっこ集会所</title>
+<!-- EDIT: 説明文（Discordのリンクプレビューに出ます） -->
+<meta name="description" content="Discord「ねっこ集会所」で開催する、ホロドリのミニゲーム「ポカジャン」の大会案内ページです。参加費無料・ねっこなら誰でも歓迎。">
+<meta property="og:type" content="website">
+<meta property="og:title" content="ねっこ杯 ポカジャン大会 ｜ ねっこ集会所">
+<meta property="og:description" content="その手札、咲かせにいこう。ホロドリ「ポカジャン」大会をねっこ集会所で開催します。">
+<!-- EDIT: Discordのリンクプレビューに出す画像（tools/generate_nene.py --preset ogp で作り直せます） -->
+<meta property="og:image" content="assets/img/ogp.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="theme-color" content="#FFF7F3">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍑</text></svg>">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- Google Fonts は「実際に画面に出た文字が属するサブセット」だけを落とすので、
+     使わないウェイトを並べてもフォント本体の転送量は増えない（CSSがわずかに伸びるだけ）。
+     Zen Kaku の 700 は、本文に <strong> を足したときの合成太字を避けるために残している。 -->
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700&family=Zen+Kaku+Gothic+New:wght@400;700&family=Zen+Maru+Gothic:wght@700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+<script>document.documentElement.classList.add('js');</script>
+</head>
+<body>
+
+<!-- ==========================================================
+     アイコン定義（すべてこのページのための自作モチーフです）
+     ========================================================== -->
+<svg class="sprite" aria-hidden="true" focusable="false">
+  <!-- 「根っこ」の語感から起こした芽のシンボル -->
+  <symbol id="ic-nekko" viewBox="0 0 64 64">
+    <path d="M32 29v18M32 47c0 6-5 8-11 9M32 47c0 6 5 8 11 9"
+          fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round"/>
+    <path d="M32 30C30 15 20 7 9 7 6 7 5 9 6 12c4 12 14 18 26 18z"/>
+    <path d="M32 30c2-15 12-23 23-23 3 0 4 2 3 5-4 12-14 18-26 18z"/>
+  </symbol>
+  <symbol id="ic-star" viewBox="0 0 64 64">
+    <path d="M32 4l7.6 17.2L58 23.4 44.4 35.8 48.2 54 32 44.6 15.8 54l3.8-18.2L6 23.4l18.4-2.2z"/>
+  </symbol>
+  <symbol id="ic-petal" viewBox="0 0 40 40">
+    <path d="M20 2c6 6 10 11 10 17a10 10 0 1 1-20 0c0-6 4-11 10-17z"/>
+  </symbol>
+  <symbol id="ic-sparkle" viewBox="0 0 64 64">
+    <path d="M32 2c2.5 16 11.5 27 30 30-18.5 3-27.5 14-30 30-2.5-16-11.5-27-30-30 18.5-3 27.5-14 30-30z"/>
+  </symbol>
+</svg>
+
+<!-- ローディング（JSが有効なときだけ表示。CSSアニメーションで自動的に消えます） -->
+<div class="splash" aria-hidden="true">
+  <span class="splash__portrait" data-img-slot hidden>
+    <img src="assets/img/nekko-1.webp" alt="">
+  </span>
+  <p class="splash__mark fanmark">🍑🥟</p>
+  <p class="splash__text">LOADING</p>
+</div>
+
+<a class="skip-link" href="#main">本文へスキップ</a>
+
+<header class="site-header">
+  <div class="site-header__inner">
+    <a class="site-header__logo" href="#top">
+      <span class="site-header__mark fanmark" aria-hidden="true">🍑🥟</span>
+      <span>ねっこ杯</span>
+    </a>
+
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
+      <span class="nav-toggle__bars" aria-hidden="true"></span>
+      <span class="nav-toggle__label">メニュー</span>
+    </button>
+
+    <nav class="site-nav" id="site-nav" aria-label="ページ内ナビゲーション">
+      <ul>
+        <li><a href="#top">TOP</a></li>
+        <li><a href="#about">ABOUT</a></li>
+        <li><a href="#rule">RULE</a></li>
+        <li><a href="#entry">ENTRY</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- ============ HERO ============ -->
+  <section class="hero" id="top">
+    <div class="hero__sunburst" aria-hidden="true"></div>
+
+    <div class="hero__deco" aria-hidden="true">
+      <svg class="deco deco--petal deco--1"><use href="#ic-petal"></use></svg>
+      <svg class="deco deco--petal deco--2"><use href="#ic-petal"></use></svg>
+      <svg class="deco deco--petal deco--3"><use href="#ic-petal"></use></svg>
+      <svg class="deco deco--petal deco--4"><use href="#ic-petal"></use></svg>
+      <svg class="deco deco--star  deco--5"><use href="#ic-star"></use></svg>
+      <svg class="deco deco--star  deco--6"><use href="#ic-star"></use></svg>
+      <svg class="deco deco--nekko deco--7"><use href="#ic-nekko"></use></svg>
+      <svg class="deco deco--nekko deco--8"><use href="#ic-nekko"></use></svg>
+      <svg class="deco deco--sparkle deco--9"><use href="#ic-sparkle"></use></svg>
+      <svg class="deco deco--sparkle deco--10"><use href="#ic-sparkle"></use></svg>
+      <svg class="deco deco--sparkle deco--11"><use href="#ic-sparkle"></use></svg>
+      <svg class="deco deco--sparkle deco--12"><use href="#ic-sparkle"></use></svg>
+    </div>
+
+    <!-- 背景の壁紙。読み込めたときだけ出る。たまに右へ隠れて戻ってくる -->
+    <div class="hero__wallpaper" data-img-slot hidden aria-hidden="true">
+      <img src="assets/img/nene-wallpaper.webp" alt="">
+    </div>
+
+    <!-- 背景の幕。一定間隔で滑り込んできて、真ん中から開く。
+         大会名は常に幕の手前に出るので、幕自体は文字を持たない装飾パネルにしている。
+         左右で同じ柄を持ち、clip-path で半分ずつ見せている。 -->
+    <div class="curtain" aria-hidden="true">
+      <div class="curtain__half curtain__half--l"><div class="curtain__panel"></div></div>
+      <div class="curtain__half curtain__half--r"><div class="curtain__panel"></div></div>
+    </div>
+
+    <!-- 舞い落ちる花びら。--x 位置 / --d 開始ずらし / --dur 落ちる速さ / --s 大きさ -->
+    <div class="fall" aria-hidden="true">
+      <svg class="fall__petal" style="--x:3%;  --d:-1s;  --dur:15s; --s:22px"><use href="#ic-petal"></use></svg>
+      <svg class="fall__petal" style="--x:9%;  --d:-7s;  --dur:19s; --s:30px"><use href="#ic-petal"></use></svg>
+      <svg class="fall__petal" style="--x:15%; --d:-13s; --dur:13s; --s:16px"><use href="#ic-petal"></use></svg>
+      <svg class="fall__petal" style="--x:21%; --d:-3s;  --dur:22s; --s:26px"><use href="#ic-petal"></use></svg>
+      <svg class="fall__petal" style="--x:28%; --d:-10s; --dur:16s; --s:19px"><use href="#ic-petal"></use></svg>
+      <svg class="fall__petal" style="--x:34%; --d:-17s; --dur:20s; --s:28px"><use href="#ic-petal"></use></svg>
+      <svg class="fall__petal" style="--x:41%; --d:-5s;  --dur:14s; --s:17px"><use href="#ic-petal"></use></svg>
+      <svg class="fall__petal" style="--x:48%; --d:-11s; --dur:18s; --s:24px"><use href="#ic-petal"></use></svg>
+      <svg class="fall__petal" style="--x:55%; --d:-2s;  --dur:21s; --s:31px"><use href="#ic-petal"></use></svg>
+      <svg class="fall__petal" style="--x:61%; --d:-15s; --dur:15s; --s:18px"><use href="#ic-petal"></use></svg>
+      <svg class="fall__petal" style="--x:68%; --d:-8s;  --dur:17s; --s:25px"><use href="#ic-petal"></use></svg>
+      <svg class="fall__petal" style="--x:74%; --d:-19s; --dur:23s; --s:20px"><use href="#ic-petal"></use></svg>
+      <svg class="fall__petal" style="--x:81%; --d:-4s;  --dur:13s; --s:27px"><use href="#ic-petal"></use></svg>
+      <svg class="fall__petal" style="--x:87%; --d:-12s; --dur:19s; --s:16px"><use href="#ic-petal"></use></svg>
+      <svg class="fall__petal" style="--x:93%; --d:-6s;  --dur:16s; --s:23px"><use href="#ic-petal"></use></svg>
+      <svg class="fall__petal" style="--x:98%; --d:-16s; --dur:21s; --s:29px"><use href="#ic-petal"></use></svg>
+    </div>
+
+    <div class="hero__head">
+      <!-- EDIT: 主催サーバー名 -->
+      <p class="hero__eyebrow"><span>ねっこ集会所 presents</span></p>
+      <h1 class="hero__title">
+        <!-- EDIT: 大会名（1行ずつ。data-text は表示文字と必ず同じにしてください） -->
+        <span class="stroked stroked--sm" data-text="第1回 ねっこ杯">第1回 ねっこ杯</span>
+        <span class="stroked" data-text="ポカジャン大会">ポカジャン大会</span>
+      </h1>
+      <!-- EDIT: キャッチコピー -->
+      <p class="hero__catch">その手札、咲かせにいこう。</p>
+    </div>
+
+    <!-- カウントダウン（JSが有効なときだけ表示。日時はHTML側にも書いてあります） -->
+    <!-- EDIT: 開催日時（ISO形式。手札やABOUTの表記と揃えてください） -->
+    <div class="countdown" hidden data-deadline="2026-09-13T21:00:00+09:00">
+      <span class="countdown__label">開催まであと</span>
+      <span class="countdown__cell"><b data-unit="days">--</b><i>日</i></span>
+      <span class="countdown__cell"><b data-unit="hours">--</b><i>時間</i></span>
+      <span class="countdown__cell"><b data-unit="minutes">--</b><i>分</i></span>
+    </div>
+
+    <!-- 手札＝大会情報。1枚1項目。 -->
+    <ul class="hand" aria-label="大会の開催情報">
+      <li class="hand__tile" style="--i:0">
+        <div class="tile">
+          <span class="tile__label">DATE</span>
+          <!-- EDIT: 開催日 -->
+          <strong class="tile__value">9<span class="tile__unit">/</span>13</strong>
+          <span class="tile__note">2026年（日）</span>
+        </div>
+      </li>
+      <li class="hand__tile" style="--i:1">
+        <div class="tile">
+          <span class="tile__label">OPEN</span>
+          <!-- EDIT: 開始時刻 -->
+          <strong class="tile__value">21<span class="tile__unit">:</span>00</strong>
+          <span class="tile__note">集合 20:45</span>
+        </div>
+      </li>
+      <li class="hand__tile" style="--i:2">
+        <div class="tile">
+          <span class="tile__label">PLACE</span>
+          <!-- EDIT: 会場（Discordチャンネル名） -->
+          <strong class="tile__value tile__value--text">#ポカジャン<br>大会</strong>
+          <span class="tile__note">ボイスCh</span>
+        </div>
+      </li>
+      <li class="hand__tile" style="--i:3">
+        <div class="tile">
+          <span class="tile__label">SEATS</span>
+          <!-- EDIT: 定員 -->
+          <strong class="tile__value">32<span class="tile__unit">名</span></strong>
+          <span class="tile__note">先着順</span>
+        </div>
+      </li>
+      <li class="hand__tile" style="--i:4">
+        <div class="tile">
+          <span class="tile__label">ENTRY FEE</span>
+          <!-- EDIT: 参加費 -->
+          <strong class="tile__value tile__value--text">無料</strong>
+          <span class="tile__note">ねっこなら誰でも</span>
+        </div>
+      </li>
+      <li class="hand__tile" style="--i:5">
+        <div class="tile">
+          <span class="tile__label">FORMAT</span>
+          <!-- EDIT: 大会形式 -->
+          <strong class="tile__value tile__value--text">4人卓<br>予選2回戦</strong>
+          <span class="tile__note">上位8名が決勝</span>
+        </div>
+      </li>
+      <li class="hand__tile" style="--i:6">
+        <div class="tile">
+          <span class="tile__label">DEADLINE</span>
+          <!-- EDIT: エントリー締切 -->
+          <strong class="tile__value">9<span class="tile__unit">/</span>10</strong>
+          <span class="tile__note">23:59まで</span>
+        </div>
+      </li>
+    </ul>
+
+    <p class="hero__cta">
+      <!-- EDIT: ヒーローのボタン文言（リンク先は下のENTRYセクションです） -->
+      <a class="btn btn--primary" href="#entry">エントリー方法を見る</a>
+    </p>
+  </section>
+
+  <!-- 流れる帯 -->
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee__track">
+      <!-- EDIT: 帯に流す文字 -->
+      <span class="marquee__set">
+        <em>NENEKKO CUP</em><img class="marquee__nekko" src="assets/img/nekko-1.webp" alt="" loading="lazy">
+        <em>POKAJAN TOURNAMENT</em><img class="marquee__nekko" src="assets/img/nekko-2.webp" alt="" loading="lazy">
+        <em>2026.09.13 SUN 21:00</em><img class="marquee__nekko" src="assets/img/nekko-3.webp" alt="" loading="lazy">
+      </span>
+      <span class="marquee__set">
+        <em>NENEKKO CUP</em><img class="marquee__nekko" src="assets/img/nekko-1.webp" alt="" loading="lazy">
+        <em>POKAJAN TOURNAMENT</em><img class="marquee__nekko" src="assets/img/nekko-2.webp" alt="" loading="lazy">
+        <em>2026.09.13 SUN 21:00</em><img class="marquee__nekko" src="assets/img/nekko-3.webp" alt="" loading="lazy">
+      </span>
+    </div>
+  </div>
+
+  <!-- ============ ABOUT ============ -->
+  <section class="section section--about reveal" id="about">
+    <!-- 横からにょきにょき生えるねっ子 -->
+    <span class="nekko-peek nekko-peek--right" aria-hidden="true">
+      <img src="assets/img/nekko-2.webp" alt="" loading="lazy">
+    </span>
+    <div class="wrap">
+      <h2 class="section__title">
+        <span class="section__en">ABOUT</span>
+        <span class="section__ja">大会について</span>
+        <svg class="icon section__mark" aria-hidden="true"><use href="#ic-nekko"></use></svg>
+      </h2>
+
+      <div class="about__grid">
+        <div class="about__text">
+          <!-- EDIT: 大会概要の本文 -->
+          <p class="about__lead">ホロドリのミニゲーム「ポカジャン」を、ねっこのみんなで一斉に囲む大会です。</p>
+          <p>腕自慢も、ルールをまだ覚えていない人も、同じ卓に着けます。予選は4人卓で2回戦。獲得コインの合計が多い上位8名が決勝卓に進みます。</p>
+          <p>観戦だけの参加も歓迎です。当日は実況つきでわいわいやります。初めての方には、開始前に15分の練習卓を用意します。ルールは下の「RULE」で先に予習しておくと、当日そのまま座れます。</p>
+
+        </div>
+
+        <dl class="about__facts">
+          <div>
+            <dt>開催日時</dt>
+            <!-- EDIT: 開催日時（手札の内容と揃えてください） -->
+            <dd><strong>2026年9月13日（日）21:00</strong><br>20:45 ボイスチャンネル集合</dd>
+          </div>
+          <div>
+            <dt>会場</dt>
+            <!-- EDIT: 会場 -->
+            <dd>Discord「ねっこ集会所」<br>#ポカジャン大会</dd>
+          </div>
+          <div>
+            <dt>参加資格</dt>
+            <!-- EDIT: 参加資格 -->
+            <dd>ねっこ集会所のメンバー<br>ホロドリでポカジャンが解放済みの方</dd>
+          </div>
+          <div>
+            <dt>主催</dt>
+            <!-- EDIT: 主催者名 -->
+            <dd>ねっこ集会所 運営チーム</dd>
+          </div>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ RULE ============ -->
+  <section class="section section--rule reveal" id="rule">
+    <span class="nekko-peek nekko-peek--left" aria-hidden="true">
+      <img src="assets/img/nekko-1.webp" alt="" loading="lazy">
+    </span>
+    <div class="wrap">
+      <h2 class="section__title">
+        <span class="section__en">RULE</span>
+        <span class="section__ja">ポカジャンのルール</span>
+        <svg class="icon section__mark" aria-hidden="true"><use href="#ic-nekko"></use></svg>
+      </h2>
+      <p class="section__lead">山札からカードを引き、手札で役を作って「ポカジャン」と宣言するとコインがもらえます。麻雀やドンジャラに近い遊びかたです。</p>
+
+      <!-- 実際のゲーム画面。ファイルが読み込めたぶんだけ表示され、0枚ならこのブロックごと出ません。 -->
+      <div class="shots-block" data-img-group="shots" hidden>
+        <div class="shots">
+          <figure class="shot shot--wide" data-img-slot data-reveals="shots" hidden>
+            <img src="assets/img/board-play.webp" alt="ポカジャンの対局画面。4人の持ちコインと、手札・山札・役の一覧が並んでいる">
+            <!-- EDIT: 盤面の説明1 -->
+            <figcaption>対局中の画面。下が自分の手札、中央が山札と役の一覧、周りが他家の持ちコインです</figcaption>
+          </figure>
+          <figure class="shot" data-img-slot data-reveals="shots" hidden>
+            <img src="assets/img/board-cards.webp" alt="ホロメンのカードが期生ごとに並んだ一覧画面">
+            <!-- EDIT: 盤面の説明2 -->
+            <figcaption>カードは期生ごとにまとまっています。右の数字がその期生の枚数です</figcaption>
+          </figure>
+        </div>
+      </div>
+
+      <h3 class="rule__subtitle">役の作りかた</h3>
+      <div class="yaku">
+        <div class="yaku__card">
+          <div class="yaku__hand" aria-hidden="true">
+            <span class="mini mini--a"><svg class="icon"><use href="#ic-petal"></use></svg></span>
+            <span class="mini mini--a"><svg class="icon"><use href="#ic-petal"></use></svg></span>
+            <span class="mini mini--a"><svg class="icon"><use href="#ic-petal"></use></svg></span>
+          </div>
+          <h4>同じホロメンで揃える</h4>
+          <p>同じホロメンのカードを3枚集めます。いちばん基本の役で、狙いやすいぶん配当は控えめです。</p>
+        </div>
+        <div class="yaku__card">
+          <div class="yaku__hand" aria-hidden="true">
+            <span class="mini mini--b"><svg class="icon"><use href="#ic-petal"></use></svg></span>
+            <span class="mini mini--b"><svg class="icon"><use href="#ic-star"></use></svg></span>
+            <span class="mini mini--b"><svg class="icon"><use href="#ic-nekko"></use></svg></span>
+          </div>
+          <h4>同じ期生で揃える</h4>
+          <p>ホロメンは違っても、同じ期生のカードが3枚そろえば成立します。枠の色が同じかどうかで見分けます。</p>
+        </div>
+        <div class="yaku__card">
+          <div class="yaku__hand" aria-hidden="true">
+            <span class="mini mini--a"><svg class="icon"><use href="#ic-petal"></use></svg></span>
+            <span class="mini mini--a"><svg class="icon"><use href="#ic-petal"></use></svg></span>
+            <span class="mini mini--back"></span>
+          </div>
+          <h4>あと1枚で待つ</h4>
+          <p>2枚そろったら、残り1枚を山札か他家の捨て札から拾います。宣言するとその相手からコインを受け取ります。</p>
+        </div>
+      </div>
+
+      <h3 class="rule__subtitle">この大会のルール</h3>
+      <div class="localrule">
+        <!-- EDIT: 大会独自ルール（3枚。増減してもレイアウトは崩れません） -->
+        <div class="localrule__card">
+          <h4><svg class="icon" aria-hidden="true"><use href="#ic-nekko"></use></svg>試合形式</h4>
+          <p>4人卓・予選2回戦。2回戦の獲得コイン合計で上位8名が決勝卓へ進みます。同点の場合は2回戦目の成績が上の方を優先します。</p>
+        </div>
+        <div class="localrule__card">
+          <h4><svg class="icon" aria-hidden="true"><use href="#ic-nekko"></use></svg>順位点</h4>
+          <p>各卓の着順に応じて、1位 +30 / 2位 +10 / 3位 -10 / 4位 -30 の順位点を加算します。合計点で最終順位を決めます。</p>
+        </div>
+        <div class="localrule__card">
+          <h4><svg class="icon" aria-hidden="true"><use href="#ic-nekko"></use></svg>進行マナー</h4>
+          <p>1手あたりの考慮は30秒までを目安に。通信切断は3分まで待ちます。無断退出は棄権として扱います。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ENTRY ============ -->
+  <section class="section section--entry reveal" id="entry">
+    <div class="wrap">
+      <h2 class="section__title">
+        <span class="section__en">ENTRY</span>
+        <span class="section__ja">参加のしかた</span>
+        <svg class="icon section__mark" aria-hidden="true"><use href="#ic-nekko"></use></svg>
+      </h2>
+      <p class="section__lead">受付はDiscord上だけで完結します。締切までに3ステップを済ませてください。</p>
+
+      <ol class="steps">
+        <!-- EDIT: エントリー手順 -->
+        <li class="steps__item">
+          <span class="steps__num">01</span>
+          <div>
+            <h3>ねっこ集会所に参加する</h3>
+            <p>まだ入っていない方は、招待リンクからDiscordサーバーに参加してください。すでにメンバーの方はそのまま02へ。</p>
+          </div>
+        </li>
+        <li class="steps__item">
+          <span class="steps__num">02</span>
+          <div>
+            <h3>#ポカジャン大会 で受付する</h3>
+            <p>チャンネルに固定されている募集メッセージに 🎴 のリアクションを付けると受付完了です。定員に達し次第、締切前でも受付を終了します。</p>
+          </div>
+        </li>
+        <li class="steps__item">
+          <span class="steps__num">03</span>
+          <div>
+            <h3>当日20:45に集合する</h3>
+            <p>ボイスチャンネルに集合してください。卓分けは開始5分前に発表します。開始時刻に不在の場合は補欠と交代になります。</p>
+          </div>
+        </li>
+      </ol>
+
+      <div class="entry__cta">
+        <span class="entry__portrait nekko-peek nekko-peek--left" data-img-slot hidden>
+          <img src="assets/img/nekko-3.webp" alt="">
+        </span>
+        <p class="entry__cta-inner">
+          <!-- EDIT: ここをDiscordの招待リンク/募集メッセージのURLに差し替えてください -->
+          <a class="btn btn--primary btn--lg" href="#" target="_blank" rel="noopener noreferrer">ねっこ集会所で受付する</a>
+          <span class="entry__deadline">エントリー締切：2026年9月10日（木）23:59</span>
+        </p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <p class="site-footer__mark">
+      <img class="site-footer__nekko" src="assets/img/nekko-1.webp" alt="" loading="lazy">
+      <img class="site-footer__nekko" src="assets/img/nekko-2.webp" alt="" loading="lazy">
+      <img class="site-footer__nekko" src="assets/img/nekko-3.webp" alt="" loading="lazy">
+      <span class="fanmark" aria-hidden="true">🍑🥟</span>
+    </p>
+    <p class="site-footer__note">
+      本サイトはファン有志による非公式の企画ページです。カバー株式会社および hololive production、ホロライブドリームス運営とは一切関係ありません。
+      <a href="https://hololivepro.com/terms/" target="_blank" rel="noopener noreferrer">ホロライブプロダクション二次創作ガイドライン</a>に沿って、非営利で運営しています。
+      イラストは生成AIによる二次創作で、公式素材は使用していません。
+      <span data-img-group="shots" hidden>掲載しているゲーム画面は『ホロライブドリームス』より引用したもので、著作権はカバー株式会社に帰属します。</span>
+    </p>
+    <!-- EDIT: 問い合わせ先 -->
+    <p class="site-footer__contact">お問い合わせ：ねっこ集会所 #運営への連絡 まで</p>
+  </div>
+</footer>
+
+<script src="assets/script.js" defer></script>
+</body>
+</html>

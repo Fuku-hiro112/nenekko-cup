@@ -1,0 +1,119 @@
+{
+  "_note": "プロジェクトのルートに sd-images.json としてコピーして使う。パスはこのファイルからの相対。",
+  "api": "http://127.0.0.1:7860",
+  "model": "waiIllustriousSDXL_v170",
+  "outDir": "assets/img",
+  "forgeDir": "../stable-diffusion-webui-forge",
+  "common": {
+    "steps": 30,
+    "cfg": 5.0,
+    "sampler": "Euler a",
+    "quality": "masterpiece, best quality, amazing quality, very aesthetic, absurdres, newest, illustration, official art, key visual",
+    "background": "simple background, white background",
+    "_negative": "透かし・署名の除去は強めに。モデルが偽の著作権表記を描くことがあるため、ここを弱めない。",
+    "negative": "(watermark:1.5), (signature:1.5), (artist name:1.5), (copyright notice:1.5), (text:1.4), (english text:1.4), (logo:1.4), username, dated, web address, lowres, worst quality, low quality, bad anatomy, bad hands, missing fingers, extra digit, fewer digits, extra fingers, fused fingers, error, cropped, jpeg artifacts, multiple views, multiple girls, nsfw, cleavage, revealing clothes"
+  },
+  "_presets_note": "subject に $変数 を書くと forgeDir/vars/variables.json から展開される。width は表示サイズの約2倍にする。",
+  "presets": {
+    "hero": {
+      "note": "ヒーローのキャラクタービジュアル",
+      "subject": "$桃鈴ねね",
+      "pose": "holding fanned playing cards, showing cards to viewer, idol costume, frilled dress, wink, open mouth, cheerful smile, energetic pose, standing, cowboy shot, looking at viewer",
+      "size": [
+        832,
+        1216
+      ],
+      "width": 740,
+      "out": "nene.webp"
+    },
+    "about": {
+      "note": "本文の横に置くバストアップ",
+      "subject": "$桃鈴ねね",
+      "pose": "idol costume, frilled dress, gentle smile, one hand raised in explanation, upper body, bust shot, looking at viewer, head tilt",
+      "size": [
+        896,
+        1152
+      ],
+      "width": 560,
+      "out": "nene-about.webp"
+    },
+    "entry": {
+      "note": "CTA の横。招いているポーズ",
+      "subject": "$桃鈴ねね",
+      "pose": "idol costume, frilled dress, beckoning, waving hand, big smile, open mouth, pointing at viewer, upper body, looking at viewer",
+      "size": [
+        896,
+        1152
+      ],
+      "width": 480,
+      "out": "nene-entry.webp"
+    },
+    "mascot": {
+      "note": "マスコット。タグが通るかは要検証",
+      "subject": "nekko_(momosuzu_nene), hololive, mascot, chibi, no humans",
+      "pose": "full body, standing, facing viewer, cute, simple shape",
+      "size": [
+        1024,
+        1024
+      ],
+      "width": 320,
+      "out": "nekko.webp"
+    }
+  },
+  "_ogp_note": "リンクプレビュー画像。character は outDir 内のファイル名。y は上からの位置。",
+  "ogp": {
+    "out": "ogp.jpg",
+    "size": [
+      1200,
+      630
+    ],
+    "bgTop": [
+      255,
+      233,
+      241
+    ],
+    "bgBottom": [
+      255,
+      243,
+      232
+    ],
+    "accent": "#F7C13F",
+    "edge": 10,
+    "textX": 72,
+    "character": "nene.webp",
+    "characterMargin": 40,
+    "lines": [
+      {
+        "text": "ねっこ集会所 presents",
+        "y": 150,
+        "size": 30,
+        "color": "#A82355"
+      },
+      {
+        "text": "第1回 ねっこ杯",
+        "y": 205,
+        "size": 52,
+        "color": "#3A2430"
+      },
+      {
+        "text": "ポカジャン大会",
+        "y": 275,
+        "size": 84,
+        "color": "#D22C6B"
+      },
+      {
+        "text": "2026.09.13 SUN 21:00",
+        "y": 400,
+        "size": 40,
+        "color": "#3A2430"
+      },
+      {
+        "text": "Discord「ねっこ集会所」／ 参加費無料",
+        "y": 460,
+        "size": 28,
+        "color": "#6E5560",
+        "bold": false
+      }
+    ]
+  }
+}

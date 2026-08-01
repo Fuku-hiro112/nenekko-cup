@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>モバイル表示の確認 ｜ ねっこ杯</title>
+<style>
+  :root { color-scheme: light; }
+  html, body {
+    background-color: #262229;
+    color: #F2EDF0;
+  }
+  body {
+    margin: 0; min-height: 100vh;
+    font-family: "Zen Kaku Gothic New", "Hiragino Kaku Gothic ProN", "Yu Gothic", "Meiryo", sans-serif;
+    display: flex; flex-direction: column; align-items: center;
+    padding: 22px 16px 40px;
+    box-sizing: border-box;
+  }
+
+  h1 { font-size: 1.05rem; margin: 0 0 4px; letter-spacing: .04em; }
+  .lead { margin: 0 0 20px; font-size: .82rem; color: #B7AEB6; text-align: center; line-height: 1.7; }
+  .lead code { background: #35303A; padding: 1px 6px; border-radius: 5px; }
+
+  .bar { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 22px; }
+  .bar button {
+    font: inherit; font-size: .8rem;
+    padding: 8px 15px; border-radius: 999px; cursor: pointer;
+    background: #35303A; color: #F2EDF0; border: 1px solid #4A434F;
+    transition: background .15s ease, border-color .15s ease;
+  }
+  .bar button:hover { background: #433C49; }
+  .bar button[aria-pressed="true"] { background: #D22C6B; border-color: #E8759F; }
+  .bar button:focus-visible { outline: 3px solid #F7C13F; outline-offset: 2px; }
+
+  /* 端末の外枠 */
+  .device {
+    position: relative;
+    padding: 14px;
+    border-radius: 40px;
+    background: linear-gradient(160deg, #4A434F, #211E25);
+    box-shadow: 0 26px 60px rgba(0, 0, 0, .5), 0 0 0 1px #564E5C inset;
+  }
+  .device::before {          /* スピーカー */
+    content: ""; position: absolute; top: 24px; left: 50%; translate: -50% 0;
+    width: 62px; height: 5px; border-radius: 3px; background: #151318; z-index: 2;
+  }
+  .device iframe {
+    display: block; border: 0; border-radius: 28px; background: #FFF7F3;
+  }
+
+  .meta { margin-top: 16px; font-size: .78rem; color: #B7AEB6; text-align: center; }
+  .meta b { color: #F7C13F; font-weight: 600; }
+</style>
+</head>
+<body>
+
+<h1>モバイル表示の確認</h1>
+<p class="lead">
+  実物のページを、その幅のまま枠の中で表示しています。スクロールも動作も本物と同じです。<br>
+  Chrome の DevTools でも確認できます（<code>F12</code> → <code>Ctrl</code>+<code>Shift</code>+<code>M</code>）。
+</p>
+
+<div class="bar" id="bar"></div>
+
+<div class="device">
+  <iframe id="frame" src="../index.html" title="ねっこ杯 ポカジャン大会（モバイル表示）"></iframe>
+</div>
+
+<p class="meta">いま表示している幅：<b id="label">—</b></p>
+
+<script>
+  // 代表的な端末幅。数字は CSS ピクセル
+  var SIZES = [
+    { name: 'iPhone SE',        w: 375, h: 667 },
+    { name: 'Android 標準',      w: 360, h: 800 },
+    { name: 'iPhone 15',        w: 393, h: 852 },
+    { name: 'iPhone 15 Pro Max', w: 430, h: 932 },
+    { name: '横向き',            w: 852, h: 393 }
+  ];
+
+  var bar = document.getElementById('bar');
+  var frame = document.getElementById('frame');
+  var label = document.getElementById('label');
+
+  var currentSize = null;
+
+  function apply(size, button) {
+    if (size) currentSize = size;
+    if (button) {
+      bar.querySelectorAll('button').forEach(function (b) {
+        b.setAttribute('aria-pressed', String(b === button));
+      });
+    }
+    if (!currentSize) return;
+
+    // レイアウトを決めるのは幅なので、幅は指定どおりに保つ。
+    // 高さだけウィンドウに収まるよう縮めて、枠が画面からはみ出さないようにする。
+    var room = window.innerHeight - 210;
+    var h = Math.min(currentSize.h, Math.max(360, room));
+
+    frame.style.width = currentSize.w + 'px';
+    frame.style.height = h + 'px';
+
+    label.textContent = currentSize.name + '（' + currentSize.w + ' × ' + currentSize.h + '）'
+      + (h < currentSize.h ? ' ／ 縦は画面に合わせて ' + h + 'px に縮めています' : '');
+  }
+
+  window.addEventListener('resize', function () { apply(null, null); });
+
+  SIZES.forEach(function (size, i) {
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.textContent = size.name + ' / ' + size.w;
+    b.setAttribute('aria-pressed', 'false');
+    b.addEventListener('click', function () { apply(size, b); });
+    bar.appendChild(b);
+    if (i === 1) apply(size, b);   // 既定は Android 標準の 360px
+  });
+</script>
+
+</body>
+</html>

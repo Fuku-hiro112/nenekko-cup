@@ -1,0 +1,10 @@
+# 加工前の原本。手元にだけ置く（リポジトリを軽く保つため）
+assets/img/ねっ子(*).jpg
+assets/img/ねね壁紙.png
+assets/img/ホロドリ盤面*.png
+assets/img/nene.webp
+
+# 生成の中間物
+tools/candidates/
+__pycache__/
+*.pyc
