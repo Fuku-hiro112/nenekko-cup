@@ -922,7 +922,7 @@ a { color: var(--pink-deep); }
 }
 .site-footer__nekko { width: 46px; height: auto; }
 .site-footer__note { max-width: 56em; margin: 0 auto 12px; line-height: 1.85; }
-.site-footer__note a { color: var(--gold-pale); }
+.site-footer__note a, .site-footer__contact a { color: var(--gold-pale); }
 .site-footer__contact { margin: 0; color: #F1CEDD; }
 
 /* ---------- 12.5 ずっと動いているもの ----------
