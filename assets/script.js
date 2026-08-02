@@ -9,6 +9,7 @@
  *  3. reveal        … スクロールでセクションの中身をずらして表示
  *  4. ヘッダー       … スクロール量に応じて浮かせる
  *  5. ナビ開閉       … モバイルのハンバーガーメニュー
+ *  6. 流れる帯       … 画面を埋めるのに足りないぶんセットを複製
  *
  * ローディングと配牌はCSSだけで完結させてあります。
  * このファイルの読み込みに失敗しても、本文が隠れたままになることはありません。
@@ -145,5 +146,56 @@
       setOpen(false);
       toggle.focus();
     });
+  }
+
+  /* ---------- 6. 流れる帯のセットを画面幅に合わせる ----------
+     帯は「1セット分だけ左へ動かして、次のセットが同じ位置に来たら折り返す」作りです。
+     そのため、1セットが画面より狭いと折り返す直前に右側が空きます
+     （1セット982px・画面1674px のとき、右に692pxの空白が出ていました）。
+
+     画面を埋めるのに足りない分をここで複製し、セット数を --marquee-sets に入れます。
+     移動量はCSS側で 100% ÷ セット数＝常に1セット分になるので、
+     何セットに増えても流れる速さは変わりません。 */
+  var track = document.querySelector('.marquee__track');
+  var master = track && track.querySelector('.marquee__set');
+
+  if (track && master) {
+    var fitMarquee = function () {
+      // 画面が広がったときに測り直せるよう、いったん元の1セットまで戻す
+      while (track.children.length > 1) track.removeChild(track.lastElementChild);
+
+      var setWidth = master.getBoundingClientRect().width;
+      if (!setWidth) return;                  // 表示前などで測れないときは何もしない
+
+      // 動く1セット分に加えて、画面を覆えるだけのセットを用意する
+      var needed = Math.ceil(window.innerWidth / setWidth) + 1;
+      for (var i = 1; i < needed; i++) track.appendChild(master.cloneNode(true));
+
+      track.style.setProperty('--marquee-sets', needed);
+
+      // 動かしてよいのは複製が済んだここから。CSS はこのクラスを見て初めて流し始める
+      // （このファイルが読めなかったときに、1セットのまま動いて帯が消えるのを防ぐ）
+      track.classList.add('is-fitted');
+
+      // keyframes の移動量は変数から計算されるので、変えたら animation を作り直す
+      track.style.animation = 'none';
+      void track.offsetWidth;                 // 強制リフロー
+      track.style.animation = '';
+    };
+
+    fitMarquee();
+
+    // 幅が変わったときだけ組み直す（スマホのアドレスバー開閉で高さだけ動くのは無視）
+    var lastWidth = window.innerWidth;
+    var resizeTimer;
+    window.addEventListener('resize', function () {
+      if (window.innerWidth === lastWidth) return;
+      lastWidth = window.innerWidth;
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(fitMarquee, 200);
+    });
+
+    // Webフォントが後から入ると文字幅が変わるため、その時点で測り直す
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitMarquee);
   }
 })();

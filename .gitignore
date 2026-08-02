@@ -1,10 +1,14 @@
-# 加工前の原本。手元にだけ置く（リポジトリを軽く保つため）
-assets/img/ねっ子(*).jpg
-assets/img/ねね壁紙.png
-assets/img/ホロドリ盤面*.png
-assets/img/nene.webp
+# 加工前の原本。重いので手元にだけ置く（リポジトリを軽く保つため）
+tools/src-img/
 
 # 生成の中間物
 tools/candidates/
 __pycache__/
 *.pyc
+
+# ルート直下には画像を置かない（確認用スクショの置き忘れ対策）。
+# ページが使う画像は assets/img/ に入れるので、この指定には引っかからない。
+/*.png
+/*.jpg
+/*.jpeg
+/*.webp

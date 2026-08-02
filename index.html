@@ -4,12 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <!-- EDIT: ページタイトル（Discordに貼ったときのリンク名になります） -->
-<title>ねっこ杯 ポカジャン大会 ｜ ねっこ集会所</title>
+<title>ねっ子ポカジャン大会 ｜ ねっこ集会所</title>
 <!-- EDIT: 説明文（Discordのリンクプレビューに出ます） -->
-<meta name="description" content="Discord「ねっこ集会所」で開催する、ホロドリのミニゲーム「ポカジャン」の大会案内ページです。参加費無料・ねっこなら誰でも歓迎。">
+<meta name="description" content="2026年8月14日(金)21:00より、Discord「ねっこ集会所」で開催するホロドリのミニゲーム「ポカジャン」大会の案内ページです。勝ち上がりトーナメント方式、ポカジャン未解放でも参加できます。">
 <meta property="og:type" content="website">
-<meta property="og:title" content="ねっこ杯 ポカジャン大会 ｜ ねっこ集会所">
-<meta property="og:description" content="その手札、咲かせにいこう。ホロドリ「ポカジャン」大会をねっこ集会所で開催します。">
+<meta property="og:title" content="ねっ子ポカジャン大会 ｜ ねっこ集会所">
+<meta property="og:description" content="その手札、咲かせにいこう。2026.08.14(金) 21:00 スタート。勝ち上がりトーナメントで優勝者・最大得点者・ねねち賞を決めます。">
 <!-- EDIT: Discordのリンクプレビューに出す画像（tools/generate_nene.py --preset ogp で作り直せます） -->
 <meta property="og:image" content="assets/img/ogp.jpg">
 <meta property="og:image:width" content="1200">
@@ -65,7 +65,7 @@
   <div class="site-header__inner">
     <a class="site-header__logo" href="#top">
       <span class="site-header__mark fanmark" aria-hidden="true">🍑🥟</span>
-      <span>ねっこ杯</span>
+      <span>ねっ子ポカジャン大会</span>
     </a>
 
     <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
@@ -78,7 +78,9 @@
         <li><a href="#top">TOP</a></li>
         <li><a href="#about">ABOUT</a></li>
         <li><a href="#rule">RULE</a></li>
-        <li><a href="#entry">ENTRY</a></li>
+        <li><a href="#flow">FLOW</a></li>
+        <!-- ENTRY だけは応募への導線なので、他の項目と同じ重さでは置いていません -->
+        <li class="site-nav__cta"><a href="#entry">ENTRY</a></li>
       </ul>
     </nav>
   </div>
@@ -143,7 +145,7 @@
       <p class="hero__eyebrow"><span>ねっこ集会所 presents</span></p>
       <h1 class="hero__title">
         <!-- EDIT: 大会名（1行ずつ。data-text は表示文字と必ず同じにしてください） -->
-        <span class="stroked stroked--sm" data-text="第1回 ねっこ杯">第1回 ねっこ杯</span>
+        <span class="stroked stroked--sm" data-text="ねっ子">ねっ子</span>
         <span class="stroked" data-text="ポカジャン大会">ポカジャン大会</span>
       </h1>
       <!-- EDIT: キャッチコピー -->
@@ -152,7 +154,7 @@
 
     <!-- カウントダウン（JSが有効なときだけ表示。日時はHTML側にも書いてあります） -->
     <!-- EDIT: 開催日時（ISO形式。手札やABOUTの表記と揃えてください） -->
-    <div class="countdown" hidden data-deadline="2026-09-13T21:00:00+09:00">
+    <div class="countdown" hidden data-deadline="2026-08-14T21:00:00+09:00">
       <span class="countdown__label">開催まであと</span>
       <span class="countdown__cell"><b data-unit="days">--</b><i>日</i></span>
       <span class="countdown__cell"><b data-unit="hours">--</b><i>時間</i></span>
@@ -165,8 +167,8 @@
         <div class="tile">
           <span class="tile__label">DATE</span>
           <!-- EDIT: 開催日 -->
-          <strong class="tile__value">9<span class="tile__unit">/</span>13</strong>
-          <span class="tile__note">2026年（日）</span>
+          <strong class="tile__value">8<span class="tile__unit">/</span>14</strong>
+          <span class="tile__note">2026年（金）</span>
         </div>
       </li>
       <li class="hand__tile" style="--i:1">
@@ -174,70 +176,67 @@
           <span class="tile__label">OPEN</span>
           <!-- EDIT: 開始時刻 -->
           <strong class="tile__value">21<span class="tile__unit">:</span>00</strong>
-          <span class="tile__note">集合 20:45</span>
+          <span class="tile__note">だいたい2時間</span>
         </div>
       </li>
       <li class="hand__tile" style="--i:2">
         <div class="tile">
           <span class="tile__label">PLACE</span>
-          <!-- EDIT: 会場（Discordチャンネル名） -->
-          <strong class="tile__value tile__value--text">#ポカジャン<br>大会</strong>
-          <span class="tile__note">ボイスCh</span>
+          <!-- EDIT: 会場 -->
+          <strong class="tile__value tile__value--text">Discord</strong>
+          <span class="tile__note">イベントルーム</span>
         </div>
       </li>
       <li class="hand__tile" style="--i:3">
         <div class="tile">
-          <span class="tile__label">SEATS</span>
-          <!-- EDIT: 定員 -->
-          <strong class="tile__value">32<span class="tile__unit">名</span></strong>
-          <span class="tile__note">先着順</span>
+          <span class="tile__label">FORMAT</span>
+          <!-- EDIT: 大会方式 -->
+          <strong class="tile__value tile__value--text">勝ち上がり<br>トナメ</strong>
+          <span class="tile__note">4人卓・抽選</span>
         </div>
       </li>
       <li class="hand__tile" style="--i:4">
         <div class="tile">
-          <span class="tile__label">ENTRY FEE</span>
-          <!-- EDIT: 参加費 -->
-          <strong class="tile__value tile__value--text">無料</strong>
-          <span class="tile__note">ねっこなら誰でも</span>
+          <span class="tile__label">ENTRY</span>
+          <!-- EDIT: 応募方法 -->
+          <strong class="tile__value tile__value--text">Google<br>フォーム</strong>
+          <span class="tile__note">解放状況を記入</span>
         </div>
       </li>
       <li class="hand__tile" style="--i:5">
         <div class="tile">
-          <span class="tile__label">FORMAT</span>
-          <!-- EDIT: 大会形式 -->
-          <strong class="tile__value tile__value--text">4人卓<br>予選2回戦</strong>
-          <span class="tile__note">上位8名が決勝</span>
+          <span class="tile__label">AWARDS</span>
+          <!-- EDIT: 表彰 -->
+          <strong class="tile__value">3<span class="tile__unit">賞</span></strong>
+          <span class="tile__note">ねねち賞あり</span>
         </div>
       </li>
       <li class="hand__tile" style="--i:6">
         <div class="tile">
-          <span class="tile__label">DEADLINE</span>
-          <!-- EDIT: エントリー締切 -->
-          <strong class="tile__value">9<span class="tile__unit">/</span>10</strong>
-          <span class="tile__note">23:59まで</span>
+          <span class="tile__label">PRIZE</span>
+          <!-- EDIT: 賞品 -->
+          <strong class="tile__value tile__value--text">なし</strong>
+          <span class="tile__note">ロール付与を予定</span>
         </div>
       </li>
     </ul>
 
     <p class="hero__cta">
       <!-- EDIT: ヒーローのボタン文言（リンク先は下のENTRYセクションです） -->
-      <a class="btn btn--primary" href="#entry">エントリー方法を見る</a>
+      <a class="btn btn--primary" href="#entry">応募のしかたを見る</a>
     </p>
   </section>
 
   <!-- 流れる帯 -->
   <div class="marquee" aria-hidden="true">
+    <!-- セットは1つだけ書きます。画面を埋めるのに足りない分は script.js が複製するので、
+         コピーを並べる必要はありません（文言を直す場所も、この1か所だけです）。 -->
     <div class="marquee__track">
       <!-- EDIT: 帯に流す文字 -->
       <span class="marquee__set">
-        <em>NENEKKO CUP</em><img class="marquee__nekko" src="assets/img/nekko-1.webp" alt="" loading="lazy">
-        <em>POKAJAN TOURNAMENT</em><img class="marquee__nekko" src="assets/img/nekko-2.webp" alt="" loading="lazy">
-        <em>2026.09.13 SUN 21:00</em><img class="marquee__nekko" src="assets/img/nekko-3.webp" alt="" loading="lazy">
-      </span>
-      <span class="marquee__set">
-        <em>NENEKKO CUP</em><img class="marquee__nekko" src="assets/img/nekko-1.webp" alt="" loading="lazy">
-        <em>POKAJAN TOURNAMENT</em><img class="marquee__nekko" src="assets/img/nekko-2.webp" alt="" loading="lazy">
-        <em>2026.09.13 SUN 21:00</em><img class="marquee__nekko" src="assets/img/nekko-3.webp" alt="" loading="lazy">
+        <em>NEKKO POKAJAN CUP</em><img class="marquee__nekko" src="assets/img/nekko-1.webp" alt="" loading="lazy">
+        <em>WINNERS TOURNAMENT</em><img class="marquee__nekko" src="assets/img/nekko-2.webp" alt="" loading="lazy">
+        <em>2026.08.14 FRI 21:00</em><img class="marquee__nekko" src="assets/img/nekko-3.webp" alt="" loading="lazy">
       </span>
     </div>
   </div>
@@ -258,27 +257,40 @@
       <div class="about__grid">
         <div class="about__text">
           <!-- EDIT: 大会概要の本文 -->
-          <p class="about__lead">ホロドリのミニゲーム「ポカジャン」を、ねっこのみんなで一斉に囲む大会です。</p>
-          <p>腕自慢も、ルールをまだ覚えていない人も、同じ卓に着けます。予選は4人卓で2回戦。獲得コインの合計が多い上位8名が決勝卓に進みます。</p>
-          <p>観戦だけの参加も歓迎です。当日は実況つきでわいわいやります。初めての方には、開始前に15分の練習卓を用意します。ルールは下の「RULE」で先に予習しておくと、当日そのまま座れます。</p>
+          <p class="about__lead">ホロドリのミニゲーム「ポカジャン」を、ねっこのみんなで囲む大会です。</p>
+          <p>4人卓の勝ち上がりトーナメントで行います。トーナメント表の段数と勝ち抜け順位は、参加人数によって変わります。どの卓に入るかは<strong>運営が事前に抽選で決めます</strong>ので、当日は案内された部屋に入るだけで大丈夫です。</p>
+          <p><strong>ポカジャンを解放していなくても参加できます。</strong>応募のときに解放・未解放を書いてもらい、未解放の方が1つの卓に固まらないように振り分けます。ルールは下の「RULE」で予習しておくと、当日そのまま座れます。</p>
 
+          <p class="about__portrait" data-img-slot hidden>
+            <img src="assets/img/nene.webp" alt="">
+          </p>
         </div>
 
         <dl class="about__facts">
           <div>
             <dt>開催日時</dt>
             <!-- EDIT: 開催日時（手札の内容と揃えてください） -->
-            <dd><strong>2026年9月13日（日）21:00</strong><br>20:45 ボイスチャンネル集合</dd>
+            <dd><strong>2026年8月14日（金）21:00</strong><br>所要はだいたい2時間くらい</dd>
           </div>
           <div>
             <dt>会場</dt>
             <!-- EDIT: 会場 -->
-            <dd>Discord「ねっこ集会所」<br>#ポカジャン大会</dd>
+            <dd>Discord「ねっこ集会所」<br>イベントルームに集合 → 卓ごとのVCへ</dd>
+          </div>
+          <div>
+            <dt>大会方式</dt>
+            <!-- EDIT: 大会方式 -->
+            <dd>4人卓の勝ち上がりトーナメント<br>段数・勝ち抜け順位は参加人数で変動</dd>
           </div>
           <div>
             <dt>参加資格</dt>
             <!-- EDIT: 参加資格 -->
-            <dd>ねっこ集会所のメンバー<br>ホロドリでポカジャンが解放済みの方</dd>
+            <dd>ねっこ集会所のメンバー<br>ポカジャン未解放でも参加できます</dd>
+          </div>
+          <div>
+            <dt>表彰</dt>
+            <!-- EDIT: 表彰 -->
+            <dd>優勝者／最大得点者／ねねち賞<br>賞品はありません（ロール付与を予定）</dd>
           </div>
           <div>
             <dt>主催</dt>
@@ -306,15 +318,15 @@
       <!-- 実際のゲーム画面。ファイルが読み込めたぶんだけ表示され、0枚ならこのブロックごと出ません。 -->
       <div class="shots-block" data-img-group="shots" hidden>
         <div class="shots">
-          <figure class="shot shot--wide" data-img-slot data-reveals="shots" hidden>
+          <figure class="shot" data-img-slot data-reveals="shots" hidden>
             <img src="assets/img/board-play.webp" alt="ポカジャンの対局画面。4人の持ちコインと、手札・山札・役の一覧が並んでいる">
             <!-- EDIT: 盤面の説明1 -->
             <figcaption>対局中の画面。下が自分の手札、中央が山札と役の一覧、周りが他家の持ちコインです</figcaption>
           </figure>
           <figure class="shot" data-img-slot data-reveals="shots" hidden>
-            <img src="assets/img/board-cards.webp" alt="ホロメンのカードが期生ごとに並んだ一覧画面">
+            <img src="assets/img/board-cards.webp" alt="今回登場するグループの一覧画面。グループごとにホロメンが並び、右側にボーナスのホロメンのカードが表示されている">
             <!-- EDIT: 盤面の説明2 -->
-            <figcaption>カードは期生ごとにまとまっています。右の数字がその期生の枚数です</figcaption>
+            <figcaption>対局の前に出る画面。その回に登場するグループと、右のBONUSのホロメンが分かります</figcaption>
           </figure>
         </div>
       </div>
@@ -322,50 +334,147 @@
       <h3 class="rule__subtitle">役の作りかた</h3>
       <div class="yaku">
         <div class="yaku__card">
+          <!-- 実際の手札から。同じホロメンのカードが3枚そろっている状態です -->
           <div class="yaku__hand" aria-hidden="true">
-            <span class="mini mini--a"><svg class="icon"><use href="#ic-petal"></use></svg></span>
-            <span class="mini mini--a"><svg class="icon"><use href="#ic-petal"></use></svg></span>
-            <span class="mini mini--a"><svg class="icon"><use href="#ic-petal"></use></svg></span>
+            <span class="mini mini--card"><img src="assets/img/yaku-same-1.webp" alt="" loading="lazy"></span>
+            <span class="mini mini--card"><img src="assets/img/yaku-same-2.webp" alt="" loading="lazy"></span>
+            <span class="mini mini--card"><img src="assets/img/yaku-same-3.webp" alt="" loading="lazy"></span>
           </div>
           <h4>同じホロメンで揃える</h4>
-          <p>同じホロメンのカードを3枚集めます。いちばん基本の役で、狙いやすいぶん配当は控えめです。</p>
+          <p>同じホロメンのカードを3枚集めます。いちばん基本の役です。3枚の色までそろうと、もらえるコインが増えます。</p>
         </div>
         <div class="yaku__card">
+          <!-- 盤面の役一覧から。このグループは4名なので、この4枚を集めれば成立します -->
           <div class="yaku__hand" aria-hidden="true">
-            <span class="mini mini--b"><svg class="icon"><use href="#ic-petal"></use></svg></span>
-            <span class="mini mini--b"><svg class="icon"><use href="#ic-star"></use></svg></span>
-            <span class="mini mini--b"><svg class="icon"><use href="#ic-nekko"></use></svg></span>
+            <span class="mini mini--card"><img src="assets/img/yaku-group-1.webp" alt="" loading="lazy"></span>
+            <span class="mini mini--card"><img src="assets/img/yaku-group-2.webp" alt="" loading="lazy"></span>
+            <span class="mini mini--card"><img src="assets/img/yaku-group-3.webp" alt="" loading="lazy"></span>
+            <span class="mini mini--card"><img src="assets/img/yaku-group-4.webp" alt="" loading="lazy"></span>
           </div>
-          <h4>同じ期生で揃える</h4>
-          <p>ホロメンは違っても、同じ期生のカードが3枚そろえば成立します。枠の色が同じかどうかで見分けます。</p>
+          <h4>グループで揃える</h4>
+          <p>ホロメンは違っても、その期生などのグループを<strong>全員分</strong>そろえれば成立します。必要な枚数はグループによって変わります。</p>
         </div>
         <div class="yaku__card">
+          <!-- 実際の手札から。あと1枚そろえば成立する状態（右の伏せ札は待っている1枚） -->
           <div class="yaku__hand" aria-hidden="true">
-            <span class="mini mini--a"><svg class="icon"><use href="#ic-petal"></use></svg></span>
-            <span class="mini mini--a"><svg class="icon"><use href="#ic-petal"></use></svg></span>
+            <span class="mini mini--card"><img src="assets/img/yaku-wait-1.webp" alt="" loading="lazy"></span>
+            <span class="mini mini--card"><img src="assets/img/yaku-wait-2.webp" alt="" loading="lazy"></span>
             <span class="mini mini--back"></span>
           </div>
           <h4>あと1枚で待つ</h4>
-          <p>2枚そろったら、残り1枚を山札か他家の捨て札から拾います。宣言するとその相手からコインを受け取ります。</p>
+          <p>あと1枚そろえば成立、という状態です。残りは山札から引くか、他家の捨て札を拾います。捨て札で成立させたときは、その相手からコインを受け取ります。</p>
         </div>
       </div>
 
       <h3 class="rule__subtitle">この大会のルール</h3>
       <div class="localrule">
-        <!-- EDIT: 大会独自ルール（3枚。増減してもレイアウトは崩れません） -->
+        <!-- EDIT: 大会独自ルール（枚数を増減してもレイアウトは崩れません） -->
         <div class="localrule__card">
-          <h4><svg class="icon" aria-hidden="true"><use href="#ic-nekko"></use></svg>試合形式</h4>
-          <p>4人卓・予選2回戦。2回戦の獲得コイン合計で上位8名が決勝卓へ進みます。同点の場合は2回戦目の成績が上の方を優先します。</p>
+          <h4><svg class="icon" aria-hidden="true"><use href="#ic-nekko"></use></svg>勝ち上がり方式</h4>
+          <p>4人卓で対局し、上位が次の卓へ進みます。トーナメント表の段数と勝ち抜け順位は参加人数によって変わるため、当日発表します。</p>
+        </div>
+        <!-- この賞だけは達成の形を絵で見せています。1枚を3つ並べて「同じ色で3枚」を表しています -->
+        <div class="localrule__card localrule__card--nene">
+          <div class="yaku__hand" aria-hidden="true">
+            <span class="mini mini--card"><img src="assets/img/yaku-nene.webp" alt="" loading="lazy"></span>
+            <span class="mini mini--card"><img src="assets/img/yaku-nene.webp" alt="" loading="lazy"></span>
+            <span class="mini mini--card"><img src="assets/img/yaku-nene.webp" alt="" loading="lazy"></span>
+          </div>
+          <h4><svg class="icon" aria-hidden="true"><use href="#ic-sparkle"></use></svg>ねねち賞</h4>
+          <p><strong>桃鈴ねねのカードを同じ色で3枚そろえた人</strong>に贈られます。勝ち負けとは別枠なので、負けが込んでいても狙う価値があります。</p>
         </div>
         <div class="localrule__card">
-          <h4><svg class="icon" aria-hidden="true"><use href="#ic-nekko"></use></svg>順位点</h4>
-          <p>各卓の着順に応じて、1位 +30 / 2位 +10 / 3位 -10 / 4位 -30 の順位点を加算します。合計点で最終順位を決めます。</p>
+          <h4><svg class="icon" aria-hidden="true"><use href="#ic-nekko"></use></svg>最大得点者</h4>
+          <p>ゲーム終了時の点数が最も高かった人を表彰します。集計のため、<strong>各卓の結果はスクリーンショットを撮って運営に送ってください。</strong></p>
         </div>
         <div class="localrule__card">
-          <h4><svg class="icon" aria-hidden="true"><use href="#ic-nekko"></use></svg>進行マナー</h4>
-          <p>1手あたりの考慮は30秒までを目安に。通信切断は3分まで待ちます。無断退出は棄権として扱います。</p>
+          <h4><svg class="icon" aria-hidden="true"><use href="#ic-nekko"></use></svg>人数が半端なとき</h4>
+          <p>4人に満たない卓は、<strong>そのまま開始すると空いた席にCPUが入ります。</strong>人数合わせはしないので、その卓はCPUを交えて対局してください。</p>
+        </div>
+        <div class="localrule__card">
+          <h4><svg class="icon" aria-hidden="true"><use href="#ic-nekko"></use></svg>卓分けは抽選</h4>
+          <p>どの卓に入るかは運営が事前に抽選で決めます。ポカジャン未解放の方が4人そろってしまわないよう、解放組と混ぜて振り分けます。</p>
         </div>
       </div>
+
+      <h3 class="rule__subtitle">もっと詳しく知りたい人へ</h3>
+      <!-- EDIT: 参考リンク（カードを増減してもレイアウトは崩れません）
+           点数や役の細かい数字は、実際のゲーム画面つきで載っている攻略サイトに任せています。
+           このページには「当日そのまま座れる分」だけを置く方針です。 -->
+      <div class="refs">
+        <a class="refs__card" href="https://game8.jp/hololive-dreams/801833" target="_blank" rel="noopener noreferrer">
+          <h4>点数と役をきちんと知る</h4>
+          <p>役ごとにもらえるコイン、ボーナス、終了時の順位ごとの倍率まで、数字で載っています。実際のゲーム画面つきです。</p>
+          <span class="refs__site">ゲームエイト</span>
+        </a>
+        <a class="refs__card" href="https://gamerch.com/hololive-dreams/1000599" target="_blank" rel="noopener noreferrer">
+          <h4>やり方と勝つコツ</h4>
+          <p>ひと通りの進めかたと、どの札を捨てると安全かといった立ち回りが書かれています。</p>
+          <span class="refs__site">ホロドリ攻略Wiki</span>
+        </a>
+      </div>
+      <p class="refs__note">どちらも本大会とは関係のない外部サイトです。当日のルールは上の「この大会のルール」が優先されます。</p>
+    </div>
+  </section>
+
+  <!-- ============ FLOW ============ -->
+  <section class="section section--flow reveal" id="flow">
+    <span class="nekko-peek nekko-peek--right" aria-hidden="true">
+      <img src="assets/img/nekko-3.webp" alt="" loading="lazy">
+    </span>
+    <div class="wrap">
+      <h2 class="section__title">
+        <span class="section__en">FLOW</span>
+        <span class="section__ja">当日の流れ</span>
+        <svg class="icon section__mark" aria-hidden="true"><use href="#ic-nekko"></use></svg>
+      </h2>
+      <p class="section__lead">集合してから解散までの流れです。卓分けは事前に決まっているので、当日は案内どおりに動くだけで大丈夫です。</p>
+
+      <ol class="steps">
+        <!-- EDIT: 当日の流れ -->
+        <li class="steps__item">
+          <span class="steps__num">01</span>
+          <div>
+            <h3>イベントルームに集合</h3>
+            <p>開始時刻までにDiscordのイベントルームへ。ここで卓分けと、入る部屋・VCの案内をします。</p>
+          </div>
+        </li>
+        <li class="steps__item">
+          <span class="steps__num">02</span>
+          <div>
+            <h3>ルームを立てて4人そろう</h3>
+            <p>各卓で<strong>ポカジャンを解放している人がルームを作成</strong>し、残りの3人がそこへ入ります。卓ごとに用意されたVCに、同卓の4人で集まってください。</p>
+          </div>
+        </li>
+        <li class="steps__item">
+          <span class="steps__num">03</span>
+          <div>
+            <h3>対局する</h3>
+            <p>見学したい人のために、<strong>画面共有ができる人は共有してください。</strong>観戦だけの参加も歓迎です。</p>
+          </div>
+        </li>
+        <li class="steps__item">
+          <span class="steps__num">04</span>
+          <div>
+            <h3>結果を送る</h3>
+            <p>対局が終わったら<strong>結果画面のスクリーンショットを撮って運営に送ってください。</strong>最大得点者の集計に使います。</p>
+          </div>
+        </li>
+        <li class="steps__item">
+          <span class="steps__num">05</span>
+          <div>
+            <h3>戻って歓談 / 観戦</h3>
+            <p>イベントルームに戻って歓談するか、他の卓のVCへ移動して観戦してください。</p>
+          </div>
+        </li>
+        <li class="steps__item">
+          <span class="steps__num">06</span>
+          <div>
+            <h3>結果発表・解散</h3>
+            <p>全卓が終わったらイベントルームで結果発表です。優勝者・最大得点者・ねねち賞を発表し、<strong>受賞者にはロールを付与</strong>する予定です。そのあと解散になります。</p>
+          </div>
+        </li>
+      </ol>
     </div>
   </section>
 
@@ -377,29 +486,29 @@
         <span class="section__ja">参加のしかた</span>
         <svg class="icon section__mark" aria-hidden="true"><use href="#ic-nekko"></use></svg>
       </h2>
-      <p class="section__lead">受付はDiscord上だけで完結します。締切までに3ステップを済ませてください。</p>
+      <p class="section__lead">応募はGoogleフォームから。締切までに送信してください。</p>
 
       <ol class="steps">
         <!-- EDIT: エントリー手順 -->
         <li class="steps__item">
           <span class="steps__num">01</span>
           <div>
-            <h3>ねっこ集会所に参加する</h3>
-            <p>まだ入っていない方は、招待リンクからDiscordサーバーに参加してください。すでにメンバーの方はそのまま02へ。</p>
+            <h3>Googleフォームを開く</h3>
+            <p>下のボタンから応募フォームへ。ねっこ集会所のメンバーであれば、どなたでも応募できます。</p>
           </div>
         </li>
         <li class="steps__item">
           <span class="steps__num">02</span>
           <div>
-            <h3>#ポカジャン大会 で受付する</h3>
-            <p>チャンネルに固定されている募集メッセージに 🎴 のリアクションを付けると受付完了です。定員に達し次第、締切前でも受付を終了します。</p>
+            <h3>名前と解放状況を書く</h3>
+            <p>入力するのは<strong>①名前</strong>と<strong>②ポカジャンの解放・未解放</strong>の2つだけです。未解放でも参加できますので、正直に選んでください。卓分けに使います。</p>
           </div>
         </li>
         <li class="steps__item">
           <span class="steps__num">03</span>
           <div>
-            <h3>当日20:45に集合する</h3>
-            <p>ボイスチャンネルに集合してください。卓分けは開始5分前に発表します。開始時刻に不在の場合は補欠と交代になります。</p>
+            <h3>卓分けの発表を待つ</h3>
+            <p>応募が締め切られたら、運営が抽選で卓分けをします。当日イベントルームで案内するので、それまでは何もしなくて大丈夫です。</p>
           </div>
         </li>
       </ol>
@@ -409,9 +518,10 @@
           <img src="assets/img/nekko-3.webp" alt="">
         </span>
         <p class="entry__cta-inner">
-          <!-- EDIT: ここをDiscordの招待リンク/募集メッセージのURLに差し替えてください -->
-          <a class="btn btn--primary btn--lg" href="#" target="_blank" rel="noopener noreferrer">ねっこ集会所で受付する</a>
-          <span class="entry__deadline">エントリー締切：2026年9月10日（木）23:59</span>
+          <!-- EDIT: ここをGoogleフォームのURLに差し替えてください -->
+          <a class="btn btn--primary btn--lg" href="#" target="_blank" rel="noopener noreferrer">応募フォームを開く</a>
+          <!-- EDIT: 応募締切 -->
+          <span class="entry__deadline">開催：2026年8月14日（金）21:00 ／ 締切は決まりしだい掲載します</span>
         </p>
       </div>
     </div>
