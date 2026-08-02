@@ -192,15 +192,30 @@ a { color: var(--pink-deep); }
 .site-header {
   position: fixed; inset: 0 0 auto 0; z-index: 50;
   height: var(--header-h);
-  background: rgba(255, 247, 243, .9);
+  /* 地は RULE と同じ「牌の裏面」の斜めストライプ。薄い面が無地だと平板に見えるため、
+     刻みだけヘッダーの高さに合わせて細かくしている（本文は 9/26px）。 */
+  background:
+    repeating-linear-gradient(-45deg,
+      rgba(255, 255, 255, .5) 0 7px,
+      rgba(255, 255, 255, 0) 7px 20px),
+    rgba(255, 247, 243, .9);
   backdrop-filter: blur(10px);
-  border-bottom: 1px solid var(--line);
   box-shadow: 0 1px 0 rgba(255, 255, 255, .8) inset;
   transition: box-shadow var(--t) var(--ease), background-color var(--t) var(--ease);
 }
+/* 本文のカードはどれも上辺に金の帯を持っている。ヘッダーは上から下りてくる面なので、
+   同じ帯を下辺に敷いてページの造作と言語をそろえた（1pxの罫線だけだと浮いていた）。 */
+.site-header::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 3px;
+  background: linear-gradient(90deg, var(--gold-pale), var(--gold) 50%, #E2952A);
+}
 /* スクロールすると、ヘッダーが浮いていることが分かる程度に影をつける */
 .is-scrolled .site-header {
-  background: rgba(255, 247, 243, .96);
+  background:
+    repeating-linear-gradient(-45deg,
+      rgba(255, 255, 255, .5) 0 7px,
+      rgba(255, 255, 255, 0) 7px 20px),
+    rgba(255, 247, 243, .96);
   box-shadow: 0 4px 18px rgba(70, 32, 58, .12);
 }
 .site-header__inner {
@@ -209,14 +224,31 @@ a { color: var(--pink-deep); }
   margin-inline: auto;
   display: flex; align-items: center; justify-content: space-between; gap: 16px;
 }
+/* ロゴは「札」。このページの中心にある手札のモチーフを、ヘッダーにも1枚だけ置いている。
+   地・縁・角丸は RULE の .mini（役の説明に出る小さな札）と同じ組み立て。 */
 .site-header__logo {
+  position: relative; overflow: hidden;
   display: inline-flex; align-items: center; gap: 9px;
-  font-family: var(--font-display); font-weight: 900; font-size: 1.08rem;
+  padding: 7px 16px 7px 13px;
+  font-family: var(--font-display); font-weight: 900; font-size: 1.02rem;
   color: var(--ink); text-decoration: none;
+  background: linear-gradient(180deg, var(--surface), #FFF6FA);
+  border: 2px solid var(--pink-soft);
+  border-radius: var(--radius-sm);
+  box-shadow: 0 4px 12px rgba(70, 32, 58, .12);
+  transition: transform var(--t) var(--ease), box-shadow var(--t) var(--ease);
+}
+.site-header__logo::before {          /* 札の上辺。本文カードと同じ金の帯 */
+  content: ""; position: absolute; inset: -2px -2px auto; height: 4px;
+  background: linear-gradient(90deg, var(--gold-pale), var(--gold) 50%, #E2952A);
+}
+.site-header__logo:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 9px 20px rgba(70, 32, 58, .18);
 }
 .site-header__mark { font-size: 1.15em; }
 
-.site-nav ul { display: flex; gap: 28px; }
+.site-nav ul { display: flex; align-items: center; gap: 26px; }
 .site-nav a {
   font-family: var(--font-en); font-weight: 600; font-size: .9rem;
   letter-spacing: .16em; color: var(--ink); text-decoration: none;
@@ -229,6 +261,23 @@ a { color: var(--pink-deep); }
   transform: scaleX(0); transform-origin: left; transition: transform .25s ease;
 }
 .site-nav a:hover::after { transform: scaleX(1); }
+
+/* ENTRY はこのページの目的そのもの。押せる面にして、他の項目と重さを変えている。
+   沈み込みかたは本文の .btn--primary と同じ語彙（影を薄くしながら下げる）。 */
+.site-nav__cta a {
+  padding: 8px 18px;
+  border-radius: 999px;
+  color: #FFF;
+  background: linear-gradient(180deg, var(--pink), var(--pink-deep));
+  box-shadow: 0 3px 0 0 var(--pink-deep), 0 6px 14px rgba(70, 32, 58, .18);
+  transition: transform var(--t) var(--ease), box-shadow var(--t) var(--ease);
+}
+.site-nav__cta a::after { display: none; }   /* ピルなので金の下線は出さない */
+.site-nav__cta a:hover {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 0 var(--pink-deep), 0 3px 8px rgba(70, 32, 58, .16);
+}
+.site-nav__cta a:focus-visible { border-radius: 999px; }
 
 .nav-toggle {
   display: none; align-items: center; gap: 8px;
@@ -568,7 +617,10 @@ a { color: var(--pink-deep); }
   padding: 13px 0;
 }
 .marquee__track { display: flex; width: max-content; }
-.js .marquee__track { animation: marquee 26s linear infinite; }
+/* `.js` ではなく `.is-fitted` を条件にしている。`.js` は index.html のインライン
+   スクリプトで付くため、script.js だけ読み込めなかったときにセットが1つのまま
+   動きだし、帯が画面から消える時間ができてしまう。複製できたときだけ動かす。 */
+.marquee__track.is-fitted { animation: marquee 26s linear infinite; }
 .marquee__set { display: flex; align-items: center; gap: 26px; padding-right: 26px; }
 .marquee__set em {
   font-family: var(--font-en); font-weight: 700; font-style: normal;
@@ -579,7 +631,11 @@ a { color: var(--pink-deep); }
 .marquee__set .icon { font-size: 18px; color: var(--pink-soft); }
 .marquee__nekko { display: block; width: 34px; height: auto; flex: none; }
 .marquee:hover .marquee__track { animation-play-state: paused; }
-@keyframes marquee { to { transform: translateX(-50%); } }
+/* 1セット分だけ動かして、次のセットが同じ位置に来たところで折り返す。
+   セットの数は script.js が画面幅から決めて --marquee-sets に入れるので、
+   何セットあっても「1セット分」の移動量になり、速度も変わらない。
+   JSが動かないときは複製されず1セットのまま（この帯は静止する）。 */
+@keyframes marquee { to { transform: translateX(calc(-100% / var(--marquee-sets, 1))); } }
 
 /* ---------- 8. 汎用セクション ---------- */
 .section { position: relative; padding: 92px 0; }
@@ -624,7 +680,7 @@ a { color: var(--pink-deep); }
 }
 
 /* 面の共通装飾（金の細縁とつや） */
-.about__facts, .yaku__card, .localrule__card, .steps__item {
+.about__facts, .yaku__card, .localrule__card, .refs__card, .steps__item {
   position: relative;
   background: linear-gradient(180deg, var(--surface) 0%, #FFF9FB 100%);
   border: 2px solid var(--line);
@@ -632,11 +688,11 @@ a { color: var(--pink-deep); }
   box-shadow: var(--shadow-deep);
   transition: transform var(--t) var(--ease), box-shadow var(--t) var(--ease);
 }
-.yaku__card:hover, .localrule__card:hover, .steps__item:hover {
+.yaku__card:hover, .localrule__card:hover, .refs__card:hover, .steps__item:hover {
   transform: translateY(-4px);
   box-shadow: var(--shadow-lift);
 }
-.about__facts::before, .yaku__card::before, .localrule__card::before, .steps__item::before {
+.about__facts::before, .yaku__card::before, .localrule__card::before, .refs__card::before, .steps__item::before {
   content: ""; position: absolute; inset: -2px -2px auto; height: 6px;
   border-radius: var(--radius) var(--radius) 0 0;
   background: linear-gradient(90deg, var(--gold-pale), var(--gold) 50%, #E2952A);
@@ -653,8 +709,8 @@ a { color: var(--pink-deep); }
 }
 .about__text p:last-child { margin-bottom: 0; }
 
-/* ABOUT のキャラクター。本文の下、右寄せで置く */
-.about__portrait { margin: 26px 0 0; text-align: right; }
+/* ABOUT のキャラクター。本文の下、左寄せで置く */
+.about__portrait { margin: 26px 0 0; text-align: left; }
 .about__portrait img {
   width: min(100%, 280px); height: auto; display: inline-block;
   filter: drop-shadow(0 12px 24px rgba(70, 32, 58, .18));
@@ -689,29 +745,55 @@ a { color: var(--pink-deep); }
 .yaku__card p, .localrule__card p { margin: 0; font-size: .9rem; color: var(--ink-muted); }
 .localrule__card h4 .icon { color: var(--pink); margin-right: 8px; font-size: .95em; }
 
+/* ねねち賞だけは勝ち負けと別枠の賞なので、他のルールと同じ重さでは置かない。
+   金の縁・上から差す光・札のまわりの淡い金で、この1枚だけ格を上げている。 */
+.localrule__card--nene {
+  border-color: var(--gold);
+  background:
+    radial-gradient(120% 78% at 50% 0%, #FFF7E4 0%, rgba(255, 247, 228, 0) 64%),
+    linear-gradient(180deg, var(--surface) 0%, #FFF9FB 100%);
+}
+.localrule__card--nene::before { height: 8px; }        /* 上辺の帯を少し太く */
+.localrule__card--nene h4 .icon { color: var(--gold-ink); }
+.localrule__card--nene .mini--card img {
+  filter:
+    drop-shadow(0 4px 9px rgba(70, 32, 58, .24))
+    drop-shadow(0 0 7px rgba(247, 193, 63, .9));       /* 札そのものが光っている見せかた */
+}
+
 .yaku__hand { display: flex; justify-content: center; gap: 9px; margin-bottom: 20px; }
 .mini {
   display: grid; place-items: center;
-  width: 48px; height: 65px;
+  width: 56px; height: 76px;
   border-radius: 9px;
   background: linear-gradient(180deg, var(--surface), #FFF6FA);
   border: 2px solid var(--line);
   box-shadow: 0 5px 12px rgba(70, 32, 58, .12);
 }
-.mini .icon { font-size: 23px; }
-.mini--a { border-color: #F49AB8; color: #C2306A; }   /* 同じホロメン＝同じ枠色・同じ絵柄 */
-.mini--b { border-color: #F2B93C; color: var(--gold-ink); } /* 同じ期生＝同じ枠色・違う絵柄 */
+/* 実際のゲーム画面から切り出した札。カード自体が枠と色を持っているので、
+   こちらの縁・地・影はすべて消して絵だけを見せる。
+   切り出し元によって縦横比が少しずつ違うため `contain` で全体を入れる
+   （`cover` にすると下の「ID Gen1」のラベルが切れます）。影は絵の形に沿わせる。 */
+.mini--card {
+  border: 0; padding: 0;
+  background: none; box-shadow: none;
+}
+.mini--card img {
+  width: 100%; height: 100%; display: block;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 9px rgba(70, 32, 58, .24));
+}
 .mini--back {                                          /* 伏せ札 */
   border-color: #E8B9C8;
   background: repeating-linear-gradient(-45deg, #FBD9E4 0 5px, #FFF0F5 5px 10px);
 }
 
-/* 実際のゲーム画面。横長の対局画面を大きく、カード一覧を小さく並べる */
+/* 実際のゲーム画面。2枚とも横長のスクショなので、枠は対等にして高さをそろえる
+   （枠の幅が狭いと、横長の画像は contain で小さくなってしまう） */
 .shots {
-  display: grid; grid-template-columns: 1.6fr 1fr; gap: 24px;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 24px;
   margin-bottom: 8px;
 }
-.shot--wide img { height: clamp(200px, 22vw, 300px); }
 .shot {
   position: relative; margin: 0;
   background: linear-gradient(180deg, var(--surface) 0%, #FFF9FB 100%);
@@ -739,6 +821,30 @@ a { color: var(--pink-deep); }
 .shot figcaption {
   padding: 14px 2px 18px;
   font-size: .86rem; line-height: 1.6; color: var(--ink-muted); text-align: center;
+}
+
+/* 参考リンク。点数や役の細かい数字は外部の攻略サイトに任せているので、
+   カードの見た目は .localrule__card と共通のまま、リンクだと分かる指定だけ足している。
+   リンク先が消えたらカードごと削除してかまわない（残りの1枚だけでも成立する）。 */
+/* 2列なので、幅を絞らないと上の3列カードより1枚が大きくなり、並びのリズムが崩れる */
+.refs {
+  display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px;
+  max-width: 760px; margin-inline: auto;
+}
+.refs__card {
+  display: block; padding: 28px 26px;
+  text-decoration: none; color: inherit;
+}
+.refs__card h4 { font-size: 1.08rem; font-weight: 900; margin-bottom: 8px; color: var(--ink); }
+.refs__card p  { margin: 0 0 14px; font-size: .9rem; color: var(--ink-muted); }
+.refs__site {
+  font-family: var(--font-en); font-weight: 600; font-size: .78rem;
+  letter-spacing: .08em; color: var(--pink-deep);
+}
+.refs__site::after { content: " ↗"; }          /* 別タブで開くことの合図 */
+.refs__note {
+  margin: 18px auto 0; max-width: 640px; text-align: center;
+  font-size: .82rem; line-height: 1.7; color: var(--ink-muted);
 }
 
 /* ---------- 11. ENTRY ---------- */
@@ -906,6 +1012,7 @@ a { color: var(--pink-deep); }
 .anim .reveal .wrap > *,
 .anim .reveal .yaku > *,
 .anim .reveal .localrule > *,
+.anim .reveal .refs > *,
 .anim .reveal .steps > * {
   opacity: 0; transform: translateY(14px);
   transition: opacity var(--t-in) var(--ease), transform var(--t-in) var(--ease);
@@ -913,6 +1020,7 @@ a { color: var(--pink-deep); }
 .anim .reveal.is-visible .wrap > *,
 .anim .reveal.is-visible .yaku > *,
 .anim .reveal.is-visible .localrule > *,
+.anim .reveal.is-visible .refs > *,
 .anim .reveal.is-visible .steps > * { opacity: 1; transform: none; }
 
 .anim .reveal.is-visible .wrap > *:nth-child(1) { transition-delay: 40ms; }
@@ -921,11 +1029,16 @@ a { color: var(--pink-deep); }
 .anim .reveal.is-visible .wrap > *:nth-child(4) { transition-delay: 250ms; }
 .anim .reveal.is-visible .wrap > *:nth-child(5) { transition-delay: 320ms; }
 .anim .reveal.is-visible .wrap > *:nth-child(6) { transition-delay: 390ms; }
+/* RULE だけ中身が多く、7個目から先まで伸びる（現在10個） */
+.anim .reveal.is-visible .wrap > *:nth-child(7) { transition-delay: 460ms; }
+.anim .reveal.is-visible .wrap > *:nth-child(8) { transition-delay: 530ms; }
+.anim .reveal.is-visible .wrap > *:nth-child(9) { transition-delay: 600ms; }
+.anim .reveal.is-visible .wrap > *:nth-child(10) { transition-delay: 670ms; }
 
-.anim .reveal.is-visible :is(.yaku, .localrule, .steps, .shots) > *:nth-child(1) { transition-delay: 120ms; }
-.anim .reveal.is-visible :is(.yaku, .localrule, .steps, .shots) > *:nth-child(2) { transition-delay: 210ms; }
-.anim .reveal.is-visible :is(.yaku, .localrule, .steps, .shots) > *:nth-child(3) { transition-delay: 300ms; }
-.anim .reveal.is-visible :is(.yaku, .localrule, .steps, .shots) > *:nth-child(4) { transition-delay: 390ms; }
+.anim .reveal.is-visible :is(.yaku, .localrule, .refs, .steps, .shots) > *:nth-child(1) { transition-delay: 120ms; }
+.anim .reveal.is-visible :is(.yaku, .localrule, .refs, .steps, .shots) > *:nth-child(2) { transition-delay: 210ms; }
+.anim .reveal.is-visible :is(.yaku, .localrule, .refs, .steps, .shots) > *:nth-child(3) { transition-delay: 300ms; }
+.anim .reveal.is-visible :is(.yaku, .localrule, .refs, .steps, .shots) > *:nth-child(4) { transition-delay: 390ms; }
 
 /* 見出し左右の金の罫線は、中心から外へ引かれる */
 .anim .section__ja::before, .anim .section__ja::after { transform: scaleX(0); }
@@ -945,6 +1058,7 @@ a { color: var(--pink-deep); }
 .anim .reveal.is-visible .yaku__card:nth-child(2) .mini:nth-child(1) { animation-delay: .39s; }
 .anim .reveal.is-visible .yaku__card:nth-child(2) .mini:nth-child(2) { animation-delay: .47s; }
 .anim .reveal.is-visible .yaku__card:nth-child(2) .mini:nth-child(3) { animation-delay: .55s; }
+.anim .reveal.is-visible .yaku__card:nth-child(2) .mini:nth-child(4) { animation-delay: .63s; }
 .anim .reveal.is-visible .yaku__card:nth-child(3) .mini:nth-child(1) { animation-delay: .48s; }
 .anim .reveal.is-visible .yaku__card:nth-child(3) .mini:nth-child(2) { animation-delay: .56s; }
 .anim .reveal.is-visible .yaku__card:nth-child(3) .mini:nth-child(3) { animation-delay: .64s; }
@@ -957,8 +1071,9 @@ a { color: var(--pink-deep); }
 /* ---------- 14. レスポンシブ ---------- */
 @media (max-width: 900px) {
   .about__grid { grid-template-columns: 1fr; gap: 32px; }
-  .yaku, .localrule, .shots { grid-template-columns: 1fr; }
-  .shot--wide img { height: auto; }
+  .yaku, .localrule, .refs, .shots { grid-template-columns: 1fr; }
+  /* 1カラムになれば幅に余裕ができるので、高さの上限は外して大きく見せる */
+  .shot img { height: auto; }
 }
 
 @media (max-width: 760px) {
@@ -972,11 +1087,26 @@ a { color: var(--pink-deep); }
     display: none;
   }
   .site-nav.is-open { display: block; }
-  .site-nav ul { flex-direction: column; gap: 0; padding: 8px 20px 18px; }
+  /* align-items は横並び用に center にしてあるので、縦に積むここでは戻す
+     （center のままだと項目が中身の幅まで縮み、ENTRY のピルが伸びない） */
+  .site-nav ul { flex-direction: column; align-items: stretch; gap: 0; padding: 8px 20px 18px; }
   .site-nav li { border-bottom: 1px dashed var(--line); }
   .site-nav li:last-child { border-bottom: 0; }
   .site-nav a { display: block; padding: 14px 4px; }
   .site-nav a::after { display: none; }
+
+  /* 引き出しの中でも ENTRY は押せる面のまま、幅いっぱいに置く */
+  .site-nav__cta { border-bottom: 0; }
+  .site-nav__cta a { margin: 12px 0 4px; padding: 13px 18px; text-align: center; }
+
+  /* 札が狭い画面で幅を食いすぎないよう詰める。折り返すと札がヘッダーの高さを
+     超えてはみ出すので、nowrap で1行に固定したうえで文字を小さくしている。 */
+  .site-header__logo {
+    gap: 6px; padding: 5px 11px 5px 9px; font-size: .86rem;
+    white-space: nowrap;
+  }
+  .site-header__mark { font-size: 1em; }
+  .nav-toggle { white-space: nowrap; flex: none; }
 
   .hero { padding: calc(var(--header-h) + 32px) 16px 56px; }
 
@@ -1057,7 +1187,7 @@ a { color: var(--pink-deep); }
   }
   /* 無限ループを 0.01ms のまま回し続けないよう、回数も 1 に落とす */
   *, *::before, *::after { animation-iteration-count: 1 !important; }
-  .js .fall__petal, .js .deco--sparkle, .js .marquee__track,
+  .js .fall__petal, .js .deco--sparkle, .marquee__track.is-fitted,
   .js .hero__sunburst, .js .hero__wallpaper img, .js .deco, .js .hero__catch,
   .js .marquee__nekko, .js .site-footer__nekko, .js .splash__portrait img,
   .js .countdown__cell,
