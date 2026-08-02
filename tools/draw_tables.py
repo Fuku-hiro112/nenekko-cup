@@ -47,28 +47,55 @@ def table_name(i):
 UNLOCKED_NG = {"", "未", "未解放", "x", "×", "no", "false", "0", "-"}
 
 
+def pick_columns(header):
+    """見出しから「名前」の列と「解放」の列を探す。
+
+    **Googleフォームの回答をそのまま書き出すと、1列目がタイムスタンプになります。**
+    列の位置を決め打ちにすると日時を名前として読んでしまうので、見出しの言葉から
+    拾えるようにしています。見つからなければ1列目と2列目を使います。
+    """
+    name_i = flag_i = None
+    for i, h in enumerate(header):
+        low = h.strip().lower()
+        if name_i is None and any(k in low for k in ("名前", "なまえ", "ニックネーム", "ハンドル", "name")):
+            name_i = i
+        if flag_i is None and any(k in low for k in ("解放", "かいほう", "unlock")):
+            flag_i = i
+    return (0 if name_i is None else name_i,
+            1 if flag_i is None else flag_i)
+
+
 def load_players(path):
-    """CSVを読んで [(名前, 解放済みか), ...] にする。"""
-    rows = []
+    """CSVを読んで ([(名前, 解放済みか), ...], 使った列の説明) を返す。"""
     with open(path, encoding="utf-8-sig", newline="") as f:
-        for i, row in enumerate(csv.reader(f)):
-            if not row or not row[0].strip():
-                continue
-            if i == 0:                                  # 見出し行は読み飛ばす
-                continue
-            name = row[0].strip()
-            flag = row[1].strip() if len(row) > 1 else ""
-            rows.append((name, flag.lower() not in UNLOCKED_NG))
+        table = [r for r in csv.reader(f)]
+    if not table:
+        sys.exit(f"中身が空です: {path}")
+
+    header = table[0]
+    name_i, flag_i = pick_columns(header)
+    picked = (f"名前 = {name_i + 1}列目「{header[name_i].strip()}」 / "
+              f"解放 = {flag_i + 1}列目「{header[flag_i].strip() if flag_i < len(header) else '—'}」")
+
+    rows = []
+    for row in table[1:]:                               # 1行目は見出しとして読み飛ばす
+        if len(row) <= name_i or not row[name_i].strip():
+            continue
+        name = row[name_i].strip()
+        flag = row[flag_i].strip() if len(row) > flag_i else ""
+        rows.append((name, flag.lower() not in UNLOCKED_NG))
+
     if not rows:
         sys.exit(f"参加者が1人も読み取れませんでした: {path}\n"
-                 f"1行目は見出しとして読み飛ばします。2行目以降に「名前,解放」を書いてください。")
+                 f"読もうとした列 → {picked}\n"
+                 f"1行目は見出しとして読み飛ばします。2行目以降に参加者を書いてください。")
 
     names = [n for n, _ in rows]
     dup = {n for n in names if names.count(n) > 1}
     if dup:
         sys.exit(f"同じ名前が複数あります: {'、'.join(sorted(dup))}\n"
                  f"当日の呼び分けができないので、区別できる名前にしてください。")
-    return rows
+    return rows, picked
 
 
 def draw(players, rng):
@@ -179,7 +206,7 @@ def main():
     if not 1 <= args.advance < SEAT:
         sys.exit(f"--advance は 1〜{SEAT - 1} の範囲で指定してください。")
 
-    players = load_players(args.csv)
+    players, picked = load_players(args.csv)
     seed = args.seed if args.seed is not None else random.randrange(10 ** 8)
     tables = draw(players, random.Random(seed))
     rounds = plan_rounds(len(players), args.advance)
@@ -209,6 +236,7 @@ def main():
             print(f"- {label}：{n}人 / {tn}卓{cpu}")
         return
 
+    print(f"読んだ列: {picked}")                        # 名前と解放を取り違えていないか確認用
     print(f"参加者 {len(players)}人（解放 {n_unlocked} / 未解放 {len(players) - n_unlocked}）")
     print(f"抽選 seed: {seed}   ← 同じ結果を出すには --seed {seed}")
     print()
