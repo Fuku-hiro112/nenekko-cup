@@ -680,7 +680,7 @@ a { color: var(--pink-deep); }
 }
 
 /* 面の共通装飾（金の細縁とつや） */
-.about__facts, .yaku__card, .localrule__card, .refs__card, .steps__item {
+.about__facts, .yaku__card, .localrule__card, .refs__card, .tablecard, .steps__item {
   position: relative;
   background: linear-gradient(180deg, var(--surface) 0%, #FFF9FB 100%);
   border: 2px solid var(--line);
@@ -692,7 +692,8 @@ a { color: var(--pink-deep); }
   transform: translateY(-4px);
   box-shadow: var(--shadow-lift);
 }
-.about__facts::before, .yaku__card::before, .localrule__card::before, .refs__card::before, .steps__item::before {
+.about__facts::before, .yaku__card::before, .localrule__card::before, .refs__card::before,
+.tablecard::before, .steps__item::before {
   content: ""; position: absolute; inset: -2px -2px auto; height: 6px;
   border-radius: var(--radius) var(--radius) 0 0;
   background: linear-gradient(90deg, var(--gold-pale), var(--gold) 50%, #E2952A);
@@ -845,6 +846,63 @@ a { color: var(--pink-deep); }
 .refs__note {
   margin: 18px auto 0; max-width: 640px; text-align: center;
   font-size: .82rem; line-height: 1.7; color: var(--ink-muted);
+}
+
+/* ---------- 10.5 BRACKET ----------
+   中身は tools/update_bracket.py が書き出します（HTMLの構造はあちらが正）。
+   卓は人数によって数が変わるので、列数を決め打ちせず auto-fit で流し込んでいます。 */
+.rounds { display: grid; gap: 44px; }
+.round__label {
+  font-size: 1.28rem; font-weight: 900; text-align: center; margin: 0 0 22px;
+}
+.round__label::before {                 /* 見出しの上の金の棒。rule__subtitle と同じ作り */
+  content: ""; display: block; width: 52px; height: 4px; border-radius: 4px;
+  background: linear-gradient(90deg, var(--gold-pale), var(--gold));
+  margin: 0 auto 12px;
+}
+/* 卓の幅を上限つきにして中央へ寄せている。1fr で伸ばすと、卓が減る決勝ほど
+   1卓が大きくなって回戦ごとに不揃いに見えるため。 */
+.round__tables {
+  display: grid; gap: 22px; justify-content: center;
+  grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 240px));
+}
+
+.tablecard { padding: 22px 22px 18px; }
+.tablecard__name {
+  font-family: var(--font-en); font-weight: 700; font-size: .82rem;
+  letter-spacing: .14em; color: var(--pink-deep);
+  text-align: center; margin: 0 0 14px;
+}
+.tablecard__seats { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.tablecard__seats li {
+  display: flex; align-items: center; gap: 8px;
+  padding: 9px 12px; border-radius: var(--radius-sm);
+  background: var(--bg-alt);
+  font-size: .93rem; line-height: 1.5;
+}
+/* 勝ち上がった人。色だけで示すと分からない人がいるので、印も一緒に出す */
+.tablecard__seats .is-winner {
+  background: linear-gradient(180deg, #FFF3D6, #FFE9A8);
+  font-weight: 700; color: var(--gold-ink);
+}
+.tablecard__seats .is-winner::before { content: "✦"; color: var(--gold-ink); }
+/* 決勝の勝者は勝ち上がりではなく優勝者。ここだけ言葉でも示す */
+.tablecard__seats .is-champion {
+  background: linear-gradient(180deg, #FFE9A8, var(--gold));
+  box-shadow: 0 0 0 2px var(--gold-pale) inset;
+}
+.tablecard__seats .is-champion::after {
+  content: "優勝"; margin-left: auto; flex: none;
+  font-size: .68rem; letter-spacing: .08em; color: var(--gold-ink);
+}
+.tablecard__seats .is-cpu { color: var(--ink-muted); opacity: .75; font-style: italic; }
+.seat__note {
+  margin-left: auto; flex: none;
+  font-size: .68rem; letter-spacing: .04em; color: var(--ink-muted);
+}
+.bracket__empty {
+  text-align: center; color: var(--ink-muted);
+  padding: 44px 0;
 }
 
 /* ---------- 11. ENTRY ---------- */

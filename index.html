@@ -79,6 +79,7 @@
         <li><a href="#about">ABOUT</a></li>
         <li><a href="#rule">RULE</a></li>
         <li><a href="#flow">FLOW</a></li>
+        <li><a href="#bracket">BRACKET</a></li>
         <!-- ENTRY だけは応募への導線なので、他の項目と同じ重さでは置いていません -->
         <li class="site-nav__cta"><a href="#entry">ENTRY</a></li>
       </ul>
@@ -475,6 +476,25 @@
           </div>
         </li>
       </ol>
+    </div>
+  </section>
+
+  <!-- ============ BRACKET ============ -->
+  <section class="section section--bracket reveal" id="bracket">
+    <div class="wrap">
+      <h2 class="section__title">
+        <span class="section__en">BRACKET</span>
+        <span class="section__ja">トーナメント表</span>
+        <svg class="icon section__mark" aria-hidden="true"><use href="#ic-nekko"></use></svg>
+      </h2>
+      <!-- EDIT: トーナメント表の前置き -->
+      <p class="section__lead">卓分けは当日、イベントルームで発表します。ここに出るので、自分がどの卓かはこのページで確認できます。勝ち上がりも対局が終わるたびに更新します。</p>
+
+      <!-- ここから下は tools/update_bracket.py が書き換えます。手で直しても次の実行で消えます。
+           表の作りかたは README「卓分けを抽選する」を見てください。 -->
+      <!-- BRACKET:START -->
+      <p class="bracket__empty">当日をお楽しみに。ここに卓分けが出ます。</p>
+      <!-- BRACKET:END -->
     </div>
   </section>
 

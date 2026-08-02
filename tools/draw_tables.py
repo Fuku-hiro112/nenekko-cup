@@ -31,11 +31,17 @@
 """
 import argparse
 import csv
+import json
 import math
 import random
 import sys
 
 SEAT = 4                       # 1卓の人数
+
+
+def table_name(i):
+    """卓の呼び名。当日のVC名にもそのまま使います（0始まりの番号を渡す）。"""
+    return f"卓{i + 1}"
 
 # 2列目がこれらのいずれか（前後の空白は無視・大文字小文字は問わない）なら未解放とみなす
 UNLOCKED_NG = {"", "未", "未解放", "x", "×", "no", "false", "0", "-"}
@@ -136,12 +142,38 @@ def warn_rounds(rounds, advance):
     return notes
 
 
+def save_state(path, seed, advance, players, tables):
+    """抽選結果を JSON に保存する。update_bracket.py がこれを読んでサイトを更新します。
+
+    winners は空のまま出します。**対局が終わったら、そこに勝ち上がった人の名前を
+    書き足してください。** 次の回戦は update_bracket.py が自動で組みます。
+    """
+    state = {
+        "seed": seed,
+        "advance": advance,
+        "players": [{"name": n, "unlocked": u} for n, u in players],
+        "rounds": [{
+            "label": "1回戦" if len(tables) > 1 else "決勝",
+            "tables": [{
+                "vc": table_name(i),
+                "players": [n for n, _ in t],
+                "winners": [],
+            } for i, t in enumerate(tables)],
+        }],
+    }
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(state, f, ensure_ascii=False, indent=2)
+        f.write("\n")
+
+
 def main():
     ap = argparse.ArgumentParser(description="ねっ子ポカジャン大会の卓分け抽選")
     ap.add_argument("csv", help="参加者のCSV（名前,解放）")
     ap.add_argument("--advance", type=int, default=2, help="各卓から次に進む人数（既定: 2）")
     ap.add_argument("--seed", type=int, help="同じ抽選結果を再現したいときに指定")
     ap.add_argument("--md", action="store_true", help="Discordに貼れる形で出す")
+    ap.add_argument("--save", metavar="JSON",
+                    help="抽選結果を保存する（この後 update_bracket.py でサイトに反映できます）")
     args = ap.parse_args()
 
     if not 1 <= args.advance < SEAT:
@@ -155,12 +187,19 @@ def main():
     n_unlocked = sum(1 for _, u in players if u)
     mark = (lambda u: "" if u else "（未解放）") if not args.md else (lambda u: "" if u else " ※未解放")
 
+    if args.save:
+        save_state(args.save, seed, args.advance, players, tables)
+        print(f"保存しました: {args.save}")
+        print("対局が終わったら winners に勝ち上がった人の名前を書いて、")
+        print(f"  python tools/update_bracket.py {args.save}")
+        print("を実行するとサイトに反映されます。\n")
+
     if args.md:
         print(f"**1回戦の卓分け**（参加 {len(players)}人／抽選 seed `{seed}`）\n")
         for i, t in enumerate(tables):
             cpu = SEAT - len(t)
             note = f"　※空席{cpu}はCPU" if cpu else ""
-            print(f"__{chr(65 + i)}卓__{note}")
+            print(f"__{table_name(i)}__{note}")
             for name, u in t:
                 print(f"- {name}{mark(u)}")
             print()
@@ -176,7 +215,7 @@ def main():
     for i, t in enumerate(tables):
         cpu = SEAT - len(t)
         note = f"  ← 空席{cpu}にCPUが入ります" if cpu else ""
-        print(f"[{chr(65 + i)}卓]{note}")
+        print(f"[{table_name(i)}]{note}")
         for j, (name, u) in enumerate(t):
             room = "  ルーム作成" if j == 0 else ""
             print(f"   {name}{mark(u)}{room}")
