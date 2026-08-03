@@ -76,6 +76,18 @@ function isWon(v) {
 
 
 /**
+ * 卓を番号順に並べるための比較。
+ * **シートに書いた順のままだと「卓2, 卓1, 卓3」の順で勝者を集めてしまいます。**
+ */
+function byNumber(a, b) {
+  var na = parseInt(String(a).replace(/[^0-9]/g, ''), 10);
+  var nb = parseInt(String(b).replace(/[^0-9]/g, ''), 10);
+  if (!isNaN(na) && !isNaN(nb) && na !== nb) return na - nb;
+  return String(a) < String(b) ? -1 : String(a) > String(b) ? 1 : 0;
+}
+
+
+/**
  * 最後の回戦が終わっていれば、次の回戦の行を足す。
  * すでに次の回戦が書かれているときは何もしない。
  */
@@ -104,10 +116,12 @@ function addNextRound(sheet, idx) {
   var last = rounds[lastLabel];
   if (last.order.length === 1) return;                 // 決勝まで来ている
 
+  var tableOrder = last.order.slice().sort(byNumber);  // 卓1, 卓2, 卓3 … の順にそろえる
+
   // 全部の卓に勝ちが入っているか確かめる。1卓でも空なら、まだ足さない
   var winners = [];
-  for (var t = 0; t < last.order.length; t++) {
-    var seats = last.tables[last.order[t]];
+  for (var t = 0; t < tableOrder.length; t++) {
+    var seats = last.tables[tableOrder[t]];
     var w = [];
     for (var s = 0; s < seats.length; s++) if (seats[s].won) w.push(seats[s].name);
     if (!w.length) return;                             // この卓はまだ終わっていない

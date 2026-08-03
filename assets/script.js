@@ -239,6 +239,15 @@
       return NOT_WON.indexOf(String(v == null ? '' : v).trim().toLowerCase()) < 0;
     };
 
+    // 卓を番号順に並べる。**シートに書いた順のままだと「卓2, 卓1, 卓3」のように出ます。**
+    // 表示だけでなく、次の回戦へ配る順番もこれで決まるので、ここでそろえておきます。
+    var byNumber = function (a, b) {
+      var na = parseInt(String(a).replace(/[^0-9]/g, ''), 10);
+      var nb = parseInt(String(b).replace(/[^0-9]/g, ''), 10);
+      if (!isNaN(na) && !isNaN(nb) && na !== nb) return na - nb;
+      return String(a) < String(b) ? -1 : String(a) > String(b) ? 1 : 0;
+    };
+
     // 勝った人を集めて次の回戦を組む（update_bracket.py と同じ配りかた）
     var nextRound = function (winners) {
       var n = Math.max(1, Math.ceil(winners.length / SEAT));
@@ -307,7 +316,8 @@
       if (!order.length) return null;
 
       var rounds = order.map(function (k) {
-        return { label: byRound[k].label, tables: byRound[k].order.map(function (v) { return byRound[k].tables[v]; }) };
+        var R = byRound[k];
+        return { label: R.label, tables: R.order.slice().sort(byNumber).map(function (v) { return R.tables[v]; }) };
       });
 
       // シートに無い先の回戦は、勝った人から組み立てる
