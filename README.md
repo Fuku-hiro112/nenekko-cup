@@ -23,7 +23,8 @@ nenePokajyan/
     ├─ generate_nene.py    キャラクター画像の生成スクリプト
     ├─ cut_cards.py        RULEの札をプレイ画面から切り出すスクリプト
     ├─ draw_tables.py      卓分けの抽選（下記）
-    ├─ update_bracket.py   トーナメント表を index.html に書き込む（下記）
+    ├─ update_bracket.py   最終結果をページに焼き付ける（当日は不要）
+    ├─ bracket-sheet.example.csv トーナメント表のスプレッドシートの見本
     ├─ build_operation_xlsx.py  運営ガイドの Excel 版を書き出す
     ├─ participants.example.csv  参加者CSVの書きかたの見本
     ├─ preview-mobile.html PCでスマホ表示を確認する枠
@@ -80,16 +81,20 @@ Excel版は Md からの**書き出しであって、正本は Md のほう**で
 **卓分けの抽選から当日の更新までは [大会運営ガイド](docs/operation-guide.md) にまとめてあります。**
 実際に表示される内容つきの手順書なので、当日はそれを開きながら進めてください。
 
-```bash
-# 前日：抽選して保存する
-python tools/draw_tables.py 参加者.csv --save tournament.json
+**前日**（パソコン）— 参加者リストから卓分けを抽選します。
+Googleフォームの回答CSVは、**列を並べ替えずそのまま渡せます。**
 
-# 当日：tournament.json の winners に勝った人を書いてから
-python tools/update_bracket.py tournament.json
+```bash
+python tools/draw_tables.py 参加者.csv --save tournament.json
 ```
 
-これでトーナメント表が更新され、次の回戦も自動で組まれます。
-Googleフォームの回答CSVは、**列を並べ替えずそのまま渡せます。**
+**当日**（パソコン不要）— 卓分けを Google スプレッドシートに貼り、
+対局が終わるたびに「勝ち」の欄へ ○ を入れるだけです。
+サイトがそのシートを読んで表を組み立て、**次の回戦も自動で作ります。**
+
+> **当日は `git` も `python` も要りません。スマホだけで更新できます。**
+> 主催者が動けないときに、代わりの人へ編集リンクを渡すだけで引き継げます。
+> シートの用意（最初の1回だけ）は運営ガイドの章6を見てください。
 
 ## スマホ表示を確認する
 

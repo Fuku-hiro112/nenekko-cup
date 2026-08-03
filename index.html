@@ -220,8 +220,8 @@
         <div class="tile">
           <span class="tile__label">PRIZE</span>
           <!-- EDIT: 賞品 -->
-          <strong class="tile__value tile__value--text">なし</strong>
-          <span class="tile__note">ロール付与を予定</span>
+          <strong class="tile__value tile__value--text">ロール<br>付与</strong>
+          <span class="tile__note">受賞者に贈ります</span>
         </div>
       </li>
     </ul>
@@ -290,17 +290,17 @@
           <div>
             <dt>参加資格</dt>
             <!-- EDIT: 参加資格 -->
-            <dd>ねっこ集会所のメンバー<br>ポカジャン未解放でも参加できます</dd>
+            <dd>ねっこ集会所のメンバー<br>フォーチュンネットワークが解放済みであること<br>(第1章EP4で解放されます)<br>※ポカジャン未解放でも参加できます</dd>
           </div>
           <div>
             <dt>表彰</dt>
             <!-- EDIT: 表彰 -->
-            <dd>優勝者／最大得点者／ねねち賞<br>賞品はありません（ロール付与を予定）</dd>
+            <dd>優勝者／最大得点者／ねねち賞<br>受賞者にロールを付与します</dd>
           </div>
           <div>
             <dt>主催</dt>
             <!-- EDIT: 主催者名 -->
-            <dd>ねっこ集会所 運営チーム</dd>
+            <dd>どこばか</dd>
           </div>
         </dl>
       </div>
@@ -476,7 +476,7 @@
           <span class="steps__num">06</span>
           <div>
             <h3>結果発表・解散</h3>
-            <p>全卓が終わったらイベントルームで結果発表です。優勝者・最大得点者・ねねち賞を発表し、<strong>受賞者にはロールを付与</strong>する予定です。そのあと解散になります。</p>
+            <p>全卓が終わったらイベントルームで結果発表です。優勝者・最大得点者・ねねち賞を発表し、<strong>受賞者にはロールを付与します。</strong>そのあと解散になります。</p>
           </div>
         </li>
       </ol>
@@ -494,11 +494,19 @@
       <!-- EDIT: トーナメント表の前置き -->
       <p class="section__lead">卓分けは当日、イベントルームで発表します。ここに出るので、自分がどの卓かはこのページで確認できます。勝ち上がりも対局が終わるたびに更新します。</p>
 
-      <!-- ここから下は tools/update_bracket.py が書き換えます。手で直しても次の実行で消えます。
-           表の作りかたは README「卓分けを抽選する」を見てください。 -->
-      <!-- BRACKET:START -->
-      <p class="bracket__empty">当日をお楽しみに。ここに卓分けが出ます。</p>
-      <!-- BRACKET:END -->
+      <!-- EDIT: トーナメント表のスプレッドシートID
+           Googleスプレッドシートの URL の /d/ と /edit の間にある長い文字列です。
+             https://docs.google.com/spreadsheets/d/【ここ】/edit
+           空のままなら、下の「当日をお楽しみに」が出たままになります。
+           シートの作りかたは docs/operation-guide.md を見てください。 -->
+      <div class="bracket" data-sheet="" data-sheet-name="">
+        <!-- ここから下は、スプレッドシートが読めたら script.js が差し替えます。
+             読めないとき（未設定・非公開・JSが動かない）はこのまま残ります。
+             最終結果を焼き付けたいときだけ tools/update_bracket.py を使ってください。 -->
+        <!-- BRACKET:START -->
+        <p class="bracket__empty">当日をお楽しみに。ここに卓分けが出ます。</p>
+        <!-- BRACKET:END -->
+      </div>
     </div>
   </section>
 

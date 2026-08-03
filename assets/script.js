@@ -10,6 +10,7 @@
  *  4. ヘッダー       … スクロール量に応じて浮かせる
  *  5. ナビ開閉       … モバイルのハンバーガーメニュー
  *  6. 流れる帯       … 画面を埋めるのに足りないぶんセットを複製
+ *  7. トーナメント表 … Googleスプレッドシートを読んで組み立て
  *
  * ローディングと配牌はCSSだけで完結させてあります。
  * このファイルの読み込みに失敗しても、本文が隠れたままになることはありません。
@@ -197,5 +198,135 @@
 
     // Webフォントが後から入ると文字幅が変わるため、その時点で測り直す
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitMarquee);
+  }
+
+  /* ---------- 7. トーナメント表をスプレッドシートから作る ----------
+     当日、主催者が動けなくても誰かが結果を入れられるようにするための仕組みです。
+     Googleスプレッドシートの「勝ち」欄に印を入れるだけで、この表が変わります。
+     GitHub も Python も要りません。
+
+     シートはこの4列です（1行目は見出し）。
+
+         回戦 | 卓 | 参加者 | 勝ち
+         1回戦 | 卓1 | ふろん | ○
+
+     **2回戦以降はシートに書かなくて構いません。** 勝った人を集めて、
+     ここで自動的に組み直します。
+
+     取得に JSONP を使っているのは、Googleのスプレッドシートが
+     `Access-Control-Allow-Origin` を返さず、fetch では読めないためです
+     （実測して確認しました）。script タグでの読み込みなら制限を受けません。 */
+  var bracket = document.querySelector('[data-sheet]');
+
+  if (bracket && bracket.dataset.sheet) {
+    var SEAT = 4;
+    var CB = 'nenekkoBracket';
+
+    var esc = function (s) {
+      return String(s).replace(/[&<>"]/g, function (c) {
+        return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c];
+      });
+    };
+
+    // 勝った人を集めて次の回戦を組む（update_bracket.py と同じ配りかた）
+    var nextRound = function (winners) {
+      var n = Math.max(1, Math.ceil(winners.length / SEAT));
+      var tables = [];
+      for (var i = 0; i < n; i++) tables.push({ vc: '卓' + (i + 1), seats: [] });
+      winners.forEach(function (name, i) {
+        tables[i % n].seats.push({ name: name, won: false });
+      });
+      return tables;
+    };
+
+    var render = function (rounds) {
+      var html = '<div class="rounds">';
+      rounds.forEach(function (rnd, ri) {
+        // 「優勝」を出すのは決勝だけ。**卓が1つでも、見出しが決勝でなければ出さない**
+        // （参加者が4人以下だと1回戦がそのまま1卓になり、優勝と誤表示していました）
+        var isFinal = ri === rounds.length - 1 && rnd.tables.length === 1 &&
+                      rnd.label.indexOf('決勝') >= 0;
+        html += '<div class="round"><h3 class="round__label">' + esc(rnd.label) + '</h3>';
+        html += '<div class="round__tables">';
+        rnd.tables.forEach(function (t) {
+          html += '<div class="tablecard"><h4 class="tablecard__name">' + esc(t.vc) + '</h4>';
+          html += '<ul class="tablecard__seats">';
+          t.seats.forEach(function (s) {
+            var cls = s.name === 'CPU' ? ' class="is-cpu"'
+              : s.won ? (isFinal ? ' class="is-winner is-champion"' : ' class="is-winner"') : '';
+            html += '<li' + cls + '>' + esc(s.name) + '</li>';
+          });
+          // 4人に満たない卓は、そのまま始めると空席にCPUが入る
+          for (var k = t.seats.length; k < SEAT; k++) html += '<li class="is-cpu">CPU</li>';
+          html += '</ul></div>';
+        });
+        html += '</div></div>';
+      });
+      bracket.innerHTML = html + '</div>';
+    };
+
+    var build = function (rows) {
+      // 「回戦 → 卓 → 参加者」の順にまとめる。シートの並び順をそのまま活かす
+      var order = [], byRound = {};
+      rows.forEach(function (r) {
+        var round = (r[0] || '').trim(), vc = (r[1] || '').trim(), name = (r[2] || '').trim();
+        if (!round || !vc || !name) return;
+        if (!byRound[round]) { byRound[round] = { label: round, order: [], tables: {} }; order.push(round); }
+        var R = byRound[round];
+        if (!R.tables[vc]) { R.tables[vc] = { vc: vc, seats: [] }; R.order.push(vc); }
+        R.tables[vc].seats.push({ name: name, won: !!(r[3] || '').trim() });
+      });
+      if (!order.length) return null;
+
+      var rounds = order.map(function (k) {
+        return { label: byRound[k].label, tables: byRound[k].order.map(function (v) { return byRound[k].tables[v]; }) };
+      });
+
+      // シートに無い先の回戦は、勝った人から組み立てる
+      var guard = 0;
+      while (guard++ < 10) {
+        var last = rounds[rounds.length - 1];
+        if (last.tables.length === 1) break;                    // 決勝まで来た
+        var winners = [];
+        var done = last.tables.every(function (t) {
+          var w = t.seats.filter(function (s) { return s.won; });
+          if (!w.length) return false;                          // まだ終わっていない卓がある
+          w.forEach(function (s) { winners.push(s.name); });
+          return true;
+        });
+        if (!done || !winners.length) break;
+        var tables = nextRound(winners);
+        rounds.push({ label: tables.length === 1 ? '決勝' : (rounds.length + 1) + '回戦', tables: tables });
+      }
+      return rounds;
+    };
+
+    window[CB] = function (res) {
+      try {
+        if (!res || !res.table || !res.table.rows) return;
+        var rows = res.table.rows.map(function (row) {
+          return (row.c || []).map(function (cell) { return cell && cell.v != null ? String(cell.v) : ''; });
+        });
+        // URL に headers=1 を付けているので、見出し行は普通ここに入ってきません。
+        // 入ってきたときのために落としますが、**1列目がちょうど「回戦」のときだけ**です。
+        // 緩く判定すると「決勝」で始まる行まで見出しとみなして捨ててしまいます（実際に踏みました）。
+        if (rows.length && (rows[0][0] || '').trim() === '回戦') rows.shift();
+        var rounds = build(rows);
+        if (rounds) render(rounds);
+      } catch (e) {
+        // 表が出ないだけで、ページの他は動き続けてほしいので握りつぶす
+      }
+    };
+
+    var url = 'https://docs.google.com/spreadsheets/d/' + bracket.dataset.sheet +
+      '/gviz/tq?tqx=responseHandler:' + CB +
+      (bracket.dataset.sheetName ? '&sheet=' + encodeURIComponent(bracket.dataset.sheetName) : '') +
+      '&headers=1&_=' + Date.now();                             // キャッシュ避け
+
+    var tag = document.createElement('script');
+    tag.src = url;
+    tag.async = true;
+    // 読めなかったときは、HTMLに書いてある「当日をお楽しみに」がそのまま残る
+    document.head.appendChild(tag);
   }
 })();
