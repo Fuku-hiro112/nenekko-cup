@@ -365,7 +365,12 @@ def main():
         write_sheet(wb, name, blocks, i)
     build_index(wb, [n for n, _ in sheets])
     wb.active = 0
-    wb.save(OUT)
+    try:
+        wb.save(OUT)
+    except PermissionError:
+        sys.exit(f"保存できませんでした: {OUT}\n"
+                 f"**このファイルを Excel で開いたままだと書き込めません。**\n"
+                 f"閉じてから、もう一度実行してください。")
 
     print(f"書き出しました: {OUT}")
     for name, blocks in sheets:

@@ -369,11 +369,19 @@ def build_ogp():
                 continue
         return ImageFont.load_default(size)
 
+    # ▼ 文字はここに直書きされています（このスクリプトは sd-images.json を読みません）。
+    #    **OGP を作り直すときは、こちらではなく共有版を使ってください。**
+    #
+    #        python ../.claude/skills/illust-forge/scripts/sd_generate.py --preset ogp
+    #
+    #    共有版は sd-images.json の ogp.lines を読むので、設定と画像がずれません。
+    #    ここを使うと、設定を直したのに画像だけ古いままになります（実際に踏みました）。
+    #    保険として、下の内容は sd-images.json と同じにそろえてあります。
     draw.text((72, 150), "ねっこ集会所 presents", font=font(30), fill="#A82355")
-    draw.text((72, 205), "第1回 ねっこ杯", font=font(52), fill="#3A2430")
+    draw.text((72, 205), "ねっ子", font=font(52), fill="#3A2430")
     draw.text((72, 275), "ポカジャン大会", font=font(84), fill="#D22C6B")
-    draw.text((72, 400), "2026.09.13 SUN 21:00", font=font(40), fill="#3A2430")
-    draw.text((72, 460), "Discord「ねっこ集会所」／ 参加費無料", font=font(28, False), fill="#6E5560")
+    draw.text((72, 400), "2026.08.30 SUN 20:00", font=font(40), fill="#3A2430")
+    draw.text((72, 460), "Discord「ねっこ集会所」／ 未解放でも参加OK", font=font(28, False), fill="#6E5560")
 
     chara = OUT_DIR / "nene.webp"
     if chara.exists():

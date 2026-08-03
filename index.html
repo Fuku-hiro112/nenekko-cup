@@ -6,10 +6,14 @@
 <!-- EDIT: ページタイトル（Discordに貼ったときのリンク名になります） -->
 <title>ねっ子ポカジャン大会 ｜ ねっこ集会所</title>
 <!-- EDIT: 説明文（Discordのリンクプレビューに出ます） -->
-<meta name="description" content="2026年8月14日(金)21:00より、Discord「ねっこ集会所」で開催するホロドリのミニゲーム「ポカジャン」大会の案内ページです。勝ち上がりトーナメント方式、ポカジャン未解放でも参加できます。">
+<meta name="description" content="2026年8月30日(日)20:00より、Discord「ねっこ集会所」で開催するホロドリのミニゲーム「ポカジャン」大会の案内ページです。応募は8月23日(日)23:59まで。勝ち上がりトーナメント方式、ポカジャン未解放でも参加できます。">
+<!-- 検索結果に出したくないページなので、クローラーには載せない指示を出しています。
+     防げるのは「検索からの偶然の発見」だけで、URLを知っている人には効きません。
+     Discordのリンクプレビュー（下のog:）は、この指定とは別系統なので従来どおり出ます。 -->
+<meta name="robots" content="noindex, nofollow">
 <meta property="og:type" content="website">
 <meta property="og:title" content="ねっ子ポカジャン大会 ｜ ねっこ集会所">
-<meta property="og:description" content="その手札、咲かせにいこう。2026.08.14(金) 21:00 スタート。勝ち上がりトーナメントで優勝者・最大得点者・ねねち賞を決めます。">
+<meta property="og:description" content="その手札、咲かせにいこう。2026.08.30(日) 20:00 スタート。応募は8月23日(日)23:59まで。勝ち上がりトーナメントで優勝者・最大得点者・ねねち賞を決めます。">
 <!-- EDIT: Discordのリンクプレビューに出す画像（tools/generate_nene.py --preset ogp で作り直せます） -->
 <meta property="og:image" content="assets/img/ogp.jpg">
 <meta property="og:image:width" content="1200">
@@ -155,7 +159,7 @@
 
     <!-- カウントダウン（JSが有効なときだけ表示。日時はHTML側にも書いてあります） -->
     <!-- EDIT: 開催日時（ISO形式。手札やABOUTの表記と揃えてください） -->
-    <div class="countdown" hidden data-deadline="2026-08-14T21:00:00+09:00">
+    <div class="countdown" hidden data-deadline="2026-08-30T20:00:00+09:00">
       <span class="countdown__label">開催まであと</span>
       <span class="countdown__cell"><b data-unit="days">--</b><i>日</i></span>
       <span class="countdown__cell"><b data-unit="hours">--</b><i>時間</i></span>
@@ -168,15 +172,15 @@
         <div class="tile">
           <span class="tile__label">DATE</span>
           <!-- EDIT: 開催日 -->
-          <strong class="tile__value">8<span class="tile__unit">/</span>14</strong>
-          <span class="tile__note">2026年（金）</span>
+          <strong class="tile__value">8<span class="tile__unit">/</span>30</strong>
+          <span class="tile__note">2026年（日）</span>
         </div>
       </li>
       <li class="hand__tile" style="--i:1">
         <div class="tile">
           <span class="tile__label">OPEN</span>
           <!-- EDIT: 開始時刻 -->
-          <strong class="tile__value">21<span class="tile__unit">:</span>00</strong>
+          <strong class="tile__value">20<span class="tile__unit">:</span>00</strong>
           <span class="tile__note">だいたい2時間</span>
         </div>
       </li>
@@ -237,7 +241,7 @@
       <span class="marquee__set">
         <em>NEKKO POKAJAN CUP</em><img class="marquee__nekko" src="assets/img/nekko-1.webp" alt="" loading="lazy">
         <em>WINNERS TOURNAMENT</em><img class="marquee__nekko" src="assets/img/nekko-2.webp" alt="" loading="lazy">
-        <em>2026.08.14 FRI 21:00</em><img class="marquee__nekko" src="assets/img/nekko-3.webp" alt="" loading="lazy">
+        <em>2026.08.30 SUN 20:00</em><img class="marquee__nekko" src="assets/img/nekko-3.webp" alt="" loading="lazy">
       </span>
     </div>
   </div>
@@ -271,7 +275,7 @@
           <div>
             <dt>開催日時</dt>
             <!-- EDIT: 開催日時（手札の内容と揃えてください） -->
-            <dd><strong>2026年8月14日（金）21:00</strong><br>所要はだいたい2時間くらい</dd>
+            <dd><strong>2026年8月30日（日）20:00</strong><br>所要はだいたい2時間くらい</dd>
           </div>
           <div>
             <dt>会場</dt>
@@ -539,9 +543,9 @@
         </span>
         <p class="entry__cta-inner">
           <!-- EDIT: ここをGoogleフォームのURLに差し替えてください -->
-          <a class="btn btn--primary btn--lg" href="#" target="_blank" rel="noopener noreferrer">応募フォームを開く</a>
+          <a class="btn btn--primary btn--lg" href="https://docs.google.com/forms/d/e/1FAIpQLSc4dYxDz1h4Ts-uf06dPMVQxvSrWGm5GMsrTMnSwDWX8hrjmA/viewform?usp=dialog" target="_blank" rel="noopener noreferrer">応募フォームを開く</a>
           <!-- EDIT: 応募締切 -->
-          <span class="entry__deadline">開催：2026年8月14日（金）21:00 ／ 締切は決まりしだい掲載します</span>
+          <span class="entry__deadline">応募締切：2026年8月23日（日）23:59 ／ 開催：8月30日（日）20:00</span>
         </p>
       </div>
     </div>

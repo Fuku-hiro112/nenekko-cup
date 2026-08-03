@@ -401,6 +401,7 @@ Webフォントの読み込みで文字幅が変わるため、`document.fonts.r
 | 11 | `.site-nav ul` の `align-items: center` をレスポンシブ側で戻し忘れる | 横並び用の指定なので、縦に積むスマホでは項目が中身の幅まで縮み、**ENTRY のピルが伸びない**（実際に踏みました） |
 | 12 | ヘッダーのロゴ札の文字を増やす／`white-space: nowrap` を外す | スマホで札が2行になり、**ヘッダーの高さ（62px）からはみ出す** |
 | 13 | `<!-- BRACKET:START -->` / `<!-- BRACKET:END -->` を消す | `update_bracket.py` が書き込み場所を見つけられず止まります。**この間を手で直しても、次の実行で消えます** |
+| 14 | OGP を `tools/generate_nene.py --preset ogp` で作り直す | そちらは文字が直書きで `sd-images.json` を読みません。**日付を直したのに画像だけ古いまま**になります（実際に踏みました）。共有版の `sd_generate.py` を使ってください |
 
 ---
 

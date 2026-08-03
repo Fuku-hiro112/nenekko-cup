@@ -43,7 +43,12 @@
 **Forge は `start_forge_api.bat` から起動してください。** 通常の起動方法だと `--api` が
 付かず、スクリプトから生成できません。
 
-生成スクリプトは2つあり、**どちらでも同じ画像が出ます**（seed固定でバイト単位の一致を確認済み）。
+生成スクリプトは2つあります。キャラクター画像は**どちらでも同じものが出ます**
+（seed固定でバイト単位の一致を確認済み）。
+
+> **ただし OGP だけは違います。** 専用版（`tools/generate_nene.py`）は文字を
+> スクリプトに直書きしており、`sd-images.json` を読みません。
+> **OGP を作り直すときは必ず共有版を使ってください**（章4）。
 
 ```bash
 # 共有版（推奨）— illust-forge Skill 同梱。設定はルートの sd-images.json を自動で探す
@@ -111,6 +116,10 @@ python ../.claude/skills/illust-forge/scripts/sd_generate.py --preset ogp
 
 **この処理は Forge を起動していなくても動きます。** `assets/img/nene.webp` と
 `sd-images.json` の `ogp` セクションの文字を合成するだけだからです。
+
+> **`tools/generate_nene.py --preset ogp` を使わないでください。**
+> そちらは文字がスクリプトに直書きされていて `sd-images.json` を読まないため、
+> 設定を直しても画像に反映されません。**日付だけ古いOGPができます**（実際に踏みました）。
 
 `ogp` セクションの `lines` に、表示する文字・位置・サイズ・色を書きます。
 **大会名や日時を変えたら、ここも直して画像を作り直してください。**
