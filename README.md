@@ -25,6 +25,8 @@ nenePokajyan/
     ├─ draw_tables.py      卓分けの抽選（下記）
     ├─ update_bracket.py   最終結果をページに焼き付ける（当日は不要）
     ├─ bracket-sheet.example.csv トーナメント表のスプレッドシートの見本
+    ├─ bracket.gs          スプレッドシートに入れる（次の回戦を自動で足す）
+    ├─ bracket.gs.test.js  上のスクリプトの検証（node tools/bracket.gs.test.js）
     ├─ build_operation_xlsx.py  運営ガイドの Excel 版を書き出す
     ├─ participants.example.csv  参加者CSVの書きかたの見本
     ├─ preview-mobile.html PCでスマホ表示を確認する枠
