@@ -24,6 +24,7 @@ nenePokajyan/
     ├─ cut_cards.py        RULEの札をプレイ画面から切り出すスクリプト
     ├─ draw_tables.py      卓分けの抽選（下記）
     ├─ update_bracket.py   トーナメント表を index.html に書き込む（下記）
+    ├─ build_operation_xlsx.py  運営ガイドの Excel 版を書き出す
     ├─ participants.example.csv  参加者CSVの書きかたの見本
     ├─ preview-mobile.html PCでスマホ表示を確認する枠
     └─ src-img/            加工前の原本（Gitには乗りません）
@@ -40,13 +41,19 @@ nenePokajyan/
 | [詳細設計書](docs/detail-design.md) | **「ここを変えたい」ときの逆引き。まずこれ** |
 | [画像ガイド](docs/image-guide.md) | 画像を差し替える・作り直すとき |
 | [**大会運営ガイド**](docs/operation-guide.md) | **卓分けの抽選と、当日の更新のしかた。当日はこれを開く** |
+| `docs/大会運営ガイド.xlsx` | 上の運営ガイドの Excel 版。**当日は印刷して手元に置けます**（チェック欄つき） |
 | `docs/設計書.xlsx` | 基本設計書・詳細設計書・画像ガイドを1つのブックにまとめたもの（全9シート） |
 
 Excel版は Md からの**書き出しであって、正本は Md のほう**です。
 
-> **Excel版は現在、Md の内容から遅れています。** 書き出したあとに Md を何度も
+> **`設計書.xlsx` は現在、Md の内容から遅れています。** 書き出したあとに Md を何度も
 > 更新しており、生成スクリプトも残っていません。**Md のほうを見てください。**
-> 大会運営ガイドは Excel版に含まれていません。
+>
+> **`大会運営ガイド.xlsx` は作り直せます。** Md を直したあとに次を流してください。
+>
+> ```bash
+> python tools/build_operation_xlsx.py
+> ```
 
 ## よく直すところ
 
