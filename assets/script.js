@@ -228,6 +228,17 @@
       });
     };
 
+    // 「勝ち」の欄がこれらのときは、勝ちにしません。
+    // **チェックボックスは、外していても false という値が入ります。**
+    // 「何か入っていれば勝ち」にすると、外したチェックや「×」まで勝ちになります
+    // （実際にそうなっていました）。負けを表す書きかたはここに足してください。
+    var NOT_WON = ['', 'false', '0', '×', 'ｘ', 'x', '✕', '✗', '-', '－', 'ー',
+                   'なし', '負け', 'まけ', 'no', 'n'];
+
+    var isWon = function (v) {
+      return NOT_WON.indexOf(String(v == null ? '' : v).trim().toLowerCase()) < 0;
+    };
+
     // 勝った人を集めて次の回戦を組む（update_bracket.py と同じ配りかた）
     var nextRound = function (winners) {
       var n = Math.max(1, Math.ceil(winners.length / SEAT));
@@ -265,16 +276,33 @@
       bracket.innerHTML = html + '</div>';
     };
 
-    var build = function (rows) {
+    // 見出しから列の位置を探す。メモ列を足したり並べ替えたりしても動くようにするため。
+    // 見出しで見つからない列は、左から 回戦 / 卓 / 参加者 / 勝ち の順とみなします。
+    var pickColumns = function (cols) {
+      var idx = { round: 0, table: 1, name: 2, win: 3 };
+      (cols || []).forEach(function (c, i) {
+        var label = String((c && (c.label || '')) || '').trim();
+        if (!label) return;
+        if (/回戦|ラウンド/.test(label)) idx.round = i;
+        else if (/卓|テーブル|部屋/.test(label)) idx.table = i;
+        else if (/参加者|名前|プレイヤー|ユーザー/.test(label)) idx.name = i;
+        else if (/勝/.test(label)) idx.win = i;
+      });
+      return idx;
+    };
+
+    var build = function (rows, idx) {
       // 「回戦 → 卓 → 参加者」の順にまとめる。シートの並び順をそのまま活かす
       var order = [], byRound = {};
       rows.forEach(function (r) {
-        var round = (r[0] || '').trim(), vc = (r[1] || '').trim(), name = (r[2] || '').trim();
+        var round = (r[idx.round] || '').trim(),
+            vc = (r[idx.table] || '').trim(),
+            name = (r[idx.name] || '').trim();
         if (!round || !vc || !name) return;
         if (!byRound[round]) { byRound[round] = { label: round, order: [], tables: {} }; order.push(round); }
         var R = byRound[round];
         if (!R.tables[vc]) { R.tables[vc] = { vc: vc, seats: [] }; R.order.push(vc); }
-        R.tables[vc].seats.push({ name: name, won: !!(r[3] || '').trim() });
+        R.tables[vc].seats.push({ name: name, won: isWon(r[idx.win]) });
       });
       if (!order.length) return null;
 
@@ -310,8 +338,9 @@
         // URL に headers=1 を付けているので、見出し行は普通ここに入ってきません。
         // 入ってきたときのために落としますが、**1列目がちょうど「回戦」のときだけ**です。
         // 緩く判定すると「決勝」で始まる行まで見出しとみなして捨ててしまいます（実際に踏みました）。
-        if (rows.length && (rows[0][0] || '').trim() === '回戦') rows.shift();
-        var rounds = build(rows);
+        var idx = pickColumns(res.table.cols);
+        if (rows.length && (rows[0][idx.round] || '').trim() === '回戦') rows.shift();
+        var rounds = build(rows, idx);
         if (rounds) render(rounds);
       } catch (e) {
         // 表が出ないだけで、ページの他は動き続けてほしいので握りつぶす
