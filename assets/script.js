@@ -239,6 +239,12 @@
       return NOT_WON.indexOf(String(v == null ? '' : v).trim().toLowerCase()) < 0;
     };
 
+    // **CPUは勝ち上がりません。**（上位に入ったら、その下の人が繰り上がる決まり）
+    // 間違って印を付けても次の回戦に出てこないよう、ここで弾いています。
+    var isCpu = function (name) {
+      return /^cpu$/i.test(String(name).trim());
+    };
+
     // 卓を番号順に並べる。**シートに書いた順のままだと「卓2, 卓1, 卓3」のように出ます。**
     // 表示だけでなく、次の回戦へ配る順番もこれで決まるので、ここでそろえておきます。
     var byNumber = function (a, b) {
@@ -311,7 +317,7 @@
         if (!byRound[round]) { byRound[round] = { label: round, order: [], tables: {} }; order.push(round); }
         var R = byRound[round];
         if (!R.tables[vc]) { R.tables[vc] = { vc: vc, seats: [] }; R.order.push(vc); }
-        R.tables[vc].seats.push({ name: name, won: isWon(r[idx.win]) });
+        R.tables[vc].seats.push({ name: name, won: !isCpu(name) && isWon(r[idx.win]) });
       });
       if (!order.length) return null;
 
@@ -325,14 +331,26 @@
       while (guard++ < 10) {
         var last = rounds[rounds.length - 1];
         if (last.tables.length === 1) break;                    // 決勝まで来た
-        var winners = [];
+        var perTable = [];
         var done = last.tables.every(function (t) {
           var w = t.seats.filter(function (s) { return s.won; });
-          if (!w.length) return false;                          // まだ終わっていない卓がある
-          w.forEach(function (s) { winners.push(s.name); });
+          if (!w.length) return false;                          // まだ手が付いていない卓がある
+          perTable.push(w);
           return true;
         });
-        if (!done || !winners.length) break;
+        if (!done) break;
+
+        // **卓によって勝ちの数が違ううちは、まだ入れている途中とみなして待ちます。**
+        // 「1卓に1人でもいれば終わり」にすると、最後の卓の1人目を入れた時点で
+        // 次の回戦が組まれ、2人目が入らないまま進んでしまいます。
+        var most = Math.max.apply(null, perTable.map(function (w) { return w.length; }));
+        if (perTable.some(function (w) { return w.length !== most; })) break;
+
+        var winners = [];
+        perTable.forEach(function (w) {
+          w.forEach(function (s) { winners.push(s.name); });
+        });
+        if (!winners.length) break;
         var tables = nextRound(winners);
         rounds.push({ label: tables.length === 1 ? '決勝' : (rounds.length + 1) + '回戦', tables: tables });
       }
