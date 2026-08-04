@@ -266,13 +266,21 @@
     };
 
     var render = function (rounds) {
-      var html = '<div class="rounds">';
+      // 「優勝」を出すのは決勝だけ。**卓が1つでも、見出しが決勝でなければ出さない**
+      // （参加者が4人以下だと1回戦がそのまま1卓になり、優勝と誤表示していました）
+      var last = rounds.length - 1;
       rounds.forEach(function (rnd, ri) {
-        // 「優勝」を出すのは決勝だけ。**卓が1つでも、見出しが決勝でなければ出さない**
-        // （参加者が4人以下だと1回戦がそのまま1卓になり、優勝と誤表示していました）
-        var isFinal = ri === rounds.length - 1 && rnd.tables.length === 1 &&
-                      rnd.label.indexOf('決勝') >= 0;
-        html += '<div class="round"><h3 class="round__label">' + esc(rnd.label) + '</h3>';
+        rnd.isFinal = ri === last && rnd.tables.length === 1 && rnd.label.indexOf('決勝') >= 0;
+      });
+
+      // **新しい回戦を上に出します**（決勝 → 2回戦 → 1回戦）。
+      // 当日いちばん見たいのは最新の組み合わせなので、下までたどらせないため。
+      // 勝ち上がりの計算は元の順序で済ませてあるので、ここで並べ替えても影響しません。
+      var html = '<div class="rounds">';
+      rounds.slice().reverse().forEach(function (rnd) {
+        var isFinal = rnd.isFinal;
+        html += '<div class="round' + (isFinal ? ' round--final' : '') + '">';
+        html += '<h3 class="round__label">' + esc(rnd.label) + '</h3>';
         html += '<div class="round__tables">';
         rnd.tables.forEach(function (t) {
           html += '<div class="tablecard"><h4 class="tablecard__name">' + esc(t.vc) + '</h4>';

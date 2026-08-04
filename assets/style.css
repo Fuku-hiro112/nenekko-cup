@@ -886,14 +886,42 @@ a { color: var(--pink-deep); }
   font-weight: 700; color: var(--gold-ink);
 }
 .tablecard__seats .is-winner::before { content: "✦"; color: var(--gold-ink); }
-/* 決勝の勝者は勝ち上がりではなく優勝者。ここだけ言葉でも示す */
+/* 決勝の卓だけは格を上げる。金の縁と、上から差す光。
+   ねねち賞のカード（.localrule__card--nene）と同じ組み立てで揃えている。 */
+.round--final .tablecard {
+  border-color: var(--gold);
+  background:
+    radial-gradient(120% 78% at 50% 0%, #FFF7E4 0%, rgba(255, 247, 228, 0) 64%),
+    linear-gradient(180deg, var(--surface) 0%, #FFF9FB 100%);
+  box-shadow: var(--shadow-deep), 0 0 30px rgba(247, 193, 63, .35);
+}
+.round--final .tablecard::before { height: 8px; }
+.round--final .tablecard__name { color: var(--gold-ink); }
+.round--final .round__label::before {          /* 見出しの上の棒も金を濃くする */
+  background: linear-gradient(90deg, var(--gold), #E2952A);
+  width: 72px;
+}
+
+/* 優勝者。ページ内でいちばん強い一行にする。
+   **金を濃くするほど金色の文字が読めなくなる**ので、代わりに文字を大きくしている。
+   19.2px の太字は「大きい文字」の扱いになり、必要なコントラストが 4.5:1 から 3:1 に下がる
+   （この地の下端に対して 3.96:1）。 */
 .tablecard__seats .is-champion {
-  background: linear-gradient(180deg, #FFE9A8, var(--gold));
-  box-shadow: 0 0 0 2px var(--gold-pale) inset;
+  background: linear-gradient(180deg, #FFF6DC 0%, #FFD86B 100%);
+  box-shadow:
+    0 0 0 2px var(--gold-pale) inset,
+    0 6px 18px rgba(247, 193, 63, .55);
+  padding: 14px;
+  font-size: 1.2rem; font-weight: 900; color: var(--gold-ink);
+}
+.tablecard__seats .is-champion::before {       /* ✦ ではなく王冠にする */
+  content: "👑"; font-size: 1.05em;
 }
 .tablecard__seats .is-champion::after {
   content: "優勝"; margin-left: auto; flex: none;
-  font-size: .68rem; letter-spacing: .08em; color: var(--gold-ink);
+  font-family: var(--font-display); font-weight: 900;
+  font-size: .78rem; letter-spacing: .12em;
+  color: #5C3F02;                              /* 小さい字なので、金の地に 7:1 まで濃くする */
 }
 .tablecard__seats .is-cpu { color: var(--ink-muted); opacity: .75; font-style: italic; }
 .seat__note {
@@ -1132,6 +1160,11 @@ a { color: var(--pink-deep); }
   .yaku, .localrule, .refs, .shots { grid-template-columns: 1fr; }
   /* 1カラムになれば幅に余裕ができるので、高さの上限は外して大きく見せる */
   .shot img { height: auto; }
+
+  /* 狭い画面では「優勝」の文字を省き、名前に幅を回す。
+     **文字を小さくして詰める手もあるが、そうすると求められるコントラストが上がり、
+     金を薄めることになって豪華さが消える。** 王冠と金の強調だけでも意味は伝わる。 */
+  .tablecard__seats .is-champion::after { display: none; }
 }
 
 @media (max-width: 760px) {
