@@ -198,17 +198,13 @@ function addNextRound(sheet, idx) {
     return no(lastLabel + 'の ' + empty.join('・') + ' に、まだ勝ちの印がありません。');
   }
 
-  // **卓によって勝ちの数が違ううちは、まだ入れている途中とみなして待ちます。**
-  // 「1卓に1人でもいれば終わり」にすると、最後の卓の1人目を入れた瞬間に
-  // 次の回戦ができてしまい、2人目が入らないまま組まれます（実際にそうなっていました）。
+  // **勝ち上がる人数は卓によって違ってかまいません。**（参加人数で変わるため）
+  // 各卓に1人でも印があれば作ります。押したときだけ動くので、
+  // 入力の途中で勝手に組まれることはありません。
+  // ただし数が違うと入れ忘れの可能性もあるので、あとで知らせます。
   var most = Math.max.apply(null, counts);
-  for (var c = 0; c < counts.length; c++) {
-    if (counts[c] !== most) {
-      return no(lastLabel + 'の勝ちの数がそろっていません（' +
-                tableOrder.map(function (v, i) { return v + 'は' + counts[i] + '人'; }).join('・') +
-                '）。入れ忘れがないか確かめてください。');
-    }
-  }
+  var uneven = false;
+  for (var c = 0; c < counts.length; c++) if (counts[c] !== most) uneven = true;
 
   var winners = [];
   for (var p = 0; p < perTable.length; p++) winners = winners.concat(perTable[p]);
@@ -243,7 +239,14 @@ function addNextRound(sheet, idx) {
   // どこが増えたのか分かるように、少しだけ色を付けて知らせる
   sheet.getRange(lastRow + 1, 1, out.length, width).setBackground('#FFF3D6');
 
-  return { added: out.length, message: label + 'を作りました（' + out.length + '人／' + tableCount + '卓）。' };
+  var note = '';
+  if (uneven) {
+    // 数が違うのは意図どおりのこともあるので止めはしません。ただし気づけるように伝えます
+    note = '　※卓ごとの勝ちの数が違いました（' +
+           tableOrder.map(function (v, i) { return v + 'は' + counts[i] + '人'; }).join('・') +
+           '）。入れ忘れでなければそのままで大丈夫です。';
+  }
+  return { added: out.length, message: label + 'を作りました（' + out.length + '人／' + tableCount + '卓）。' + note };
 }
 
 

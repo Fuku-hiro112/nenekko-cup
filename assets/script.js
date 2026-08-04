@@ -340,12 +340,8 @@
         });
         if (!done) break;
 
-        // **卓によって勝ちの数が違ううちは、まだ入れている途中とみなして待ちます。**
-        // 「1卓に1人でもいれば終わり」にすると、最後の卓の1人目を入れた時点で
-        // 次の回戦が組まれ、2人目が入らないまま進んでしまいます。
-        var most = Math.max.apply(null, perTable.map(function (w) { return w.length; }));
-        if (perTable.some(function (w) { return w.length !== most; })) break;
-
+        // **勝ち上がる人数は卓によって違ってかまいません。**（参加人数で変わるため）
+        // 各卓に1人でも印があれば次の回戦を組みます。
         var winners = [];
         perTable.forEach(function (w) {
           w.forEach(function (s) { winners.push(s.name); });
