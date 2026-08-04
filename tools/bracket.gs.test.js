@@ -45,17 +45,20 @@ function run(name, header, rows, expect) {
   const api = fn(sandbox.SpreadsheetApp);
 
   const idx = api.findColumns(sheet);
-  api.addNextRound(sheet, idx);
+  const res = api.addNextRound(sheet, idx);
 
   const added = sheet._grid.slice(1 + rows.length);
   const summary = added.length
     ? added.map(r => `${r[idx.round]}/${r[idx.table]}/${r[idx.name]}`).join(', ')
     : '(追加なし)';
+  // 作れなかったときは、理由がひとこと返ってくること
+  if (!added.length && (!res || !res.message)) console.log('      !! 理由が返っていません');
   const ok = summary === expect;
   console.log(`${ok ? 'OK  ' : '!!  '} ${name}`);
   console.log(`      期待: ${expect}`);
   if (!ok) console.log(`      実際: ${summary}`);
   else if (added.length) console.log(`      実際: ${summary}`);
+  else console.log(`      返した理由: ${res && res.message}`);
   return ok;
 }
 
