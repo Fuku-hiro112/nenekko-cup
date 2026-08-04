@@ -64,9 +64,19 @@ function createNextRound() {
 }
 
 
-/** 画面の右下に短く知らせる。ダイアログと違って、押して閉じる手間がありません。 */
+/**
+ * 画面の右下に短く知らせる。ダイアログと違って、押して閉じる手間がありません。
+ *
+ * **知らせに失敗しても、行の追加まで巻き戻したくないので握りつぶします。**
+ * チェックボックスから動かしたときは承認なしで走るため、
+ * 環境によっては通知だけ出せないことがあります。
+ */
 function tell(message) {
-  SpreadsheetApp.getActiveSpreadsheet().toast(message, 'ねっ子ポカジャン大会', 8);
+  try {
+    SpreadsheetApp.getActiveSpreadsheet().toast(message, 'ねっ子ポカジャン大会', 8);
+  } catch (err) {
+    // 通知が出せなくても、行はもう足してあります
+  }
 }
 
 
