@@ -119,14 +119,24 @@ function addNextRound(sheet, idx) {
   var tableOrder = last.order.slice().sort(byNumber);  // 卓1, 卓2, 卓3 … の順にそろえる
 
   // 全部の卓に勝ちが入っているか確かめる。1卓でも空なら、まだ足さない
-  var winners = [];
+  var perTable = [], counts = [];
   for (var t = 0; t < tableOrder.length; t++) {
     var seats = last.tables[tableOrder[t]];
     var w = [];
     for (var s = 0; s < seats.length; s++) if (seats[s].won) w.push(seats[s].name);
-    if (!w.length) return;                             // この卓はまだ終わっていない
-    winners = winners.concat(w);
+    if (!w.length) return;                             // この卓はまだ手が付いていない
+    perTable.push(w);
+    counts.push(w.length);
   }
+
+  // **卓によって勝ちの数が違ううちは、まだ入れている途中とみなして待ちます。**
+  // 「1卓に1人でもいれば終わり」にすると、最後の卓の1人目を入れた瞬間に
+  // 次の回戦ができてしまい、2人目が入らないまま組まれます（実際にそうなっていました）。
+  var most = Math.max.apply(null, counts);
+  for (var c = 0; c < counts.length; c++) if (counts[c] !== most) return;
+
+  var winners = [];
+  for (var p = 0; p < perTable.length; p++) winners = winners.concat(perTable[p]);
   if (!winners.length) return;
 
   // 勝った人を順番に配る。同じ卓から上がった人どうしが固まらないようにするため
