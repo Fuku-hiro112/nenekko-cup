@@ -239,6 +239,12 @@
       return NOT_WON.indexOf(String(v == null ? '' : v).trim().toLowerCase()) < 0;
     };
 
+    // **CPUは勝ち上がりません。**（上位に入ったら、その下の人が繰り上がる決まり）
+    // 間違って印を付けても次の回戦に出てこないよう、ここで弾いています。
+    var isCpu = function (name) {
+      return /^cpu$/i.test(String(name).trim());
+    };
+
     // 卓を番号順に並べる。**シートに書いた順のままだと「卓2, 卓1, 卓3」のように出ます。**
     // 表示だけでなく、次の回戦へ配る順番もこれで決まるので、ここでそろえておきます。
     var byNumber = function (a, b) {
@@ -311,7 +317,7 @@
         if (!byRound[round]) { byRound[round] = { label: round, order: [], tables: {} }; order.push(round); }
         var R = byRound[round];
         if (!R.tables[vc]) { R.tables[vc] = { vc: vc, seats: [] }; R.order.push(vc); }
-        R.tables[vc].seats.push({ name: name, won: isWon(r[idx.win]) });
+        R.tables[vc].seats.push({ name: name, won: !isCpu(name) && isWon(r[idx.win]) });
       });
       if (!order.length) return null;
 

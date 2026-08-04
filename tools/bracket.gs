@@ -131,6 +131,15 @@ function isWon(v) {
 
 
 /**
+ * **CPUは勝ち上がりません。**（上位に入ったら、その下の人が繰り上がる決まり）
+ * 間違って印を付けても次の回戦に出てこないよう、ここで弾いています。
+ */
+function isCpu(name) {
+  return /^cpu$/i.test(String(name).trim());
+}
+
+
+/**
  * 卓を番号順に並べるための比較。
  * **シートに書いた順のままだと「卓2, 卓1, 卓3」の順で勝者を集めてしまいます。**
  */
@@ -165,7 +174,7 @@ function addNextRound(sheet, idx) {
     if (!rounds[round]) { rounds[round] = { order: [], tables: {} }; order.push(round); }
     var R = rounds[round];
     if (!R.tables[vc]) { R.tables[vc] = []; R.order.push(vc); }
-    R.tables[vc].push({ name: name, won: isWon(row[idx.win]) });
+    R.tables[vc].push({ name: name, won: !isCpu(name) && isWon(row[idx.win]) });
   }
   if (!order.length) return no('参加者が読み取れませんでした。回戦・卓・参加者がそろっているか確かめてください。');
 
