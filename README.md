@@ -112,7 +112,86 @@ Chrome の DevTools（`F12` → `Ctrl`+`Shift`+`M`）でも同じことができ
 
 **GitHub Pages で公開中です。** → <https://fuku-hiro112.github.io/nenekko-cup/>
 
-`main` に push すれば数十秒で反映されます。パスはすべて相対なので追加設定は要りません。
+サイトになるのは **`main` ブランチの中身だけ**です。作業ブランチに commit しただけでは
+サイトは変わりません。**`main` に取り込んで push するまでが「公開」**です。
+パスはすべて相対なので、追加設定は要りません。
+
+> このリポジトリに `develop` ブランチはありません。リモートにあるのは `main` だけで、
+> 実際の流れは **`feature/*` → `main`** です。
+
+### push する前に確認すること
+
+- `docs/*.md` を直したなら、Excel版を作り直しましたか（`python tools/build_operation_xlsx.py`）
+- 開催日時を直したなら、**9か所すべて**そろっていますか
+  → [詳細設計書 2-2](docs/detail-design.md#2-2-開催日時を変える重要9か所あります)
+- 載せてよい情報ですか。**一度 push したものは履歴に残り続けます**（下の「見えかたについて」）
+
+### 手順
+
+**1. 何を変えたか見る**
+
+```bash
+git status
+git diff
+```
+
+**2. 作業ブランチに記録する**
+
+```bash
+git add -A
+git commit -m "変えた内容を一行で"
+```
+
+**3. `main` に取り込む**
+
+`feature/xxxx` は、いま作業しているブランチの名前です（`git status` の1行目に出ます）。
+
+```bash
+git checkout main
+git merge --no-ff feature/xxxx
+```
+
+**4. GitHub に送る**
+
+```bash
+git push origin main
+```
+
+**5. 反映を確認する**
+
+**数十秒〜1分**で切り替わります。リポジトリの **Actions** タブに緑のチェックが付けば完了です。
+そのあとサイトを開いて、直したところが変わっているか目で見てください。
+
+**6. 作業ブランチに戻る**
+
+いまは `main` にいます。**`main` の上で直接作業しないでください。**
+
+```bash
+git checkout feature/xxxx
+```
+
+### うまくいかないとき
+
+**直したはずなのにサイトが変わらない**
+
+まず `Ctrl`+`F5`（Mac は `Cmd`+`Shift`+`R`）で読み込み直してください。
+画像やCSSは特にブラウザに残りやすいです。それでも変わらないなら、
+`main` へのマージを忘れている可能性があります。`git log --oneline -3` で確認してください。
+
+**push が弾かれる（`rejected` と出る）**
+
+GitHub 側が先に進んでいます。取り込んでから送り直してください。
+
+```bash
+git pull --rebase origin main
+git push origin main
+```
+
+**ユーザー名とパスワードを聞かれる**
+
+HTTPS でつないでいるので、パスワードではなく**アクセストークン**が要ります。
+GitHub の Settings → Developer settings → Personal access tokens で発行し、
+パスワード欄にそれを貼ってください。一度通れば次からは聞かれません。
 
 ### 見えかたについて
 
