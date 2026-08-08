@@ -364,6 +364,16 @@ a { color: var(--pink-deep); }
   display: block; width: 100%; height: 100%;
   object-fit: cover; object-position: 50% 40%;
 }
+/* 絵は静止画なので、代わりにゆっくり寄せて動きを出します。
+   大きさを戻すのは、柄が全面を覆っている 88% の一瞬。
+   隠れている間に戻すので、継ぎ目は見えません。 */
+.js .kv__art img { animation: kv-zoom 15s linear -10s infinite; }
+@keyframes kv-zoom {
+  0%       { scale: 1; }
+  88%      { scale: 1.09; }
+  88.001%  { scale: 1; }      /* ← 柄の裏で寸法を戻す */
+  100%     { scale: 1; }
+}
 /* 下端を生成りへ溶かす膜。大会名はこの手前に出ます */
 .kv__fade {
   position: absolute; left: 0; right: 0; bottom: 0; z-index: 3;
@@ -508,15 +518,15 @@ a { color: var(--pink-deep); }
             mask-composite: exclude;
   }
 }
-/* 開始を -11.5s ずらしています。ローディング（1.5s から 0.8秒かけて消える）が
-   明けた直後に花が開きはじめるので、ページを開いた人が必ずこの演出を見られます。 */
-.js .kv-veil { animation: veil 15s linear -11.5s infinite; }
+/* 開始を -10s ずらしています。ローディングは 1.5s から 0.8秒かけて消えるので、
+   明け終わる 2.3秒ちょうどで柄が出そろい、そこから 1.8秒見せてから花が開きます。 */
+.js .kv-veil { animation: veil 15s linear -10s infinite; }
 @keyframes veil {
   /* 絵だけの時間 */
-  0%,  85%  { opacity: 0; -webkit-mask-size: 100% 100%, 0 0; mask-size: 100% 100%, 0 0; }
+  0%,  77%  { opacity: 0; -webkit-mask-size: 100% 100%, 0 0; mask-size: 100% 100%, 0 0; }
   /* 柄が重なって溶けてくる（0.75秒） */
-  90%       { opacity: 1; -webkit-mask-size: 100% 100%, 0 0; mask-size: 100% 100%, 0 0; }
-  /* 柄だけで止まる（0.6秒）。この間に中央へ花の印が出ます。
+  82%       { opacity: 1; -webkit-mask-size: 100% 100%, 0 0; mask-size: 100% 100%, 0 0; }
+  /* 柄だけで止まる（1.8秒）。この間に中央へ花の印が出ます。
      ここから先は、小さいうちはゆっくり・大きくなるほど速く開かせます。 */
   94%       { opacity: 1; -webkit-mask-size: 100% 100%, 0 0; mask-size: 100% 100%, 0 0;
               animation-timing-function: cubic-bezier(.45, .03, .7, .45); }
@@ -533,7 +543,7 @@ a { color: var(--pink-deep); }
   font-size: clamp(2rem, 5.6vw, 4.6rem);
   line-height: 1.12; letter-spacing: .04em; white-space: nowrap;
 }
-.js .kv-veil__pattern { animation: veil-slide 14s linear infinite; }
+.js .kv-veil__pattern { animation: veil-slide 14s linear -10s infinite; }
 @keyframes veil-slide { to { translate: -6% 3%; } }
 .kv-veil__pattern b { display: block; }
 /* 1行おきに色と、塗り／輪郭を替えて、面が単調にならないようにしています */
@@ -554,10 +564,10 @@ a { color: var(--pink-deep); }
 }
 .kv-veil__mark svg { position: absolute; inset: 0; width: 100%; height: 100%; }
 .kv-veil__mark img { position: relative; width: 50%; height: auto; }
-.js .kv-veil__mark { animation: veil-mark 15s linear -11.5s infinite; }
+.js .kv-veil__mark { animation: veil-mark 15s linear -10s infinite; }
 @keyframes veil-mark {
-  0%, 86%   { opacity: 0; scale: .5; }
-  89.5%     { opacity: 1; scale: 1; }
+  0%, 78%   { opacity: 0; scale: .5; }
+  81.5%     { opacity: 1; scale: 1; }
   94%       { opacity: 1; scale: 1; }
   /* 穴が開きはじめるのに合わせて、印は膨らみながら消えます */
   96.6%     { opacity: 0; scale: 2.4; }
@@ -1628,7 +1638,7 @@ a { color: var(--pink-deep); }
   .js .fall__petal, .js .deco--sparkle, .marquee__track.is-fitted,
   .js .hero__sunburst, .js .deco, .js .hero__catch,
   .js .cloud, .js .mascot--l, .js .mascot--r,
-  .js .kv-veil, .js .kv-veil__pattern, .js .kv-veil__mark,
+  .js .kv-veil, .js .kv-veil__pattern, .js .kv-veil__mark, .js .kv__art img,
   .js .flower-btn__petals, .js .fixed-entry__petals,
   .js .marquee__nekko, .js .site-footer__nekko, .js .splash__portrait img,
   .js .countdown__cell,
