@@ -52,6 +52,9 @@
   --flower: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cg fill='%23FFDDE8'%3E%3Ccircle cx='20' cy='10' r='7.4'/%3E%3Ccircle cx='30' cy='17.2' r='7.4'/%3E%3Ccircle cx='26.2' cy='29' r='7.4'/%3E%3Ccircle cx='13.8' cy='29' r='7.4'/%3E%3Ccircle cx='10' cy='17.2' r='7.4'/%3E%3C/g%3E%3Ccircle cx='20' cy='20.4' r='6' fill='%23FFE3A8'/%3E%3C/svg%3E");
   --flower-w: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40' fill='%23FFFFFF' fill-opacity='.62'%3E%3Ccircle cx='20' cy='10' r='7.4'/%3E%3Ccircle cx='30' cy='17.2' r='7.4'/%3E%3Ccircle cx='26.2' cy='29' r='7.4'/%3E%3Ccircle cx='13.8' cy='29' r='7.4'/%3E%3Ccircle cx='10' cy='17.2' r='7.4'/%3E%3Ccircle cx='20' cy='20.4' r='6' fill-opacity='.9'/%3E%3C/svg%3E");
 
+  /* 絵を覆う柄をくり抜く花のかたち。白い部分が穴になります */
+  --flower-hole: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Cg fill='%23ffffff'%3E%3Cellipse cx='100' cy='44' rx='30' ry='62'/%3E%3Cellipse cx='100' cy='44' rx='30' ry='62' transform='rotate(45 100 100)'/%3E%3Cellipse cx='100' cy='44' rx='30' ry='62' transform='rotate(90 100 100)'/%3E%3Cellipse cx='100' cy='44' rx='30' ry='62' transform='rotate(135 100 100)'/%3E%3Cellipse cx='100' cy='44' rx='30' ry='62' transform='rotate(180 100 100)'/%3E%3Cellipse cx='100' cy='44' rx='30' ry='62' transform='rotate(225 100 100)'/%3E%3Cellipse cx='100' cy='44' rx='30' ry='62' transform='rotate(270 100 100)'/%3E%3Cellipse cx='100' cy='44' rx='30' ry='62' transform='rotate(315 100 100)'/%3E%3C/g%3E%3C/svg%3E");
+
   /* セクションの境目に使ううねった曲線 */
   --wave: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 100' preserveAspectRatio='none'%3E%3Cpath d='M0 100V62C200 8 400 102 600 54C800 6 1000 96 1200 44V100Z' fill='%23000'/%3E%3C/svg%3E");
 
@@ -363,7 +366,7 @@ a { color: var(--pink-deep); }
 }
 /* 下端を生成りへ溶かす膜。大会名はこの手前に出ます */
 .kv__fade {
-  position: absolute; left: 0; right: 0; bottom: 0; z-index: 2;
+  position: absolute; left: 0; right: 0; bottom: 0; z-index: 3;
   height: 58%;
   background: linear-gradient(180deg,
     rgba(255, 251, 242, 0)   0%,
@@ -479,9 +482,88 @@ a { color: var(--pink-deep); }
   100% { transform: translate(-6px, 112svh)  rotate(430deg); opacity: 0; }
 }
 
+/* ---------- 5-1b. 周期で絵を覆う柄 ----------
+   参考サイトは15秒ループの動画で、行きと帰りで手法が違っていました。
+     覆うとき（約0.75秒） … 柄を重ねて溶かす（クロスディゾルブ）
+     戻るとき（約0.33秒） … 花のかたちの穴を中央から広げる
+   同じ組み立てを、動画を使わず CSS だけで作っています。 */
+.kv-veil {
+  position: absolute; inset: 0; z-index: 2;
+  overflow: hidden;
+  background: var(--cream);
+  opacity: 0;                       /* 動きを止めた環境では出しません */
+}
+/* 花のかたちに「穴を空ける」。全面の面から花を引き算しています */
+@supports ((mask-composite: exclude) or (-webkit-mask-composite: xor)) {
+  .kv-veil {
+    -webkit-mask-image: linear-gradient(#000, #000), var(--flower-hole);
+            mask-image: linear-gradient(#000, #000), var(--flower-hole);
+    -webkit-mask-repeat: no-repeat, no-repeat;
+            mask-repeat: no-repeat, no-repeat;
+    -webkit-mask-position: center, center;
+            mask-position: center, center;
+    -webkit-mask-size: 100% 100%, 0 0;
+            mask-size: 100% 100%, 0 0;
+    -webkit-mask-composite: xor;
+            mask-composite: exclude;
+  }
+}
+.js .kv-veil { animation: veil 15s linear infinite; }
+@keyframes veil {
+  /* 絵だけの時間 */
+  0%,  89%  { opacity: 0; -webkit-mask-size: 100% 100%, 0 0; mask-size: 100% 100%, 0 0; }
+  /* 柄が重なって溶けてくる */
+  94%       { opacity: 1; -webkit-mask-size: 100% 100%, 0 0; mask-size: 100% 100%, 0 0; }
+  /* 柄だけで止まる。この間に中央へ花の印が出ます */
+  97.8%     { opacity: 1; -webkit-mask-size: 100% 100%, 0 0; mask-size: 100% 100%, 0 0; }
+  /* 花のかたちの穴が開いて絵が戻る（穴が画面より大きくなるので継ぎ目は出ません） */
+  100%      { opacity: 1; -webkit-mask-size: 100% 100%, 320% 320%; mask-size: 100% 100%, 320% 320%; }
+}
+
+/* 柄は文字そのもの。画像ではないので拡大しても粗くならず、重さも増えません */
+.kv-veil__pattern {
+  position: absolute; left: -32%; top: -32%; width: 164%; height: 164%;
+  display: grid; align-content: center; justify-items: center;
+  rotate: -12deg;
+  font-family: var(--font-display); font-weight: 900;
+  font-size: clamp(2rem, 5.6vw, 4.6rem);
+  line-height: 1.12; letter-spacing: .04em; white-space: nowrap;
+}
+.js .kv-veil__pattern { animation: veil-slide 14s linear infinite; }
+@keyframes veil-slide { to { translate: -6% 3%; } }
+.kv-veil__pattern b { display: block; }
+/* 1行おきに色と、塗り／輪郭を替えて、面が単調にならないようにしています */
+.kv-veil__pattern b:nth-child(6n+1) { color: #FF7FB0; }
+.kv-veil__pattern b:nth-child(6n+2) { color: #FF9A3C; translate: -4% 0; }
+.kv-veil__pattern b:nth-child(6n+3) { color: transparent; -webkit-text-stroke: 3px #FFC46B; }
+.kv-veil__pattern b:nth-child(6n+4) { color: #7ED957; translate: 5% 0; }
+.kv-veil__pattern b:nth-child(6n+5) { color: transparent; -webkit-text-stroke: 3px #FF9EC4; }
+.kv-veil__pattern b:nth-child(6n)   { color: #FFD84D; translate: -3% 0; }
+
+/* 中央に出る花の印。この花がそのまま穴になって開くように見せています */
+.kv-veil__mark {
+  position: absolute; left: 50%; top: 50%;
+  width: clamp(84px, 11vw, 148px); aspect-ratio: 1;
+  translate: -50% -50%;
+  display: grid; place-items: center;
+  color: #FFDE7A; opacity: 0;
+}
+.kv-veil__mark svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.kv-veil__mark img { position: relative; width: 50%; height: auto; }
+.js .kv-veil__mark { animation: veil-mark 15s linear infinite; }
+@keyframes veil-mark {
+  0%, 90.5% { opacity: 0; scale: .5; }
+  93%       { opacity: 1; scale: 1; }
+  97.8%     { opacity: 1; scale: 1; }
+  98.9%     { opacity: 0; scale: 2.6; }
+  100%      { opacity: 0; scale: 2.6; }
+}
+
 /* ---------- 5-2. 額からはみ出すねっ子 ---------- */
 /* 左右のねっ子。公式の左右に置かれたマスコットの構図に合わせています */
-.hero__mascots { position: absolute; inset: 0; z-index: 4; pointer-events: none; }
+/* ねっ子は絵と同じ層に置きます。柄が降りたときは一緒に隠れてほしいためです
+   （参考サイトではマスコットが絵に描き込まれていて、同じように覆われます） */
+.hero__mascots { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
 .mascot {
   position: absolute; bottom: 16%;
   width: clamp(84px, 13vw, 210px);
@@ -504,7 +586,7 @@ a { color: var(--pink-deep); }
 /* 大会名は額の下端に載せます（公式のロゴの位置） */
 .hero__head {
   position: absolute; left: 0; right: 0; bottom: clamp(8px, 2.4vw, 34px);
-  z-index: 3; padding: 0 12px;
+  z-index: 4; padding: 0 12px;
 }
 
 .hero__eyebrow { position: relative; z-index: 2; margin: 0 0 10px; }
@@ -1541,6 +1623,7 @@ a { color: var(--pink-deep); }
   .js .fall__petal, .js .deco--sparkle, .marquee__track.is-fitted,
   .js .hero__sunburst, .js .deco, .js .hero__catch,
   .js .cloud, .js .mascot--l, .js .mascot--r,
+  .js .kv-veil, .js .kv-veil__pattern, .js .kv-veil__mark,
   .js .flower-btn__petals, .js .fixed-entry__petals,
   .js .marquee__nekko, .js .site-footer__nekko, .js .splash__portrait img,
   .js .countdown__cell,

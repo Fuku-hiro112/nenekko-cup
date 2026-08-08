@@ -145,6 +145,28 @@
           <svg class="fall__petal" style="--x:98%; --d:-16s; --dur:21s; --s:29px"><use href="#ic-petal"></use></svg>
         </div>
 
+        <!-- 周期で絵を覆う柄。公式の作りに合わせて、行きと帰りで手法を変えています。
+             覆うとき（約0.75秒）… 柄を重ねて溶かす
+             戻るとき（約0.33秒）… 花のかたちの穴を中央から広げる
+             周期は15秒。動きを減らす設定のときは出しません。 -->
+        <div class="kv-veil" aria-hidden="true">
+          <div class="kv-veil__pattern">
+          <b>ねっこ ねっこ ねっこ ねっこ ねっこ ねっこ ねっこ</b>
+          <b>ねっこ ねっこ ねっこ ねっこ ねっこ ねっこ ねっこ</b>
+          <b>ねっこ ねっこ ねっこ ねっこ ねっこ ねっこ ねっこ</b>
+          <b>ねっこ ねっこ ねっこ ねっこ ねっこ ねっこ ねっこ</b>
+          <b>ねっこ ねっこ ねっこ ねっこ ねっこ ねっこ ねっこ</b>
+          <b>ねっこ ねっこ ねっこ ねっこ ねっこ ねっこ ねっこ</b>
+          <b>ねっこ ねっこ ねっこ ねっこ ねっこ ねっこ ねっこ</b>
+          <b>ねっこ ねっこ ねっこ ねっこ ねっこ ねっこ ねっこ</b>
+          <b>ねっこ ねっこ ねっこ ねっこ ねっこ ねっこ ねっこ</b>
+          </div>
+          <span class="kv-veil__mark">
+            <svg viewBox="-34 -34 268 268"><use href="#fb-petals" fill="currentColor"/></svg>
+            <img src="assets/img/nekko-1.webp" alt="">
+          </span>
+        </div>
+
         <!-- 下端を生成りへ溶かす膜。この上に大会名が載ります -->
         <div class="kv__fade" aria-hidden="true"></div>
 
