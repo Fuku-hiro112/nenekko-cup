@@ -97,6 +97,23 @@
 
   <!-- ============ HERO ============ -->
   <section class="hero" id="top">
+    <!-- 空・虹・雲。図形はすべてこのページのための自作です -->
+    <div class="sky" aria-hidden="true">
+      <svg class="sky__rainbow" viewBox="0 0 1000 500" preserveAspectRatio="xMidYMax slice">
+        <g fill="none" stroke-width="24" stroke-linecap="round">
+          <path d="M60 500a440 440 0 0 1 880 0"  stroke="#FF9EC4"/>
+          <path d="M86 500a414 414 0 0 1 828 0"  stroke="#FFBE86"/>
+          <path d="M112 500a388 388 0 0 1 776 0" stroke="#FFE28A"/>
+          <path d="M138 500a362 362 0 0 1 724 0" stroke="#AEE4A0"/>
+          <path d="M164 500a336 336 0 0 1 672 0" stroke="#9BD6F2"/>
+        </g>
+      </svg>
+      <span class="cloud cloud--1"></span>
+      <span class="cloud cloud--2"></span>
+      <span class="cloud cloud--3"></span>
+      <span class="cloud cloud--4"></span>
+    </div>
+
     <div class="hero__sunburst" aria-hidden="true"></div>
 
     <div class="hero__deco" aria-hidden="true">
@@ -114,17 +131,10 @@
       <svg class="deco deco--sparkle deco--12"><use href="#ic-sparkle"></use></svg>
     </div>
 
-    <!-- 背景の壁紙。読み込めたときだけ出る。たまに右へ隠れて戻ってくる -->
-    <div class="hero__wallpaper" data-img-slot hidden aria-hidden="true">
-      <img src="assets/img/nene-wallpaper.webp" alt="">
-    </div>
-
-    <!-- 背景の幕。一定間隔で滑り込んできて、真ん中から開く。
-         大会名は常に幕の手前に出るので、幕自体は文字を持たない装飾パネルにしている。
-         左右で同じ柄を持ち、clip-path で半分ずつ見せている。 -->
-    <div class="curtain" aria-hidden="true">
-      <div class="curtain__half curtain__half--l"><div class="curtain__panel"></div></div>
-      <div class="curtain__half curtain__half--r"><div class="curtain__panel"></div></div>
+    <!-- 左右に構えるねっ子。空の手前・文字の後ろに立ちます -->
+    <div class="hero__mascots" aria-hidden="true">
+      <span class="mascot mascot--l" data-img-slot hidden><img src="assets/img/nekko-1.webp" alt=""></span>
+      <span class="mascot mascot--r" data-img-slot hidden><img src="assets/img/nekko-3.webp" alt=""></span>
     </div>
 
     <!-- 舞い落ちる花びら。--x 位置 / --d 開始ずらし / --dur 落ちる速さ / --s 大きさ -->
@@ -147,9 +157,16 @@
       <svg class="fall__petal" style="--x:98%; --d:-16s; --dur:21s; --s:29px"><use href="#ic-petal"></use></svg>
     </div>
 
+    <!-- EDIT: 主催サーバー名 -->
+    <p class="hero__eyebrow"><span>ねっこ集会所 presents</span></p>
+
+    <!-- 主役。読み込めたときだけ出ます（画像を消してもレイアウトは崩れません）。
+         公式と同じく「キャラクター → 大会名 → 日付」の順に縦へ積みます。 -->
+    <div class="hero__chara" data-img-slot hidden aria-hidden="true">
+      <img src="assets/img/nene.webp" alt="">
+    </div>
+
     <div class="hero__head">
-      <!-- EDIT: 主催サーバー名 -->
-      <p class="hero__eyebrow"><span>ねっこ集会所 presents</span></p>
       <h1 class="hero__title">
         <!-- EDIT: 大会名（1行ずつ。data-text は表示文字と必ず同じにしてください） -->
         <span class="stroked stroked--sm" data-text="ねっ子">ねっ子</span>
@@ -158,6 +175,39 @@
       <!-- EDIT: キャッチコピー -->
       <p class="hero__catch">その手札、咲かせにいこう。</p>
     </div>
+
+    <!-- 開催日。ページでいちばん大きい文字です -->
+    <!-- EDIT: 開催日（年・月・日・曜日。ABOUTや手札の表記と揃えてください） -->
+    <p class="kv-date">
+      <span class="kv-date__year">2026<i>.</i></span>
+      <b class="kv-date__num">8</b><i class="kv-date__sep">.</i><b class="kv-date__num">30</b>
+      <span class="kv-date__dow">SUN</span>
+    </p>
+    <!-- EDIT: 会場（日本語／英字の2行） -->
+    <p class="kv-place">
+      <span class="kv-place__ja">Discord「ねっこ集会所」イベントルーム</span>
+      <span class="kv-place__en">at NEKKO SHUKAISHO</span>
+    </p>
+
+    <!-- 開催の条件。公式サイトの Venue / Streaming の並びに合わせた2枚組です -->
+    <ul class="kv-badges">
+      <li class="kv-badge">
+        <!-- EDIT: 1枚目のバッジ -->
+        <span class="kv-badge__head">開催</span>
+        <span class="kv-badge__body">
+          <span class="kv-badge__en">Start</span>
+          <span class="kv-badge__row"><i>START</i><b>20:00</b><i>／</i><b>約2時間</b></span>
+        </span>
+      </li>
+      <li class="kv-badge">
+        <!-- EDIT: 2枚目のバッジ -->
+        <span class="kv-badge__head">応募</span>
+        <span class="kv-badge__body">
+          <span class="kv-badge__en">Entry</span>
+          <span class="kv-badge__row"><i>締切</i><b>8/23</b><i>／</i><b>Googleフォーム</b></span>
+        </span>
+      </li>
+    </ul>
 
     <!-- カウントダウン（JSが有効なときだけ表示。日時はHTML側にも書いてあります） -->
     <!-- EDIT: 開催日時（ISO形式。手札やABOUTの表記と揃えてください） -->
@@ -168,8 +218,44 @@
       <span class="countdown__cell"><b data-unit="minutes">--</b><i>分</i></span>
     </div>
 
+    <p class="hero__cta">
+      <!-- EDIT: ヒーローのボタン文言（リンク先は下のENTRYセクションです） -->
+      <a class="flower-btn" href="#entry">
+        <!-- 花びらの先が切れないよう、viewBox は花より一回り大きく取っています -->
+        <svg class="flower-btn__petals" viewBox="-34 -34 268 268" aria-hidden="true">
+          <defs>
+            <!-- 細長い花びらを8枚。中心まで届く長さにして、真ん中に穴が空かないようにしています -->
+            <g id="fb-petals">
+              <ellipse cx="100" cy="44" rx="30" ry="62"/>
+              <ellipse cx="100" cy="44" rx="30" ry="62" transform="rotate(45 100 100)"/>
+              <ellipse cx="100" cy="44" rx="30" ry="62" transform="rotate(90 100 100)"/>
+              <ellipse cx="100" cy="44" rx="30" ry="62" transform="rotate(135 100 100)"/>
+              <ellipse cx="100" cy="44" rx="30" ry="62" transform="rotate(180 100 100)"/>
+              <ellipse cx="100" cy="44" rx="30" ry="62" transform="rotate(225 100 100)"/>
+              <ellipse cx="100" cy="44" rx="30" ry="62" transform="rotate(270 100 100)"/>
+              <ellipse cx="100" cy="44" rx="30" ry="62" transform="rotate(315 100 100)"/>
+            </g>
+          </defs>
+          <!-- 同じ花をひと回り大きく白で敷いて、見出しと同じ白フチにしています -->
+          <use href="#fb-petals" fill="#FFFFFF" transform="translate(100 100) scale(1.09) translate(-100 -100)"/>
+          <use href="#fb-petals" fill="currentColor"/>
+        </svg>
+        <span class="flower-btn__label"><small>応募のしかたは</small>ENTRY</span>
+      </a>
+    </p>
+
+    <!-- 下端のフリル。ここでキービジュアルが終わります -->
+    <svg class="hero__frill" viewBox="0 0 1200 120" preserveAspectRatio="none" aria-hidden="true">
+      <path fill="#FFC9DE" d="M0 88a50 28 0 0 1 100 0a50 28 0 0 1 100 0a50 28 0 0 1 100 0a50 28 0 0 1 100 0a50 28 0 0 1 100 0a50 28 0 0 1 100 0a50 28 0 0 1 100 0a50 28 0 0 1 100 0a50 28 0 0 1 100 0a50 28 0 0 1 100 0a50 28 0 0 1 100 0a50 28 0 0 1 100 0V120H0Z"/>
+      <!-- 手前の段は半山ぶんずらします。左端に段差が出ないよう、画面の外から描き始めています -->
+      <path fill="#FF9EC4" d="M-50 96a50 30 0 0 1 100 0a50 30 0 0 1 100 0a50 30 0 0 1 100 0a50 30 0 0 1 100 0a50 30 0 0 1 100 0a50 30 0 0 1 100 0a50 30 0 0 1 100 0a50 30 0 0 1 100 0a50 30 0 0 1 100 0a50 30 0 0 1 100 0a50 30 0 0 1 100 0a50 30 0 0 1 100 0a50 30 0 0 1 100 0V120H-50Z"/>
+    </svg>
+  </section>
+
+  <!-- ============ 大会情報（手札） ============ -->
+  <section class="info-band" aria-label="大会の開催情報">
     <!-- 手札＝大会情報。1枚1項目。 -->
-    <ul class="hand" aria-label="大会の開催情報">
+    <ul class="hand">
       <li class="hand__tile" style="--i:0">
         <div class="tile">
           <span class="tile__label">DATE</span>
@@ -231,11 +317,6 @@
         </div>
       </li>
     </ul>
-
-    <p class="hero__cta">
-      <!-- EDIT: ヒーローのボタン文言（リンク先は下のENTRYセクションです） -->
-      <a class="btn btn--primary" href="#entry">応募のしかたを見る</a>
-    </p>
   </section>
 
   <!-- 流れる帯 -->
