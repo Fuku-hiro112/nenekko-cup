@@ -21,6 +21,7 @@ nenePokajyan/
 ├─ docs/               設計書（下記）
 └─ tools/
     ├─ generate_nene.py    キャラクター画像の生成スクリプト
+    ├─ build_kv_art.py     キービジュアルの絵を原本から書き出す（写り込みを自動で切り落とします）
     ├─ cut_cards.py        RULEの札をプレイ画面から切り出すスクリプト
     ├─ draw_tables.py      卓分けの抽選（下記）
     ├─ update_bracket.py   最終結果をページに焼き付ける（当日は不要）

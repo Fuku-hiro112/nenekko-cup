@@ -97,24 +97,77 @@
 
   <!-- ============ HERO ============ -->
   <section class="hero" id="top">
-    <!-- 空・虹・雲。図形はすべてこのページのための自作です -->
-    <div class="sky" aria-hidden="true">
-      <svg class="sky__rainbow" viewBox="0 0 1000 500" preserveAspectRatio="xMidYMax slice">
-        <g fill="none" stroke-width="24" stroke-linecap="round">
-          <path d="M60 500a440 440 0 0 1 880 0"  stroke="#FF9EC4"/>
-          <path d="M86 500a414 414 0 0 1 828 0"  stroke="#FFBE86"/>
-          <path d="M112 500a388 388 0 0 1 776 0" stroke="#FFE28A"/>
-          <path d="M138 500a362 362 0 0 1 724 0" stroke="#AEE4A0"/>
-          <path d="M164 500a336 336 0 0 1 672 0" stroke="#9BD6F2"/>
-        </g>
-      </svg>
-      <span class="cloud cloud--1"></span>
-      <span class="cloud cloud--2"></span>
-      <span class="cloud cloud--3"></span>
-      <span class="cloud cloud--4"></span>
-    </div>
+    <!-- EDIT: 主催サーバー名 -->
+    <p class="hero__eyebrow"><span>ねっこ集会所 presents</span></p>
 
-    <div class="hero__sunburst" aria-hidden="true"></div>
+    <!-- キービジュアル。公式と同じく、絵を1枚の額に収めて大会名を下端に重ねます。
+         絵が読み込めなかったときは、下地の空がそのまま出ます。 -->
+    <div class="kv">
+      <div class="kv__panel">
+        <!-- 空・虹・雲。図形はすべてこのページのための自作です -->
+        <div class="sky" aria-hidden="true">
+          <svg class="sky__rainbow" viewBox="0 0 1000 500" preserveAspectRatio="xMidYMax slice">
+            <g fill="none" stroke-width="24" stroke-linecap="round">
+              <path d="M60 500a440 440 0 0 1 880 0"  stroke="#FF9EC4"/>
+              <path d="M86 500a414 414 0 0 1 828 0"  stroke="#FFBE86"/>
+              <path d="M112 500a388 388 0 0 1 776 0" stroke="#FFE28A"/>
+              <path d="M138 500a362 362 0 0 1 724 0" stroke="#AEE4A0"/>
+              <path d="M164 500a336 336 0 0 1 672 0" stroke="#9BD6F2"/>
+            </g>
+          </svg>
+          <span class="cloud cloud--1"></span>
+          <span class="cloud cloud--2"></span>
+          <span class="cloud cloud--3"></span>
+          <span class="cloud cloud--4"></span>
+        </div>
+
+        <div class="hero__sunburst" aria-hidden="true"></div>
+
+        <!-- EDIT: キービジュアルの絵（tools/src-img/ねね壁紙.png から書き出したもの） -->
+        <div class="kv__art" data-img-slot hidden aria-hidden="true">
+          <img src="assets/img/kv-art.webp" alt="">
+        </div>
+
+        <!-- 舞い落ちる花びら。--x 位置 / --d 開始ずらし / --dur 落ちる速さ / --s 大きさ -->
+        <div class="fall" aria-hidden="true">
+          <svg class="fall__petal" style="--x:3%;  --d:-1s;  --dur:15s; --s:22px"><use href="#ic-petal"></use></svg>
+          <svg class="fall__petal" style="--x:9%;  --d:-7s;  --dur:19s; --s:30px"><use href="#ic-petal"></use></svg>
+          <svg class="fall__petal" style="--x:15%; --d:-13s; --dur:13s; --s:16px"><use href="#ic-petal"></use></svg>
+          <svg class="fall__petal" style="--x:21%; --d:-3s;  --dur:22s; --s:26px"><use href="#ic-petal"></use></svg>
+          <svg class="fall__petal" style="--x:28%; --d:-10s; --dur:16s; --s:19px"><use href="#ic-petal"></use></svg>
+          <svg class="fall__petal" style="--x:34%; --d:-17s; --dur:20s; --s:28px"><use href="#ic-petal"></use></svg>
+          <svg class="fall__petal" style="--x:41%; --d:-5s;  --dur:14s; --s:17px"><use href="#ic-petal"></use></svg>
+          <svg class="fall__petal" style="--x:48%; --d:-11s; --dur:18s; --s:24px"><use href="#ic-petal"></use></svg>
+          <svg class="fall__petal" style="--x:55%; --d:-2s;  --dur:21s; --s:31px"><use href="#ic-petal"></use></svg>
+          <svg class="fall__petal" style="--x:61%; --d:-15s; --dur:15s; --s:18px"><use href="#ic-petal"></use></svg>
+          <svg class="fall__petal" style="--x:68%; --d:-8s;  --dur:17s; --s:25px"><use href="#ic-petal"></use></svg>
+          <svg class="fall__petal" style="--x:74%; --d:-19s; --dur:23s; --s:20px"><use href="#ic-petal"></use></svg>
+          <svg class="fall__petal" style="--x:81%; --d:-4s;  --dur:13s; --s:27px"><use href="#ic-petal"></use></svg>
+          <svg class="fall__petal" style="--x:87%; --d:-12s; --dur:19s; --s:16px"><use href="#ic-petal"></use></svg>
+          <svg class="fall__petal" style="--x:93%; --d:-6s;  --dur:16s; --s:23px"><use href="#ic-petal"></use></svg>
+          <svg class="fall__petal" style="--x:98%; --d:-16s; --dur:21s; --s:29px"><use href="#ic-petal"></use></svg>
+        </div>
+
+        <!-- 下端を生成りへ溶かす膜。この上に大会名が載ります -->
+        <div class="kv__fade" aria-hidden="true"></div>
+
+        <div class="hero__head">
+          <h1 class="hero__title">
+            <!-- EDIT: 大会名（1行ずつ。data-text は表示文字と必ず同じにしてください） -->
+            <span class="stroked stroked--sm" data-text="ねっ子">ねっ子</span>
+            <span class="stroked" data-text="ポカジャン大会">ポカジャン大会</span>
+          </h1>
+          <!-- EDIT: キャッチコピー -->
+          <p class="hero__catch">その手札、咲かせにいこう。</p>
+        </div>
+      </div>
+
+      <!-- 左右に構えるねっ子。空の手前・文字の後ろに立ちます -->
+      <div class="hero__mascots" aria-hidden="true">
+        <span class="mascot mascot--l" data-img-slot hidden><img src="assets/img/nekko-1.webp" alt=""></span>
+        <span class="mascot mascot--r" data-img-slot hidden><img src="assets/img/nekko-3.webp" alt=""></span>
+      </div>
+    </div>
 
     <div class="hero__deco" aria-hidden="true">
       <svg class="deco deco--petal deco--1"><use href="#ic-petal"></use></svg>
@@ -129,52 +182,6 @@
       <svg class="deco deco--sparkle deco--10"><use href="#ic-sparkle"></use></svg>
       <svg class="deco deco--sparkle deco--11"><use href="#ic-sparkle"></use></svg>
       <svg class="deco deco--sparkle deco--12"><use href="#ic-sparkle"></use></svg>
-    </div>
-
-    <!-- 左右に構えるねっ子。空の手前・文字の後ろに立ちます -->
-    <div class="hero__mascots" aria-hidden="true">
-      <span class="mascot mascot--l" data-img-slot hidden><img src="assets/img/nekko-1.webp" alt=""></span>
-      <span class="mascot mascot--r" data-img-slot hidden><img src="assets/img/nekko-3.webp" alt=""></span>
-    </div>
-
-    <!-- 舞い落ちる花びら。--x 位置 / --d 開始ずらし / --dur 落ちる速さ / --s 大きさ -->
-    <div class="fall" aria-hidden="true">
-      <svg class="fall__petal" style="--x:3%;  --d:-1s;  --dur:15s; --s:22px"><use href="#ic-petal"></use></svg>
-      <svg class="fall__petal" style="--x:9%;  --d:-7s;  --dur:19s; --s:30px"><use href="#ic-petal"></use></svg>
-      <svg class="fall__petal" style="--x:15%; --d:-13s; --dur:13s; --s:16px"><use href="#ic-petal"></use></svg>
-      <svg class="fall__petal" style="--x:21%; --d:-3s;  --dur:22s; --s:26px"><use href="#ic-petal"></use></svg>
-      <svg class="fall__petal" style="--x:28%; --d:-10s; --dur:16s; --s:19px"><use href="#ic-petal"></use></svg>
-      <svg class="fall__petal" style="--x:34%; --d:-17s; --dur:20s; --s:28px"><use href="#ic-petal"></use></svg>
-      <svg class="fall__petal" style="--x:41%; --d:-5s;  --dur:14s; --s:17px"><use href="#ic-petal"></use></svg>
-      <svg class="fall__petal" style="--x:48%; --d:-11s; --dur:18s; --s:24px"><use href="#ic-petal"></use></svg>
-      <svg class="fall__petal" style="--x:55%; --d:-2s;  --dur:21s; --s:31px"><use href="#ic-petal"></use></svg>
-      <svg class="fall__petal" style="--x:61%; --d:-15s; --dur:15s; --s:18px"><use href="#ic-petal"></use></svg>
-      <svg class="fall__petal" style="--x:68%; --d:-8s;  --dur:17s; --s:25px"><use href="#ic-petal"></use></svg>
-      <svg class="fall__petal" style="--x:74%; --d:-19s; --dur:23s; --s:20px"><use href="#ic-petal"></use></svg>
-      <svg class="fall__petal" style="--x:81%; --d:-4s;  --dur:13s; --s:27px"><use href="#ic-petal"></use></svg>
-      <svg class="fall__petal" style="--x:87%; --d:-12s; --dur:19s; --s:16px"><use href="#ic-petal"></use></svg>
-      <svg class="fall__petal" style="--x:93%; --d:-6s;  --dur:16s; --s:23px"><use href="#ic-petal"></use></svg>
-      <svg class="fall__petal" style="--x:98%; --d:-16s; --dur:21s; --s:29px"><use href="#ic-petal"></use></svg>
-    </div>
-
-    <!-- EDIT: 主催サーバー名 -->
-    <p class="hero__eyebrow"><span>ねっこ集会所 presents</span></p>
-
-    <!-- 主役。読み込めたときだけ出ます（画像を消してもレイアウトは崩れません）。
-         公式と同じく「キャラクター → 大会名 → 日付」の順に縦へ積みます。 -->
-    <!-- EDIT: キービジュアルの絵（tools/generate_nene.py --preset kv で作り直せます／seed=3264359572） -->
-    <div class="hero__chara" data-img-slot hidden aria-hidden="true">
-      <img src="assets/img/nene-kv.webp" alt="">
-    </div>
-
-    <div class="hero__head">
-      <h1 class="hero__title">
-        <!-- EDIT: 大会名（1行ずつ。data-text は表示文字と必ず同じにしてください） -->
-        <span class="stroked stroked--sm" data-text="ねっ子">ねっ子</span>
-        <span class="stroked" data-text="ポカジャン大会">ポカジャン大会</span>
-      </h1>
-      <!-- EDIT: キャッチコピー -->
-      <p class="hero__catch">その手札、咲かせにいこう。</p>
     </div>
 
     <!-- 開催日。ページでいちばん大きい文字です -->
