@@ -1214,55 +1214,61 @@ a { color: var(--pink-deep); }
   text-align: center; margin: 0 0 14px;
 }
 .tablecard__seats { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+/* 席。ページ全体に合わせて、ぼかしたグラデーションではなく
+   平らな面と縁で作っています。 */
 .tablecard__seats li {
   display: flex; align-items: center; gap: 8px;
   padding: 10px 13px; border-radius: 14px;
   background: #FBF6EE;
+  border: 2px solid #EFE4D2;
   font-size: .93rem; line-height: 1.5;
 }
-/* 勝ち上がった人。色だけで示すと分からない人がいるので、印も一緒に出す */
+/* 勝ち上がった人。色だけで示すと分からない人がいるので、印も一緒に出す。
+   地 #FFE39B に文字 #7A4E02 で 6.6:1。 */
 .tablecard__seats .is-winner {
-  background: linear-gradient(180deg, #FFF3D6, #FFE9A8);
-  font-weight: 700; color: var(--gold-ink);
+  background: #FFE39B;
+  border-color: #F0B429;
+  font-weight: 700; color: #7A4E02;
 }
-.tablecard__seats .is-winner::before { content: "✦"; color: var(--gold-ink); }
+.tablecard__seats .is-winner::before { content: "✦"; color: #946006; }  /* 印は図形扱い。地に 4.25:1 */
 /* 決勝の卓だけは格を上げる。金の縁と、上から差す光。
    ねねち賞のカード（.localrule__card--nene）と同じ組み立てで揃えている。 */
 /* 決勝の卓だけは、地の色ではなく金の縁にして格を上げる。
-   影も他のカードと同じ「真下に落とす」形のまま、金の光だけ足している。 */
+   光をぼかさず、縁の色だけで違いを出しています。 */
 .round--final .tablecard {
-  border-color: var(--gold);
-  background:
-    radial-gradient(120% 78% at 50% 0%, #FFF7E4 0%, rgba(255, 247, 228, 0) 64%),
-    var(--surface);
-  box-shadow: 0 8px 0 rgba(70, 32, 58, .13), 0 0 30px rgba(247, 193, 63, .45);
+  border-color: #F0B429;
+  background: var(--surface);
 }
-.round--final .tablecard__name { color: var(--gold-ink); }
+.round--final .tablecard__name { color: #8E5F07; }   /* 白地に 5.54:1 */
 .round--final .round__label::before {          /* 見出しの上の棒も金を濃くする */
   background: linear-gradient(90deg, var(--gold), #E2952A);
   width: 72px;
 }
 
 /* 優勝者。ページ内でいちばん強い一行にする。
-   **金を濃くするほど金色の文字が読めなくなる**ので、代わりに文字を大きくしている。
-   19.2px の太字は「大きい文字」の扱いになり、必要なコントラストが 4.5:1 から 3:1 に下がる
-   （この地の下端に対して 3.96:1）。 */
+   見出しや花のボタンと同じで、白い輪を挟んでから色の輪を回し、
+   影は真下へ落とす。ぼかした光は他のどこにも無いので使っていません。
+   地 #FFC93C に文字 #5C3F02 で 6.31:1。 */
 .tablecard__seats .is-champion {
-  background: linear-gradient(180deg, #FFF6DC 0%, #FFD86B 100%);
-  box-shadow:
-    0 0 0 2px var(--gold-pale) inset,
-    0 6px 18px rgba(247, 193, 63, .55);
-  padding: 14px;
-  font-size: 1.2rem; font-weight: 900; color: var(--gold-ink);
+  background: #FFC93C;
+  border: 3px solid var(--surface);
+  box-shadow: 0 0 0 3px #E0930F, 0 6px 0 rgba(70, 32, 58, .20);
+  padding: 11px 10px;
+  /* 卓の幅は240pxしかなく、王冠と「優勝」の札で横が詰まる。
+     名前が2行に折れないところまで字を落としている。 */
+  font-size: 1.04rem; font-weight: 900; color: #5C3F02;
+  gap: 6px; min-width: 0;
 }
 .tablecard__seats .is-champion::before {       /* ✦ ではなく王冠にする */
   content: "👑"; font-size: 1.05em;
 }
+/* 「優勝」は札にして、名前と役割を見た目で分ける。地 #9C5605 に白で 5.6:1。 */
 .tablecard__seats .is-champion::after {
   content: "優勝"; margin-left: auto; flex: none;
   font-family: var(--font-display); font-weight: 900;
-  font-size: .78rem; letter-spacing: .12em;
-  color: #5C3F02;                              /* 小さい字なので、金の地に 7:1 まで濃くする */
+  font-size: .66rem; letter-spacing: .06em;
+  color: var(--surface); background: #9C5605;
+  padding: 4px 9px; border-radius: 999px;
 }
 .tablecard__seats .is-cpu { color: var(--ink-muted); opacity: .75; font-style: italic; }
 .seat__note {
@@ -1511,10 +1517,11 @@ a { color: var(--pink-deep); }
   /* 1カラムになれば幅に余裕ができるので、高さの上限は外して大きく見せる */
   .shot img { height: auto; }
 
-  /* 狭い画面では「優勝」の文字を省き、名前に幅を回す。
-     **文字を小さくして詰める手もあるが、そうすると求められるコントラストが上がり、
-     金を薄めることになって豪華さが消える。** 王冠と金の強調だけでも意味は伝わる。 */
-  .tablecard__seats .is-champion::after { display: none; }
+  /* 「優勝」は狭い画面でも出します。
+     以前は金の地に直接この文字を載せていたため、小さくすると読めなくなり省いていました。
+     いまは札に濃い地（#9C5605 に白で 5.6:1）を持たせたので、小さくても読めます。 */
+  .tablecard__seats .is-champion { font-size: .96rem; }
+  .tablecard__seats .is-champion::after { font-size: .62rem; padding: 3px 8px; }
 }
 
 @media (max-width: 760px) {
