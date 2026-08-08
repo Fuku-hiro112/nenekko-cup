@@ -219,30 +219,23 @@ a { color: var(--pink-deep); }
 .site-header {
   position: fixed; inset: 0 0 auto 0; z-index: 50;
   height: var(--header-h);
-  /* 地は RULE と同じ「牌の裏面」の斜めストライプ。薄い面が無地だと平板に見えるため、
-     刻みだけヘッダーの高さに合わせて細かくしている（本文は 9/26px）。 */
-  background:
-    repeating-linear-gradient(-45deg,
-      rgba(255, 255, 255, .5) 0 7px,
-      rgba(255, 255, 255, 0) 7px 20px),
-    rgba(255, 247, 243, .9);
+  /* 地はキービジュアルと同じ生成り。柄を入れずに、下の絵を邪魔しない面にしている。 */
+  background: rgba(255, 251, 242, .88);
   backdrop-filter: blur(10px);
   box-shadow: 0 1px 0 rgba(255, 255, 255, .8) inset;
   transition: box-shadow var(--t) var(--ease), background-color var(--t) var(--ease);
 }
-/* 本文のカードはどれも上辺に金の帯を持っている。ヘッダーは上から下りてくる面なので、
-   同じ帯を下辺に敷いてページの造作と言語をそろえた（1pxの罫線だけだと浮いていた）。 */
+/* 下辺は、セクションの地の色をそのまま横に並べた帯。
+   ページを下まで見ると、この5色が順番に出てくることが分かる作りにしている。 */
 .site-header::after {
-  content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 3px;
-  background: linear-gradient(90deg, var(--gold-pale), var(--gold) 50%, #E2952A);
+  content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 4px;
+  background: linear-gradient(90deg,
+    #FFAE39 0%, #FFAE39 20%, #2FB4C4 20%, #2FB4C4 40%,
+    #FF7DAF 40%, #FF7DAF 60%, #78C74B 60%, #78C74B 80%, #FF8C5F 80%);
 }
 /* スクロールすると、ヘッダーが浮いていることが分かる程度に影をつける */
 .is-scrolled .site-header {
-  background:
-    repeating-linear-gradient(-45deg,
-      rgba(255, 255, 255, .5) 0 7px,
-      rgba(255, 255, 255, 0) 7px 20px),
-    rgba(255, 247, 243, .96);
+  background: rgba(255, 251, 242, .96);
   box-shadow: 0 4px 18px rgba(70, 32, 58, .12);
 }
 .site-header__inner {
@@ -259,19 +252,15 @@ a { color: var(--pink-deep); }
   padding: 7px 16px 7px 13px;
   font-family: var(--font-display); font-weight: 900; font-size: 1.02rem;
   color: var(--ink); text-decoration: none;
-  background: linear-gradient(180deg, var(--surface), #FFF6FA);
-  border: 2px solid var(--pink-soft);
-  border-radius: var(--radius-sm);
-  box-shadow: 0 4px 12px rgba(70, 32, 58, .12);
+  background: var(--surface);
+  border: 3px solid var(--p-pink);
+  border-radius: 999px;
+  box-shadow: 0 4px 0 rgba(70, 32, 58, .13);
   transition: transform var(--t) var(--ease), box-shadow var(--t) var(--ease);
-}
-.site-header__logo::before {          /* 札の上辺。本文カードと同じ金の帯 */
-  content: ""; position: absolute; inset: -2px -2px auto; height: 4px;
-  background: linear-gradient(90deg, var(--gold-pale), var(--gold) 50%, #E2952A);
 }
 .site-header__logo:hover {
   transform: translateY(-2px);
-  box-shadow: 0 9px 20px rgba(70, 32, 58, .18);
+  box-shadow: 0 6px 0 rgba(70, 32, 58, .13);
 }
 .site-header__mark { font-size: 1.15em; }
 
@@ -283,8 +272,8 @@ a { color: var(--pink-deep); }
 }
 .site-nav a::after {
   content: ""; position: absolute; left: 0; right: 0; bottom: 0;
-  height: 3px; border-radius: 3px;
-  background: linear-gradient(90deg, var(--gold-pale), var(--gold));
+  height: 4px; border-radius: 4px;
+  background: var(--p-pink);
   transform: scaleX(0); transform-origin: left; transition: transform .25s ease;
 }
 .site-nav a:hover::after { transform: scaleX(1); }
@@ -1202,11 +1191,13 @@ a { color: var(--pink-deep); }
    卓は人数によって数が変わるので、列数を決め打ちせず auto-fit で流し込んでいます。 */
 .rounds { display: grid; gap: 44px; }
 .round__label {
-  font-size: 1.28rem; font-weight: 900; text-align: center; margin: 0 0 22px;
+  font-family: var(--font-display); font-weight: 900;
+  font-size: 1.34rem; text-align: center; margin: 0 0 22px;
+  color: var(--sec-ink);
 }
-.round__label::before {                 /* 見出しの上の金の棒。rule__subtitle と同じ作り */
-  content: ""; display: block; width: 52px; height: 4px; border-radius: 4px;
-  background: linear-gradient(90deg, var(--gold-pale), var(--gold));
+.round__label::before {                 /* 見出しの上の棒。地の色に合わせる */
+  content: ""; display: block; width: 56px; height: 5px; border-radius: 5px;
+  background: var(--sec-edge);
   margin: 0 auto 12px;
 }
 /* 卓の幅を上限つきにして中央へ寄せている。1fr で伸ばすと、卓が減る決勝ほど
@@ -1218,15 +1209,15 @@ a { color: var(--pink-deep); }
 
 .tablecard { padding: 22px 22px 18px; }
 .tablecard__name {
-  font-family: var(--font-en); font-weight: 700; font-size: .82rem;
-  letter-spacing: .14em; color: var(--pink-deep);
+  font-family: var(--font-en); font-weight: 700; font-size: .84rem;
+  letter-spacing: .14em; color: var(--sec-ink);
   text-align: center; margin: 0 0 14px;
 }
 .tablecard__seats { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
 .tablecard__seats li {
   display: flex; align-items: center; gap: 8px;
-  padding: 9px 12px; border-radius: var(--radius-sm);
-  background: var(--bg-alt);
+  padding: 10px 13px; border-radius: 14px;
+  background: #FBF6EE;
   font-size: .93rem; line-height: 1.5;
 }
 /* 勝ち上がった人。色だけで示すと分からない人がいるので、印も一緒に出す */
@@ -1237,14 +1228,15 @@ a { color: var(--pink-deep); }
 .tablecard__seats .is-winner::before { content: "✦"; color: var(--gold-ink); }
 /* 決勝の卓だけは格を上げる。金の縁と、上から差す光。
    ねねち賞のカード（.localrule__card--nene）と同じ組み立てで揃えている。 */
+/* 決勝の卓だけは、地の色ではなく金の縁にして格を上げる。
+   影も他のカードと同じ「真下に落とす」形のまま、金の光だけ足している。 */
 .round--final .tablecard {
   border-color: var(--gold);
   background:
     radial-gradient(120% 78% at 50% 0%, #FFF7E4 0%, rgba(255, 247, 228, 0) 64%),
-    linear-gradient(180deg, var(--surface) 0%, #FFF9FB 100%);
-  box-shadow: var(--shadow-deep), 0 0 30px rgba(247, 193, 63, .35);
+    var(--surface);
+  box-shadow: 0 8px 0 rgba(70, 32, 58, .13), 0 0 30px rgba(247, 193, 63, .45);
 }
-.round--final .tablecard::before { height: 8px; }
 .round--final .tablecard__name { color: var(--gold-ink); }
 .round--final .round__label::before {          /* 見出しの上の棒も金を濃くする */
   background: linear-gradient(90deg, var(--gold), #E2952A);
@@ -1278,7 +1270,7 @@ a { color: var(--pink-deep); }
   font-size: .68rem; letter-spacing: .04em; color: var(--ink-muted);
 }
 .bracket__empty {
-  text-align: center; color: var(--ink-muted);
+  text-align: center; color: var(--sec-ink);
   padding: 44px 0;
 }
 
@@ -1342,14 +1334,23 @@ a { color: var(--pink-deep); }
 .entry__portrait.nekko-peek { position: static; overflow: visible; }
 
 /* ---------- 12. フッター ---------- */
+/* 濃い紫の面はセクションの明るい地から浮くので、生成りに変えています。
+   境目はセクションどうしと同じ、うねった曲線で切ります。 */
 .site-footer {
   position: relative;
-  background: linear-gradient(180deg, #57284A 0%, var(--plum) 100%);
-  color: var(--plum-ink);
-  border-top: 4px solid var(--gold);
-  padding: 46px 0 52px;
+  background: linear-gradient(180deg, #FFF1F5 0%, var(--cream) 100%);
+  color: var(--ink);
+  padding: 62px 0 52px;
   font-size: .82rem;
   text-align: center;
+}
+.site-footer::before {
+  content: ""; position: absolute; left: 0; right: 0; top: 0;
+  height: clamp(34px, 4.5vw, 72px);
+  transform: translateY(-99%);
+  background: #FFF1F5;
+  -webkit-mask: var(--wave) bottom center / 100% 100% no-repeat;
+          mask: var(--wave) bottom center / 100% 100% no-repeat;
 }
 .site-footer__mark {
   display: flex; align-items: center; justify-content: center; gap: 12px;
@@ -1357,8 +1358,8 @@ a { color: var(--pink-deep); }
 }
 .site-footer__nekko { width: 46px; height: auto; }
 .site-footer__note { max-width: 56em; margin: 0 auto 12px; line-height: 1.85; }
-.site-footer__note a, .site-footer__contact a { color: var(--gold-pale); }
-.site-footer__contact { margin: 0; color: #F1CEDD; }
+.site-footer__note a, .site-footer__contact a { color: var(--pink-deep); }
+.site-footer__contact { margin: 0; color: var(--ink-muted); }
 
 /* ---------- 12.5 ずっと動いているもの ----------
    参考サイトの語彙に合わせた常時アニメーション。
@@ -1549,6 +1550,9 @@ a { color: var(--pink-deep); }
   .nav-toggle { white-space: nowrap; flex: none; }
 
   .hero { padding: 0 0 96px; }
+
+  /* 画面に固定した応募ボタンが問い合わせリンクに重なるので、そのぶん下を空ける */
+  .site-footer { padding-bottom: 132px; }
 
   /* 縦画面では主役を下げて、文字と重なりすぎないようにする */
   /* 絵は横長なので、縦画面では枠を低くして切り取りを弱める。
