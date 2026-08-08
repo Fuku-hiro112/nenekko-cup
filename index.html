@@ -664,6 +664,17 @@
 
 </main>
 
+<!-- 画面の隅に出しっぱなしにする応募ボタン（公式の TICKET にあたる位置づけ）。
+     花びらの形はヒーローのボタンと同じ定義を使い回しています。 -->
+<a class="fixed-entry" href="#entry">
+  <svg class="fixed-entry__petals" viewBox="-34 -34 268 268" aria-hidden="true">
+    <use href="#fb-petals" fill="#FFFFFF" transform="translate(100 100) scale(1.09) translate(-100 -100)"/>
+    <use href="#fb-petals" fill="currentColor"/>
+  </svg>
+  <!-- EDIT: 固定ボタンの文言 -->
+  <span class="fixed-entry__label"><small>応募はこちら</small>ENTRY</span>
+</a>
+
 <footer class="site-footer">
   <div class="wrap">
     <p class="site-footer__mark">

@@ -47,8 +47,13 @@
   /* 見出しと日付の縁取りの太さ。1か所で太さを揃えるために変数にしています */
   --stroke-w:   18px;
 
-  /* 背景に散らす花。丸を5つ並べただけの自作の図形です */
+  /* 背景に散らす花。丸を5つ並べただけの自作の図形です。
+     淡い地には桃色、セクションの濃い地には白を使い分けます。 */
   --flower: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cg fill='%23FFDDE8'%3E%3Ccircle cx='20' cy='10' r='7.4'/%3E%3Ccircle cx='30' cy='17.2' r='7.4'/%3E%3Ccircle cx='26.2' cy='29' r='7.4'/%3E%3Ccircle cx='13.8' cy='29' r='7.4'/%3E%3Ccircle cx='10' cy='17.2' r='7.4'/%3E%3C/g%3E%3Ccircle cx='20' cy='20.4' r='6' fill='%23FFE3A8'/%3E%3C/svg%3E");
+  --flower-w: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40' fill='%23FFFFFF' fill-opacity='.62'%3E%3Ccircle cx='20' cy='10' r='7.4'/%3E%3Ccircle cx='30' cy='17.2' r='7.4'/%3E%3Ccircle cx='26.2' cy='29' r='7.4'/%3E%3Ccircle cx='13.8' cy='29' r='7.4'/%3E%3Ccircle cx='10' cy='17.2' r='7.4'/%3E%3Ccircle cx='20' cy='20.4' r='6' fill-opacity='.9'/%3E%3C/svg%3E");
+
+  /* セクションの境目に使ううねった曲線 */
+  --wave: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 100' preserveAspectRatio='none'%3E%3Cpath d='M0 100V62C200 8 400 102 600 54C800 6 1000 96 1200 44V100Z' fill='%23000'/%3E%3C/svg%3E");
 
   --radius:     20px;
   --radius-sm:  13px;
@@ -684,6 +689,39 @@ a { color: var(--pink-deep); }
 .flower-btn:hover, .flower-btn:focus-visible { transform: translateY(-4px) scale(1.04); color: #FF87B6; }
 .flower-btn:focus-visible { outline: 3px solid var(--pink-deep); outline-offset: 6px; border-radius: 50%; }
 
+/* ---------- 5-8. 画面の隅に固定する応募ボタン ----------
+   公式の TICKET と同じ位置づけで、どこまでスクロールしても応募へ戻れます。
+   花びらの形はヒーローのボタンと同じ定義（#fb-petals）を使い回しています。 */
+.fixed-entry {
+  position: fixed; z-index: 60;
+  right: clamp(10px, 2vw, 26px); bottom: clamp(10px, 2vw, 26px);
+  display: grid; place-items: center;
+  width: clamp(94px, 12vw, 136px); aspect-ratio: 1;
+  /* どのセクションの地に重なっても沈まないよう、濃い桃で固定しています */
+  color: var(--pink);
+  text-decoration: none;
+  transition: transform var(--t) var(--ease);
+}
+.fixed-entry__petals {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  filter: drop-shadow(0 8px 14px rgba(70, 32, 58, .30));
+}
+.js .fixed-entry__petals { animation: spin-slow 34s linear infinite; }
+.fixed-entry__label {
+  position: relative;
+  display: grid; justify-items: center; gap: 1px;
+  font-family: var(--font-en); font-weight: 700;
+  font-size: clamp(.8rem, 1.5vw, .98rem); letter-spacing: .08em;
+  color: var(--surface);
+  text-shadow: 0 2px 5px rgba(160, 60, 100, .55);
+}
+.fixed-entry__label small {
+  font-family: var(--font-display); font-weight: 900;
+  font-size: .54rem; letter-spacing: .02em;
+}
+.fixed-entry:hover, .fixed-entry:focus-visible { transform: scale(1.07); }
+.fixed-entry:focus-visible { outline: 3px solid var(--pink-deep); outline-offset: 5px; border-radius: 50%; }
+
 /* ---------- 5-6. 下端のフリル ---------- */
 .hero__frill {
   position: absolute; left: 0; right: 0; bottom: -1px; z-index: 4;
@@ -768,8 +806,8 @@ a { color: var(--pink-deep); }
 /* ---------- 7. 流れる帯 ---------- */
 .marquee {
   overflow: hidden;
-  background: linear-gradient(180deg, #57284A 0%, var(--plum) 100%);
-  border-block: 3px solid var(--gold);
+  background: linear-gradient(180deg, #FF9EC4 0%, #FF7FB0 100%);
+  border-block: 4px solid var(--surface);
   padding: 13px 0;
 }
 .marquee__track { display: flex; width: max-content; }
@@ -781,7 +819,7 @@ a { color: var(--pink-deep); }
 .marquee__set em {
   font-family: var(--font-en); font-weight: 700; font-style: normal;
   font-size: 1rem; letter-spacing: .24em;
-  color: var(--gold-pale);
+  color: var(--surface);          /* 桃の帯に白。この太さと大きさなら読めます */
   white-space: nowrap;
 }
 .marquee__set .icon { font-size: 18px; color: var(--pink-soft); }
@@ -793,88 +831,104 @@ a { color: var(--pink-deep); }
    JSが動かないときは複製されず1セットのまま（この帯は静止する）。 */
 @keyframes marquee { to { transform: translateX(calc(-100% / var(--marquee-sets, 1))); } }
 
-/* ---------- 8. 汎用セクション ---------- */
-.section { position: relative; padding: 92px 0; }
+/* ---------- 8. 汎用セクション ----------
+   公式にならって、セクションごとに地の色を変え、境目をうねった曲線で切ります。
+   色は各セクションで4つの変数を決めるだけにしてあり、
+   地・波・見出しの縁・カードの縁が、まとめてそれを拾います。
+     --sec-a  … 地の上端      --sec-b  … 地の下端
+     --sec-ink… その地に載せる文字色（本文が読める濃さで選んでいます）
+     --sec-edge… 見出しの縁とカードの縁 */
+.section {
+  position: relative;
+  padding: clamp(66px, 7vw, 96px) 0 clamp(80px, 9vw, 116px);
+  background: linear-gradient(180deg, var(--sec-a) 0%, var(--sec-b) 100%);
+  color: var(--sec-ink);
+}
+
+.section--about   { --sec-a: #FFF0BC; --sec-b: #FFC77E; --sec-ink: #7A3F0C; --sec-edge: #FFAE39; }
+.section--rule    { --sec-a: #BCEFF4; --sec-b: #86D9E4; --sec-ink: #0C525E; --sec-edge: #2FB4C4; }
+.section--flow    { --sec-a: #FFD6E6; --sec-b: #FFAECE; --sec-ink: #861B4B; --sec-edge: #FF7DAF; }
+.section--bracket { --sec-a: #E1F5C6; --sec-b: #B6E293; --sec-ink: #2F5C17; --sec-edge: #78C74B; }
+.section--entry   { --sec-a: #FFD6AE; --sec-b: #FFB3C8; --sec-ink: #8C2F1B; --sec-edge: #FF8C5F; }
+
+/* 上端をうねらせる。自分の地の色で、ひとつ上のセクションへ食い込ませています */
+.section::before {
+  content: ""; position: absolute; left: 0; right: 0; top: 0;
+  height: clamp(34px, 4.5vw, 72px);
+  transform: translateY(-99%);
+  background: var(--sec-a);
+  -webkit-mask: var(--wave) bottom center / 100% 100% no-repeat;
+  mask: var(--wave) bottom center / 100% 100% no-repeat;
+  z-index: 0;
+}
 
 /* 花を薄く散らす。公式でいう section_bg_flower にあたる部分を、
    丸を5つ並べただけの自作の図形で作っています（画像ファイルは増やしません）。 */
 .section::after {
   content: ""; position: absolute; inset: 0; z-index: 0;
-  pointer-events: none; opacity: .55;
+  pointer-events: none; opacity: .5;
   background:
-    var(--flower) 3%  11% / 78px no-repeat,
-    var(--flower) 94% 24% / 54px no-repeat,
-    var(--flower) 8%  79% / 46px no-repeat,
-    var(--flower) 90% 86% / 68px no-repeat;
+    var(--flower-w) 3%  10% / 96px no-repeat,
+    var(--flower-w) 95% 22% / 62px no-repeat,
+    var(--flower-w) 7%  78% / 54px no-repeat,
+    var(--flower-w) 91% 85% / 82px no-repeat;
 }
 /* 花は最背面に置き、中身は必ずその手前に出す */
 .section > * { position: relative; z-index: 1; }
 
-/* 牌の裏面を思わせる斜めストライプ＋上辺のスカラップ */
-.section--rule {
-  background:
-    repeating-linear-gradient(-45deg,
-      rgba(255, 255, 255, .4) 0 9px,
-      rgba(255, 255, 255, 0) 9px 26px),
-    var(--bg-alt);
-}
-.section--rule::before {
-  content: ""; position: absolute; left: 0; right: 0; top: 0; height: 26px;
-  background: radial-gradient(circle at 50% 100%, var(--bg) 0 13px, rgba(255, 247, 243, 0) 13.5px) repeat-x;
-  background-size: 40px 26px;
-}
-
+/* 見出し。公式にならって英字を主役にし、日本語を下へ添えます。
+   ただし公式ほど日本語を小さくはしていません。読み手が日本語話者で、
+   ここが「何の欄か」を伝えている文字だからです。 */
 .section__title {
-  display: grid; justify-items: center; gap: 4px;
-  font-size: clamp(1.6rem, 4.6vw, 2.3rem);
-  font-weight: 900; text-align: center;
-  margin-bottom: 16px;
+  display: grid; justify-items: start; gap: 2px;
+  text-align: left;
+  margin-bottom: 22px;
 }
 .section__en {
-  font-family: var(--font-en); font-weight: 600; font-size: .78rem;
-  letter-spacing: .3em; color: var(--pink-deep);
-}
-/* 見出しの左右に金の飾り罫。文字はキービジュアルと同じく白で縁取ります */
-.section__ja {
-  position: relative; padding: 0 .1em;
-  font-family: var(--font-display); font-weight: 900;
-  color: var(--pink);
-  filter: drop-shadow(0 4px 0 rgba(214, 92, 140, .26));
+  font-family: var(--font-en); font-weight: 700;
+  font-size: clamp(2.6rem, 8.5vw, 6rem);
+  line-height: .92; letter-spacing: .005em;
+  color: var(--surface);
+  filter: drop-shadow(0 7px 0 rgba(0, 0, 0, .10)) drop-shadow(0 14px 20px rgba(70, 32, 58, .18));
 }
 @supports (paint-order: stroke) {
-  .section__ja { -webkit-text-stroke: 8px var(--surface); paint-order: stroke fill; }
+  .section__en { -webkit-text-stroke: 13px var(--sec-edge); paint-order: stroke fill; }
 }
-.section__ja::before, .section__ja::after {
-  content: ""; position: absolute; top: 50%;
-  width: clamp(24px, 6vw, 62px); height: 3px; border-radius: 3px;
-  background: linear-gradient(90deg, rgba(247, 193, 63, 0), var(--gold));
+.section__ja {
+  position: relative;
+  font-family: var(--font-display); font-weight: 900;
+  font-size: clamp(1.02rem, 2.7vw, 1.4rem);
+  color: var(--sec-ink);
 }
-.section__ja::before { right: 100%; margin-right: 20px; }
-.section__ja::after  { left: 100%; margin-left: 20px; transform: scaleX(-1); }
-.section__mark { font-size: 1.6rem; color: var(--gold); margin-top: 10px; }
+/* 見出しの脇に白い点を並べる（公式の ✳ の列にあたる飾り） */
+.section__ja::after {
+  content: ""; position: absolute; left: 100%; top: 50%; margin-left: 16px;
+  width: clamp(38px, 9vw, 116px); height: 7px;
+  transform: translateY(-50%);
+  background: radial-gradient(circle, var(--surface) 0 3.2px, rgba(255, 255, 255, 0) 3.7px) repeat-x;
+  background-size: 15px 7px;
+}
+/* 見出し下の芽の印は、中央ぞろえだった頃の飾りです。
+   左寄せにした今は行から浮くので出しません（HTMLは残してあります）。 */
+.section__mark { display: none; }
 
 .section__lead {
-  max-width: 46em; margin: 0 auto 52px; text-align: center; color: var(--ink-muted);
+  max-width: 44em; margin: 0 0 44px; color: var(--sec-ink);
 }
 
-/* 面の共通装飾（金の細縁とつや） */
-.about__facts, .yaku__card, .localrule__card, .refs__card, .tablecard, .steps__item {
+/* 面の共通装飾。公式にならって、太い縁と大きな角丸、
+   そして真下に落とす影（にじませない影）にしています。 */
+.about__facts, .yaku__card, .localrule__card, .refs__card, .tablecard, .steps__item, .shot {
   position: relative;
-  background: linear-gradient(180deg, var(--surface) 0%, #FFF9FB 100%);
-  border: 2px solid var(--line);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow-deep);
+  background: var(--surface);
+  border: 4px solid var(--sec-edge);
+  border-radius: 26px;
+  box-shadow: 0 8px 0 rgba(70, 32, 58, .13);
   transition: transform var(--t) var(--ease), box-shadow var(--t) var(--ease);
 }
 .yaku__card:hover, .localrule__card:hover, .refs__card:hover, .steps__item:hover {
   transform: translateY(-4px);
-  box-shadow: var(--shadow-lift);
-}
-.about__facts::before, .yaku__card::before, .localrule__card::before, .refs__card::before,
-.tablecard::before, .steps__item::before {
-  content: ""; position: absolute; inset: -2px -2px auto; height: 6px;
-  border-radius: var(--radius) var(--radius) 0 0;
-  background: linear-gradient(90deg, var(--gold-pale), var(--gold) 50%, #E2952A);
+  box-shadow: 0 12px 0 rgba(70, 32, 58, .13);
 }
 
 /* ---------- 9. ABOUT ---------- */
@@ -975,20 +1029,15 @@ a { color: var(--pink-deep); }
 }
 .shot {
   position: relative; margin: 0;
-  background: linear-gradient(180deg, var(--surface) 0%, #FFF9FB 100%);
-  border: 2px solid var(--line);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow-deep);
+  background: var(--surface);
+  border: 4px solid var(--sec-edge);
+  border-radius: 26px;
+  box-shadow: 0 8px 0 rgba(70, 32, 58, .13);
   padding: 18px 18px 0;
   overflow: hidden;
   transition: transform var(--t) var(--ease), box-shadow var(--t) var(--ease);
 }
-.shot::before {
-  content: ""; position: absolute; inset: -2px -2px auto; height: 6px;
-  border-radius: var(--radius) var(--radius) 0 0;
-  background: linear-gradient(90deg, var(--gold-pale), var(--gold) 50%, #E2952A);
-}
-.shot:hover { transform: translateY(-4px); box-shadow: var(--shadow-lift); }
+.shot:hover { transform: translateY(-4px); box-shadow: 0 12px 0 rgba(70, 32, 58, .13); }
 /* スマホの縦長スクショでも横長でも、行の高さが揃うようにする */
 .shot img {
   display: block; width: 100%;
@@ -1300,15 +1349,19 @@ a { color: var(--pink-deep); }
 .anim .reveal.is-visible :is(.yaku, .localrule, .refs, .steps, .shots) > *:nth-child(3) { transition-delay: 300ms; }
 .anim .reveal.is-visible :is(.yaku, .localrule, .refs, .steps, .shots) > *:nth-child(4) { transition-delay: 390ms; }
 
-/* 見出し左右の金の罫線は、中心から外へ引かれる */
-.anim .section__ja::before, .anim .section__ja::after { transform: scaleX(0); }
-.anim .section__ja::before { transform-origin: right; }
-.anim .section__ja::after  { transform-origin: right; }   /* scaleX(-1) 済みなので右が中心側 */
-.anim .reveal.is-visible .section__ja::before,
-.anim .reveal.is-visible .section__ja::after {
-  animation: rule-draw .7s var(--ease) .35s both;
+/* 見出しの脇の白い点は、見出し側から外へ向かって伸びる。
+   縦の中心合わせ（translateY）を消さないよう、拡大と一緒に書いています。 */
+.anim .section__ja::after {
+  transform: translateY(-50%) scaleX(0);
+  transform-origin: left;
 }
-.anim .reveal.is-visible .section__ja::after { transform: scaleX(-1); }
+.anim .reveal.is-visible .section__ja::after {
+  animation: dots-draw .7s var(--ease) .35s both;
+}
+@keyframes dots-draw {
+  from { transform: translateY(-50%) scaleX(0); }
+  to   { transform: translateY(-50%) scaleX(1); }
+}
 
 /* 役の札と手順の番号は、跳ねて現れる */
 .anim .reveal.is-visible .mini { animation: pop-in .45s cubic-bezier(.34, 1.4, .64, 1) both; }
@@ -1395,7 +1448,8 @@ a { color: var(--pink-deep); }
   .kv-date__dow  { -webkit-text-stroke-width: 5px; }
   .kv-place__ja  { -webkit-text-stroke-width: 5px; }
   .kv-place__en  { -webkit-text-stroke-width: 4px; }
-  .section__ja   { -webkit-text-stroke-width: 6px; }
+  /* 日本語の見出しは縁を付けません。この大きさで縁を足すと字が潰れます */
+  .section__en   { -webkit-text-stroke-width: 8px; }
 
   .countdown { gap: 8px; }
   .countdown__label { width: 100%; }
@@ -1423,7 +1477,7 @@ a { color: var(--pink-deep); }
   .marquee__set em { font-size: .85rem; letter-spacing: .18em; }
 
   .section { padding: 66px 0; }
-  .section__ja::before, .section__ja::after { display: none; }
+  .section__ja::after { display: none; }
   .steps__item { grid-template-columns: 1fr; gap: 12px; padding: 24px 22px; }
 
   /* CTA はねっ子を上に逃がして、ボタンの幅を確保する */
@@ -1458,13 +1512,12 @@ a { color: var(--pink-deep); }
   .js .fall__petal, .js .deco--sparkle, .marquee__track.is-fitted,
   .js .hero__sunburst, .js .deco, .js .hero__catch,
   .js .cloud, .js .hero__chara, .js .mascot--l, .js .mascot--r,
-  .js .flower-btn__petals,
+  .js .flower-btn__petals, .js .fixed-entry__petals,
   .js .marquee__nekko, .js .site-footer__nekko, .js .splash__portrait img,
   .js .countdown__cell,
-  .anim .section__ja::before, .anim .section__ja::after,
+  .anim .section__ja::after,
   .anim .mini, .anim .steps__num { animation: none !important; }
-  .anim .section__ja::before { transform: scaleX(1) !important; }
-  .anim .section__ja::after  { transform: scaleX(-1) !important; }
+  .anim .section__ja::after { transform: translateY(-50%) scaleX(1) !important; }
   .anim .nekko-peek { clip-path: none !important; animation: none !important; }
   .js .fall__petal { opacity: .6; }
   .js .deco--sparkle { opacity: .8; }
