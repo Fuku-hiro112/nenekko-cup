@@ -73,6 +73,19 @@ PRESETS = {
         "size": (832, 1216), "width": 740, "out": "nene.webp",
         "note": "ヒーロー右下。カードを見せているポーズ",
     },
+    "kv": {
+        # キービジュアルの主役。空を舞う構図に載せるので、
+        # 上下に伸びる躍動したポーズを全身で出す。
+        "subject": NENE,
+        "pose": (
+            "idol costume, frilled dress, live stage outfit, "
+            "jumping, mid-air, one arm raised high, arm outstretched, "
+            "holding playing card, big smile, open mouth, wink, looking at viewer, "
+            "full body, dynamic pose, floating hair, flowing ribbon"
+        ),
+        "size": (832, 1216), "width": 900, "out": "nene-kv.webp",
+        "note": "キービジュアル。空に舞う全身の躍動ポーズ",
+    },
     "about": {
         "subject": NENE,
         "pose": (
