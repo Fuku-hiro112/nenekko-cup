@@ -201,35 +201,27 @@
   }
 
   /* ---------- 6.5 優勝の祝い ----------
-     優勝者の行が画面に入ったところで、1回だけ紙吹雪を降らせて行を跳ねさせます。
+     優勝者が決まっている間は、トーナメント表の中でずっと祝い続けます。
+
+     紙吹雪は画面全体ではなく表の中だけに降らせます。層を .bracket の中に置き、
+     はみ出したぶんは切っているので、他の欄には落ちません。
 
      表はスプレッドシートから作られることも、update_bracket.py で HTML に
      焼き付けられることもあるので、どちらでも動くように
      「.is-champion があるか」だけを見ています。
 
-     画面に入ったかどうかは IntersectionObserver ではなく、スクロールのたびに
-     位置を測る形にしています。表を差し替えた直後に監視を仕掛ける作りだと、
-     取りこぼすことがあったためです（実測して確認しました）。 */
-  var celebrated = false;
+     表が画面の外にある間は紙を止めます。ずっと動かし続ける必要がないうえ、
+     止めておけばその間の描画をまるごと省けるためです。 */
+  var CONFETTI = 90;
+  var confettiLayer = null;
 
-  var fireCelebration = function (champ) {
-    celebrated = true;
-    champ.dataset.celebrated = '1';
-    champ.classList.add('is-celebrating');
-
-    // 行のうしろから差す光。文字に重ならないよう、中心は抜いてあります
-    var rays = document.createElement('span');
-    rays.className = 'champ-rays';
-    rays.setAttribute('aria-hidden', 'true');
-    champ.appendChild(rays);
-
-    // 紙吹雪。画面いっぱいに降らせ、降り終わったら層ごと片付けます
+  var buildConfetti = function (host) {
     var layer = document.createElement('div');
     layer.className = 'confetti';
     layer.setAttribute('aria-hidden', 'true');
     var colors = ['#FF7FB0', '#FF9A3C', '#FFD84D', '#7ED957', '#5BC8E8', '#FFFFFF', '#F0B429'];
     var html = '';
-    for (var i = 0; i < 110; i++) {
+    for (var i = 0; i < CONFETTI; i++) {
       var w = 6 + Math.random() * 9;
       html += '<i style="' +
         '--x:'   + (Math.random() * 100).toFixed(1) + '%;' +
@@ -237,35 +229,62 @@
         '--h:'   + (w * (0.4 + Math.random() * 1.3)).toFixed(1) + 'px;' +
         '--c:'   + colors[i % colors.length] + ';' +
         '--r:'   + (Math.random() < 0.35 ? '50%' : '2px') + ';' +
-        '--dx:'  + (Math.random() * 280 - 140).toFixed(0) + 'px;' +
+        '--dx:'  + (Math.random() * 220 - 110).toFixed(0) + 'px;' +
         '--rot:' + (Math.random() * 1440 - 720).toFixed(0) + 'deg;' +
-        '--dur:' + (2.8 + Math.random() * 2.8).toFixed(2) + 's;' +
-        '--d:'   + (Math.random() * 1.6).toFixed(2) + 's;' +
+        '--dur:' + (3.2 + Math.random() * 3.4).toFixed(2) + 's;' +
+        '--d:'   + (Math.random() * -6).toFixed(2) + 's;' +   // 負の遅延で、開いた時点から降っている状態にする
         '"></i>';
     }
     layer.innerHTML = html;
-    document.body.appendChild(layer);
-    setTimeout(function () {
-      if (layer.parentNode) layer.parentNode.removeChild(layer);
-    }, 8000);
+    host.appendChild(layer);
+    return layer;
   };
 
-  var celebrate = function () {
-    if (celebrated) return;
+  // 落ちる距離は表の高さに合わせます。回戦が増えると表が伸びるためです
+  var sizeConfetti = function (host) {
+    if (confettiLayer) confettiLayer.style.setProperty('--fall', (host.offsetHeight + 80) + 'px');
+  };
+
+  var syncCelebration = function () {
     if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    var champ = document.querySelector('.is-champion');
-    if (!champ) return;
-    // 上のほうにいるうちに降らせても見えないので、行が画面に入るまで待ちます
-    var r = champ.getBoundingClientRect();
+    var host = document.querySelector('.bracket');
+    if (!host) return;
+    var champ = host.querySelector('.is-champion');
+
+    if (!champ) {                                  // まだ優勝者がいない
+      if (confettiLayer) {
+        confettiLayer.parentNode.removeChild(confettiLayer);
+        confettiLayer = null;
+      }
+      return;
+    }
+
+    if (!confettiLayer) {                          // ここで一式を用意する
+      champ.classList.add('is-celebrating');
+      if (!champ.querySelector('.champ-rays')) {
+        var rays = document.createElement('span');
+        rays.className = 'champ-rays';
+        rays.setAttribute('aria-hidden', 'true');
+        champ.appendChild(rays);
+      }
+      confettiLayer = buildConfetti(host);
+      sizeConfetti(host);
+    }
+
+    // 表が画面に入っている間だけ紙を動かす
+    var r = host.getBoundingClientRect();
     var vh = window.innerHeight || document.documentElement.clientHeight;
-    if (r.bottom < vh * 0.1 || r.top > vh * 0.9) return;
-    fireCelebration(champ);
+    confettiLayer.classList.toggle('is-running', r.bottom > 0 && r.top < vh);
   };
 
-  window.addEventListener('scroll', celebrate, { passive: true });
-  window.addEventListener('resize', celebrate);
+  window.addEventListener('scroll', syncCelebration, { passive: true });
+  window.addEventListener('resize', function () {
+    var host = document.querySelector('.bracket');
+    if (host) sizeConfetti(host);
+    syncCelebration();
+  });
   // HTMLに焼き付けてある場合は、この時点でもう優勝者がいます
-  celebrate();
+  syncCelebration();
 
   /* ---------- 7. トーナメント表をスプレッドシートから作る ----------
      当日、主催者が動けなくても誰かが結果を入れられるようにするための仕組みです。
@@ -440,7 +459,7 @@
         var idx = pickColumns(res.table.cols);
         if (rows.length && (rows[0][idx.round] || '').trim() === '回戦') rows.shift();
         var rounds = build(rows, idx);
-        if (rounds) { render(rounds); celebrate(); }
+        if (rounds) { render(rounds); syncCelebration(); }
       } catch (e) {
         // 表が出ないだけで、ページの他は動き続けてほしいので握りつぶす
       }

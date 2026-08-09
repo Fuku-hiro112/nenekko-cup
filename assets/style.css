@@ -1281,48 +1281,49 @@ a { color: var(--pink-deep); }
 }
 
 /* ---------- 10.6 優勝の祝い ----------
-   優勝が決まったら、紙吹雪を降らせて優勝者の行を跳ねさせます。
-   降らせる紙は JS が作りますが、動きの定義はここに置いています。
-   動きを減らす設定のときは、そもそも JS が降らせません。 */
+   優勝者がいる間、トーナメント表の中でずっと続く演出です。
+   紙は JS が作りますが、動きの定義はここに置いています。
+   動きを減らす設定のときは、そもそも JS が作りません。 */
+.bracket { position: relative; }
 .confetti {
-  position: fixed; inset: 0; z-index: 200;
+  position: absolute; inset: 0; z-index: 5;
   pointer-events: none; overflow: hidden;
 }
 .confetti i {
-  position: absolute; top: -10vh; left: var(--x);
+  position: absolute; top: -40px; left: var(--x);
   width: var(--w); height: var(--h);
   background: var(--c);
   border-radius: var(--r);
   opacity: 0;
-  animation: confetti-fall var(--dur) linear var(--d) both;
+  /* 表が画面の外にある間は止めておき、描画をまるごと省きます */
+  animation: confetti-fall var(--dur) linear var(--d) infinite paused;
 }
-/* 左右に流しながら回して落とす。まっすぐ落とすと雨に見えるため */
+.confetti.is-running i { animation-play-state: running; }
+/* 左右に流しながら回して落とす。落ちる距離は表の高さに合わせて JS が入れます */
 @keyframes confetti-fall {
   0%   { transform: translate3d(0, 0, 0) rotate(0deg); opacity: 0; }
-  6%   { opacity: 1; }
-  92%  { opacity: 1; }
-  100% { transform: translate3d(var(--dx), 120vh, 0) rotate(var(--rot)); opacity: 0; }
+  5%   { opacity: 1; }
+  93%  { opacity: 1; }
+  100% { transform: translate3d(var(--dx), var(--fall, 900px), 0) rotate(var(--rot)); opacity: 0; }
 }
 
-/* 優勝者の行。画面に入った瞬間に一度だけ跳ねます */
+/* 優勝者の行。ずっと出しっぱなしになるので、跳ねさせず静かに脈打たせます */
 .tablecard__seats .is-champion.is-celebrating {
-  animation: champ-pop .95s cubic-bezier(.2, .9, .3, 1.5) both;
+  animation: champ-pulse 2.8s ease-in-out infinite;
 }
-@keyframes champ-pop {
-  0%   { transform: scale(.82); }
-  40%  { transform: scale(1.14); }
-  62%  { transform: scale(.97); }
-  82%  { transform: scale(1.04); }
-  100% { transform: scale(1); }
+@keyframes champ-pulse {
+  0%, 100% { transform: scale(1);    box-shadow: 0 0 0 3px #E0930F, 0 6px 0 rgba(70, 32, 58, .20); }
+  50%      { transform: scale(1.035); box-shadow: 0 0 0 5px #E0930F, 0 8px 0 rgba(70, 32, 58, .20); }
 }
-/* 王冠だけ、少し遅れて跳ねさせる */
-.is-champion.is-celebrating::before { animation: crown-bounce 1.1s cubic-bezier(.2, .9, .3, 1.6) .25s both; }
+/* 王冠は周期の前半だけ跳ね、後半は休みます。ずっと跳ね続けると落ち着かないためです */
+.is-champion.is-celebrating::before {
+  animation: crown-bounce 2.8s cubic-bezier(.2, .9, .3, 1.5) infinite;
+}
 @keyframes crown-bounce {
-  0%   { transform: translateY(0)     rotate(0deg)   scale(1); }
-  30%  { transform: translateY(-14px) rotate(-16deg) scale(1.35); }
-  55%  { transform: translateY(0)     rotate(10deg)  scale(1.1); }
-  75%  { transform: translateY(-5px)  rotate(-5deg)  scale(1.18); }
-  100% { transform: translateY(0)     rotate(0deg)   scale(1); }
+  0%, 52%, 100% { transform: translateY(0)     rotate(0deg)   scale(1); }
+  12%           { transform: translateY(-13px) rotate(-17deg) scale(1.32); }
+  27%           { transform: translateY(0)     rotate(9deg)   scale(1.08); }
+  39%           { transform: translateY(-5px)  rotate(-4deg)  scale(1.16); }
 }
 
 /* 行のうしろから差す光。中心を抜いてあるので、名前には重なりません */
