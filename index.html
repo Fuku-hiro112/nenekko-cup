@@ -6,7 +6,7 @@
 <!-- EDIT: ページタイトル（Discordに貼ったときのリンク名になります） -->
 <title>ねっ子ポカジャン大会 ｜ ねっこ集会所</title>
 <!-- EDIT: 説明文（Discordのリンクプレビューに出ます） -->
-<meta name="description" content="2026年8月30日(日)20:00より、Discord「ねっこ集会所」で開催するホロドリのミニゲーム「ポカジャン」大会の案内ページです。応募は8月23日(日)23:59まで。勝ち上がりトーナメント方式、ポカジャン未解放でも参加できます。">
+<meta name="description" content="2026年8月30日(日)20:00より、Discord「ねっこ集会所」で開催するホロドリのミニゲーム「ポカジャン」大会の案内ページです。応募は8月23日(日)23:59まで。予選→順位決定戦→決勝の3段階方式で、予選で負けても2回以上打てます。ポカジャン未解放でも参加できます。">
 <!-- 検索結果に出したくないページなので、クローラーには載せない指示を出しています。
      防げるのは「検索からの偶然の発見」だけで、URLを知っている人には効きません。
      Discordのリンクプレビュー（下のog:）は、この指定とは別系統なので従来どおり出ます。 -->
@@ -15,7 +15,7 @@
 <meta property="og:title" content="ねっ子ポカジャン大会 ｜ ねっこ集会所">
 <!-- ねねち賞は検討中のため伏せています。復活させるときは「・ねねち賞」を戻してください。
      （このページ内の「ねねち賞」は5か所。すべて同じ印のコメントを付けてあります） -->
-<meta property="og:description" content="その手札、咲かせにいこう。2026.08.30(日) 20:00 スタート。応募は8月23日(日)23:59まで。勝ち上がりトーナメントで優勝者・最高得点者を決めます。">
+<meta property="og:description" content="その手札、咲かせにいこう。2026.08.30(日) 20:00 スタート。応募は8月23日(日)23:59まで。予選・順位決定戦・決勝の3段階で優勝者・最高得点者を決めます。">
 <!-- EDIT: Discordのリンクプレビューに出す画像（tools/generate_nene.py --preset ogp で作り直せます） -->
 <meta property="og:image" content="assets/img/ogp.jpg">
 <meta property="og:image:width" content="1200">
@@ -329,8 +329,8 @@
         <div class="tile">
           <span class="tile__label">FORMAT</span>
           <!-- EDIT: 大会方式 -->
-          <strong class="tile__value tile__value--text">勝ち上がり<br>トナメ</strong>
-          <span class="tile__note">4人卓・抽選</span>
+          <strong class="tile__value tile__value--text">3段階<br>方式</strong>
+          <span class="tile__note">4人卓・最低2回</span>
         </div>
       </li>
       <li class="hand__tile" style="--i:4">
@@ -395,7 +395,7 @@
         <div class="about__text">
           <!-- EDIT: 大会概要の本文 -->
           <p class="about__lead">ホロドリのミニゲーム「ポカジャン」を、ねっこのみんなで囲む大会です。</p>
-          <p>4人卓の勝ち上がりトーナメントで行います。トーナメント表の段数と勝ち抜け順位は、参加人数によって変わります。どの卓に入るかは<strong>運営が事前に抽選で決めます</strong>ので、当日は案内された部屋に入るだけで大丈夫です。</p>
+          <p>4人卓で<strong>予選 → 順位決定戦 → 決勝／最下位決定戦</strong>の3段階を行います。勝ち抜けの一発勝負ではないので、<strong>予選で負けても必ずもう1回は打てます。</strong>どの卓に入るかは<strong>予選だけ運営が事前に抽選で決めます</strong>ので、当日は案内された部屋に入るだけで大丈夫です。</p>
           <p><strong>ポカジャンを解放していなくても参加できます。</strong>応募のときに解放・未解放を書いてもらい、未解放の方が1つの卓に固まらないように振り分けます。ルールは下の「RULE」で予習しておくと、当日そのまま座れます。</p>
 
           <p class="about__portrait" data-img-slot hidden>
@@ -417,7 +417,7 @@
           <div>
             <dt>大会方式</dt>
             <!-- EDIT: 大会方式 -->
-            <dd>4人卓の勝ち上がりトーナメント<br>段数・勝ち抜け順位は参加人数で変動<br>（CPUは勝ち上がりません）</dd>
+            <dd>予選 → 順位決定戦 → 決勝／最下位決定戦<br>4人卓・どの卓も3戦して合計点で順位<br>（CPUは順位に入りません）</dd>
           </div>
           <div>
             <dt>参加資格</dt>
@@ -510,8 +510,13 @@
       <div class="localrule">
         <!-- EDIT: 大会独自ルール（枚数を増減してもレイアウトは崩れません） -->
         <div class="localrule__card">
-          <h4><svg class="icon" aria-hidden="true"><use href="#ic-nekko"></use></svg>勝ち上がり方式</h4>
-          <p>4人卓で対局し、上位が次の卓へ進みます。トーナメント表の段数と勝ち抜け順位は参加人数によって変わるため、当日発表します。</p>
+          <h4><svg class="icon" aria-hidden="true"><use href="#ic-nekko"></use></svg>3段階でやります</h4>
+          <p><strong>予選 → 順位決定戦 → 決勝／最下位決定戦</strong>の順に進みます。予選の各卓で、<strong>1位は決勝へ、最下位は最下位決定戦へ</strong>直行。<strong>あいだの人は順位決定戦</strong>に集まり、そこで一番よかった人が決勝、一番わるかった人が最下位決定戦に加わります。</p>
+          <p><strong>負けて終わりの卓はありません。</strong>だれでも最低2回は打てます。参加人数によっては、順位決定戦が<strong>順位を決めるだけの卓</strong>になることがあります。</p>
+        </div>
+        <div class="localrule__card">
+          <h4><svg class="icon" aria-hidden="true"><use href="#ic-nekko"></use></svg>順位は3戦の合計点</h4>
+          <p>どの卓も<strong>3戦</strong>打ち、<strong>3戦の合計点</strong>で卓の順位を決めます。1戦の事故で終わらないようにするためです。順位決定戦だけは、卓をまたいで合計点をそのまま比べます。</p>
         </div>
         <!-- ねねち賞は検討中のため伏せています。実施が決まったら、下の囲みを外すだけで戻ります。
              （画像 assets/img/yaku-nene.webp と、金の縁を付ける CSS もそのまま残してあります）
@@ -530,7 +535,7 @@
 
         <div class="localrule__card">
           <h4><svg class="icon" aria-hidden="true"><use href="#ic-nekko"></use></svg>最高得点者</h4>
-          <p>ゲーム終了時の点数が最も高かった人を表彰します。集計のため、<strong>各卓の結果はスクリーンショットを撮って運営に送ってください。</strong>同卓の1人ぶんで十分です。撮り逃したときは、<strong>点数を自己申告してもらえれば集計できます。</strong></p>
+          <p><strong>1戦の点数が最も高かった人</strong>を表彰します。順位づけと同じ点数を使うので、<strong>各戦の結果はスクリーンショットを撮って運営に送ってください。</strong>同卓の1人ぶんで十分です。<strong>3戦ぶん要ります。</strong>撮り逃したときは、<strong>点数を自己申告してもらえれば集計できます。</strong></p>
         </div>
         <div class="localrule__card">
           <h4><svg class="icon" aria-hidden="true"><use href="#ic-nekko"></use></svg>人数が半端なとき</h4>
@@ -538,11 +543,11 @@
         </div>
         <div class="localrule__card">
           <h4><svg class="icon" aria-hidden="true"><use href="#ic-nekko"></use></svg>CPUが上位に入ったら</h4>
-          <p>CPUは勝ち上がりません。<strong>CPUが上位に入った場合は、その下の順位の人が繰り上がって次の卓へ進みます。</strong>CPUに負けても、まだ望みはあります。</p>
+          <p><strong>CPUは順位に入りません。</strong>CPUが上位に入っても、人だけを並べ直して順位を付けます。CPUに勝っても負けても、次に進む人は変わりません。</p>
         </div>
         <div class="localrule__card">
           <h4><svg class="icon" aria-hidden="true"><use href="#ic-nekko"></use></svg>卓分けは抽選</h4>
-          <p>どの卓に入るかは運営が事前に抽選で決めます。ポカジャン未解放の方が4人そろってしまわないよう、解放組と混ぜて振り分けます。</p>
+          <p><strong>抽選で決めるのは予選の卓だけです。</strong>順位決定戦から先は成績で決まります。予選では、ポカジャン未解放の方が4人そろってしまわないよう、解放組と混ぜて振り分けます。</p>
         </div>
       </div>
 
@@ -592,28 +597,28 @@
           <span class="steps__num">02</span>
           <div>
             <h3>ルームを立てて4人そろう</h3>
-            <p>各卓で<strong>ポカジャンを解放している人がルームを作成</strong>し、残りの3人がそこへ入ります。卓ごとに用意されたVCに、同卓の4人で集まってください。</p>
+            <p>各卓で<strong>ポカジャンを解放している人がルームを作成</strong>し、残りの3人がそこへ入ります。卓ごとに用意されたVCに、同卓の4人で集まってください。<strong>段が変わるたびに卓が組み直されるので、そのつど立て直します。</strong></p>
           </div>
         </li>
         <li class="steps__item">
           <span class="steps__num">03</span>
           <div>
             <h3>対局する</h3>
-            <p>見学したい人のために、<strong>画面共有ができる人は共有してください。</strong>観戦だけの参加も歓迎です。</p>
+            <p><strong>同じ顔ぶれで3戦続けて打ちます。</strong>見学したい人のために、<strong>画面共有ができる人は共有してください。</strong>観戦だけの参加も歓迎です。</p>
           </div>
         </li>
         <li class="steps__item">
           <span class="steps__num">04</span>
           <div>
             <h3>結果を送る</h3>
-            <p>対局が終わったら<strong>結果画面のスクリーンショットを撮って運営に送ってください。</strong>最高得点者の集計に使います。<strong>全員の点数が並ぶ画面は数秒で自動的に切り替わるので、終局が近づいたら構えておいてください。</strong>撮り逃したときは点数の自己申告で大丈夫です。送り先は当日案内します。</p>
+            <p><strong>1戦ごとに</strong>結果画面のスクリーンショットを撮って運営に送ってください。<strong>順位づけにも最高得点者にも、この点数を使います。</strong><strong>全員の点数が並ぶ画面は数秒で自動的に切り替わるので、終局が近づいたら構えておいてください。</strong>撮り逃したときは点数の自己申告で大丈夫です。送り先は当日案内します。</p>
           </div>
         </li>
         <li class="steps__item">
           <span class="steps__num">05</span>
           <div>
             <h3>戻って歓談 / 観戦</h3>
-            <p>イベントルームに戻って歓談するか、他の卓のVCへ移動して観戦してください。</p>
+            <p>次の段の卓分けが出るまで、イベントルームに戻って歓談するか、他の卓のVCへ移動して観戦してください。</p>
           </div>
         </li>
         <li class="steps__item">
@@ -623,7 +628,7 @@
             <!-- ねねち賞は検討中のため伏せています。復活させるときは次の行に戻してください：
             <p>全卓が終わったらイベントルームで結果発表です。優勝者・最高得点者・ねねち賞を発表し、<strong>受賞者にはロールを付与します。</strong>そのあと解散になります。</p>
             -->
-            <p>全卓が終わったらイベントルームで結果発表です。優勝者・最高得点者を発表し、<strong>受賞者にはロールを付与します。</strong>そのあと解散になります。</p>
+            <p>決勝と最下位決定戦が終わったらイベントルームで結果発表です。優勝者・最高得点者を発表し、<strong>受賞者にはロールを付与します。</strong>そのあと解散になります。</p>
           </div>
         </li>
       </ol>
@@ -635,18 +640,20 @@
     <div class="wrap">
       <h2 class="section__title">
         <span class="section__en">BRACKET</span>
-        <span class="section__ja">トーナメント表</span>
+        <span class="section__ja">対戦表</span>
         <svg class="icon section__mark" aria-hidden="true"><use href="#ic-nekko"></use></svg>
       </h2>
-      <!-- EDIT: トーナメント表の前置き -->
-      <p class="section__lead">卓分けは当日、イベントルームで発表します。ここに出るので、自分がどの卓かはこのページで確認できます。勝ち上がりも対局が終わるたびに更新します。</p>
+      <!-- EDIT: 対戦表の前置き -->
+      <p class="section__lead">卓分けは当日、イベントルームで発表します。ここに出るので、自分がどの卓かはこのページで確認できます。3戦が終わった卓から、合計点の高い順に並べ替わります。<strong>金の ✦ は決勝へ、灰色の ▽ は最下位決定戦へ進む人です。</strong>印の無い人は順位決定戦へ進みます。</p>
 
-      <!-- EDIT: トーナメント表のスプレッドシートID
+      <!-- EDIT: 対戦表のスプレッドシートID
            Googleスプレッドシートの URL の /d/ と /edit の間にある長い文字列です。
              https://docs.google.com/spreadsheets/d/【ここ】/edit
              1VeqSIWl6JMTMYc4wj1md6aqxQi27ZRZuN6nxw1JXEPI
            空のままなら、下の「当日をお楽しみに」が出たままになります。
            シートの作りかたは docs/operation-guide.md を見てください。 -->
+      <!-- data-sheet-name は**スプレッドシート側のシート見出しと同じ言葉**でなければ読めません。
+           見出しの「対戦表」に合わせて変えると、シートの名前も変える必要があります。 -->
       <div class="bracket" data-sheet="1VeqSIWl6JMTMYc4wj1md6aqxQi27ZRZuN6nxw1JXEPI" data-sheet-name="トーナメント表">
         <!-- ここから下は、スプレッドシートが読めたら script.js が差し替えます。
              読めないとき（未設定・非公開・JSが動かない）はこのまま残ります。
@@ -688,7 +695,7 @@
           <span class="steps__num">03</span>
           <div>
             <h3>卓分けの発表を待つ</h3>
-            <p>応募が締め切られたら、運営が抽選で卓分けをします。当日イベントルームで案内するので、それまでは何もしなくて大丈夫です。</p>
+            <p>応募が締め切られたら、運営が抽選で予選の卓分けをします。当日イベントルームで案内するので、それまでは何もしなくて大丈夫です。</p>
           </div>
         </li>
       </ol>

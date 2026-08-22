@@ -1,17 +1,19 @@
-"""参加者リストから1回戦の卓分けを抽選し、トーナメントの段数を試算する。
+"""参加者リストから予選の卓分けを抽選し、各段の人数を試算する。
 
 サイトに書いてある大会ルールを、そのままコードにしたものです。
 
-  - 4人卓の勝ち上がりトーナメント
-  - 卓分けは運営が事前に抽選で決める
+  - 4人卓で **予選 → 順位決定戦 → 決勝／最下位決定戦** の3段階
+  - どの卓も3戦打ち、**3戦の合計点**で順位を決める
+  - **抽選するのは予選の卓だけ。** 先の卓は成績で決まります
   - **ポカジャン未解放の人だけで1卓が埋まらないようにする**
     （FLOW 02 のとおり、ルームを作るのは解放している人なので、各卓に最低1人必要）
   - 4人に満たない卓は、そのまま開始して空席にCPUが入る
 
+段の組みかたの正本は `docs/detail-design.md` 章7-1、計算は `tools/format_rules.py` です。
+
 使いかた:
 
     python tools/draw_tables.py 参加者.csv                 # 抽選して表示
-    python tools/draw_tables.py 参加者.csv --advance 2     # 各卓から2名が勝ち抜け（既定）
     python tools/draw_tables.py 参加者.csv --seed 20260814 # 同じ結果を出し直す
     python tools/draw_tables.py 参加者.csv --md            # Discordに貼れる形で出す
 
@@ -33,10 +35,13 @@ import argparse
 import csv
 import json
 import math
+import os
 import random
 import sys
 
-SEAT = 4                       # 1卓の人数
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import format_rules                                                       # noqa: E402
+from format_rules import SEAT, GAMES, QUAL, Unsupported                   # noqa: E402
 
 
 def table_name(i):
@@ -132,59 +137,23 @@ def draw(players, rng):
     return tables
 
 
-def plan_rounds(players_n, advance):
-    """段数を試算する。[(段の名前, 人数, 卓数, 空席数), ...] を返す。
-
-    空席にはCPUが入ります。**決勝が4人に満たないと、決勝までCPU入りになります。**
-    人数と勝ち抜け数の組み合わせ次第で起きるので、呼び出し側で注意を出しています。
-    """
-    rounds, n, i = [], players_n, 1
-    while True:
-        tables_n = max(1, math.ceil(n / SEAT))
-        label = "決勝" if tables_n == 1 else f"{i}回戦"
-        rounds.append((label, n, tables_n, tables_n * SEAT - n))
-        if tables_n == 1:
-            break
-        nxt = tables_n * advance                        # 各卓から advance 名が次へ
-        if nxt >= n:                                    # 減らないなら止める（設定ミス）
-            sys.exit(f"--advance {advance} だと人数が減りません（{n}人 → {nxt}人）。"
-                     f"もっと小さい値にしてください。")
-        n = nxt
-        i += 1
-    return rounds
-
-
-def warn_rounds(rounds, advance):
-    """試算の結果、運営が気にしたほうがよい点を挙げる。"""
-    notes = []
-    final = rounds[-1]
-    if final[1] < SEAT:
-        notes.append(
-            f"決勝が{final[1]}人しかいません（{final[3]}席がCPU）。"
-            f"--advance を変えるか、参加人数の区切りを調整すると{SEAT}人にできます。"
-        )
-    for label, n, tables_n, empty in rounds[:-1]:
-        if empty >= tables_n * 2:                       # 平均で半分以上が空席
-            notes.append(f"{label}は{n}人で{tables_n}卓のため、{empty}席がCPUになります。")
-    return notes
-
-
-def save_state(path, seed, advance, players, tables):
+def save_state(path, seed, players, tables):
     """抽選結果を JSON に保存する。update_bracket.py がこれを読んでサイトを更新します。
 
-    winners は空のまま出します。**対局が終わったら、そこに勝ち上がった人の名前を
-    書き足してください。** 次の回戦は update_bracket.py が自動で組みます。
+    scores は null のまま出します。**対局が終わったら、そこに3戦ぶんの点数を
+    書き足してください。** 次の段は update_bracket.py が自動で組みます。
+
+    **空欄を 0 にしないでください。** 0点と「まだ入れていない」は別のことで、
+    混ぜると対局中の卓に順位が出てしまいます。
     """
     state = {
         "seed": seed,
-        "advance": advance,
         "players": [{"name": n, "unlocked": u} for n, u in players],
-        "rounds": [{
-            "label": "1回戦" if len(tables) > 1 else "決勝",
+        "stages": [{
+            "label": QUAL,
             "tables": [{
                 "vc": table_name(i),
-                "players": [n for n, _ in t],
-                "winners": [],
+                "seats": [{"name": n, "scores": [None] * GAMES} for n, _ in t],
             } for i, t in enumerate(tables)],
         }],
     }
@@ -196,33 +165,34 @@ def save_state(path, seed, advance, players, tables):
 def main():
     ap = argparse.ArgumentParser(description="ねっ子ポカジャン大会の卓分け抽選")
     ap.add_argument("csv", help="参加者のCSV（名前,解放）")
-    ap.add_argument("--advance", type=int, default=2, help="各卓から次に進む人数（既定: 2）")
     ap.add_argument("--seed", type=int, help="同じ抽選結果を再現したいときに指定")
     ap.add_argument("--md", action="store_true", help="Discordに貼れる形で出す")
     ap.add_argument("--save", metavar="JSON",
                     help="抽選結果を保存する（この後 update_bracket.py でサイトに反映できます）")
     args = ap.parse_args()
 
-    if not 1 <= args.advance < SEAT:
-        sys.exit(f"--advance は 1〜{SEAT - 1} の範囲で指定してください。")
-
     players, picked = load_players(args.csv)
+    try:
+        format_rules.check(len(players))                # 組めない人数なら、ここで理由を出して止める
+    except Unsupported as err:
+        sys.exit(str(err))
+
     seed = args.seed if args.seed is not None else random.randrange(10 ** 8)
     tables = draw(players, random.Random(seed))
-    rounds = plan_rounds(len(players), args.advance)
+    stages = format_rules.plan_stages(len(players))
 
     n_unlocked = sum(1 for _, u in players if u)
     mark = (lambda u: "" if u else "（未解放）") if not args.md else (lambda u: "" if u else " ※未解放")
 
     if args.save:
-        save_state(args.save, seed, args.advance, players, tables)
+        save_state(args.save, seed, players, tables)
         print(f"保存しました: {args.save}")
-        print("対局が終わったら winners に勝ち上がった人の名前を書いて、")
+        print(f"対局が終わったら scores に{GAMES}戦ぶんの点数を書いて、")
         print(f"  python tools/update_bracket.py {args.save}")
         print("を実行するとサイトに反映されます。\n")
 
     if args.md:
-        print(f"**1回戦の卓分け**（参加 {len(players)}人／抽選 seed `{seed}`）\n")
+        print(f"**{QUAL}の卓分け**（参加 {len(players)}人／抽選 seed `{seed}`）\n")
         for i, t in enumerate(tables):
             cpu = SEAT - len(t)
             note = f"　※空席{cpu}はCPU" if cpu else ""
@@ -230,8 +200,8 @@ def main():
             for name, u in t:
                 print(f"- {name}{mark(u)}")
             print()
-        print("**進行**")
-        for label, n, tn, empty in rounds:
+        print(f"**進行**（どの卓も{GAMES}戦、合計点で順位）")
+        for label, n, tn, empty in stages:
             cpu = f"（うち{empty}席CPU）" if empty else ""
             print(f"- {label}：{n}人 / {tn}卓{cpu}")
         return
@@ -248,12 +218,12 @@ def main():
             room = "  ルーム作成" if j == 0 else ""
             print(f"   {name}{mark(u)}{room}")
     print()
-    print(f"進行（各卓から上位{args.advance}名が勝ち上がり）")
-    for label, n, tn, empty in rounds:
+    print(f"進行（どの卓も{GAMES}戦、{GAMES}戦の合計点で順位）")
+    for label, n, tn, empty in stages:
         cpu = f"  空席{empty}はCPU" if empty else ""
         print(f"   {label}: {n}人 / {tn}卓{cpu}")
 
-    notes = warn_rounds(rounds, args.advance)
+    notes = format_rules.warnings(len(players))
     if notes:
         print()
         print("気になる点")
