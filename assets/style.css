@@ -1222,8 +1222,14 @@ a { color: var(--pink-deep); }
   background: #FBF6EE;
   border: 2px solid #EFE4D2;
   font-size: .93rem; line-height: 1.5;
+  /* **席をすべて「位置づけ済み」にしておくこと。** 優勝者の光（.champ-rays）は
+     脈打つ拡大（transform）のせいで優勝者の席が基準になり、位置づけの無い席より
+     手前に描かれます。決勝は優勝者が先頭に並ぶので、そのままだと下の3人が
+     光に覆われて読めなくなります（実際にそうなっていました）。
+     全部を position: relative にすると、あとに並ぶ席が光より手前に来ます。 */
+  position: relative;
 }
-/* 勝ち上がった人。色だけで示すと分からない人がいるので、印も一緒に出す。
+/* 決勝へ進む人。色だけで示すと分からない人がいるので、印も一緒に出す。
    地 #FFE39B に文字 #7A4E02 で 6.6:1。 */
 .tablecard__seats .is-winner {
   background: #FFE39B;
@@ -1231,19 +1237,38 @@ a { color: var(--pink-deep); }
   font-weight: 700; color: #7A4E02;
 }
 .tablecard__seats .is-winner::before { content: "✦"; color: #946006; }  /* 印は図形扱い。地に 4.25:1 */
-/* 決勝の卓だけは格を上げる。金の縁と、上から差す光。
-   ねねち賞のカード（.localrule__card--nene）と同じ組み立てで揃えている。 */
-/* 決勝の卓だけは、地の色ではなく金の縁にして格を上げる。
+/* 最下位決定戦へ回る人。**金と取り違えないよう、色は上げずに落ち着かせる。**
+   印も ✦ ではなく下向きにして、形でも区別できるようにしている。
+   地 #EFE8DC に文字 #5A4632 で 7.1:1。 */
+.tablecard__seats .is-drop {
+  background: #EFE8DC;
+  border-color: #D8C9B2;
+  font-weight: 700; color: #5A4632;
+}
+.tablecard__seats .is-drop::before { content: "▽"; color: #7A6449; }  /* 地に 4.63:1 */
+
+/* **金を付けるのは決勝の卓だけ。** 決勝と最下位決定戦は同じ段に横並びで出るので、
+   段（.round--final）に付けると最下位決定戦まで金になります。卓ごとに付けます。
    光をぼかさず、縁の色だけで違いを出しています。 */
-.round--final .tablecard {
+.tablecard--gold {
   border-color: #F0B429;
   background: var(--surface);
 }
-.round--final .tablecard__name { color: #8E5F07; }   /* 白地に 5.54:1 */
+.tablecard--gold .tablecard__name { color: #8E5F07; }   /* 白地に 5.54:1 */
 .round--final .round__label::before {          /* 見出しの上の棒も金を濃くする */
   background: linear-gradient(90deg, var(--gold), #E2952A);
   width: 72px;
 }
+
+/* 「（予定）」と「対局中」。**まだ確定していないことを、見出しの中で小さく断る。**
+   見出しと同じ大きさにすると、確定した段と見分けが付かなくなります。 */
+.round__note, .tablecard__state {
+  display: inline-block; margin-left: .5em;
+  font-family: var(--font-body); font-weight: 700;
+  letter-spacing: .04em; color: var(--ink-muted);
+}
+.round__note { font-size: .74rem; }
+.tablecard__state { font-size: .68rem; }
 
 /* 優勝者。ページ内でいちばん強い一行にする。
    見出しや花のボタンと同じで、白い輪を挟んでから色の輪を回し、

@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>トーナメント表の見えかたを確かめる</title>
+<!--
+  スプレッドシートを用意しなくても、トーナメント表の見えかたを確かめるためのページです。
+  本番と同じ assets/style.css と assets/script.js を読み込み、
+  シートの代わりに下の作り物のデータを script.js のコールバックへ渡しています。
+
+      python -m http.server 8000        （リポジトリのフォルダで）
+      → http://localhost:8000/tools/preview-bracket.html#s4
+
+  上の帯のリンクで場面を切り替えられます。**このページは公開ページから参照されていません。**
+-->
+<link rel="stylesheet" href="../assets/style.css">
+<style>
+  .testbar { position: relative; z-index: 99; background: #3B2B33; color: #fff; padding: 8px 14px;
+             font: 13px/1.7 var(--font-body, sans-serif); }
+  .testbar a { color: #FFD98A; margin-right: 14px; }
+</style>
+</head>
+<body>
+<div class="testbar" id="bar"></div>
+
+<section class="section section--bracket" id="bracket">
+  <div class="wrap">
+    <h2 class="section__title">
+      <span class="section__en">BRACKET</span>
+      <span class="section__ja">トーナメント表</span>
+    </h2>
+    <div class="bracket" data-sheet="PREVIEW_NO_SHEET" data-sheet-name="トーナメント表">
+      <!-- BRACKET:START -->
+      <p class="bracket__empty">当日をお楽しみに。ここに卓分けが出ます。</p>
+      <!-- BRACKET:END -->
+    </div>
+  </div>
+</section>
+
+<script>
+// ── 作り物のシート ──────────────────────────────────
+var COLS = ['回戦','卓','参加者','1戦目','2戦目','3戦目'].map(function (l) { return { label: l }; });
+function R(list) { return list.map(function (r) { return { c: r.map(function (v) { return { v: v }; }) }; }); }
+
+var QUAL12 = [
+  ['予選','卓1','ふろん',12300,8400,15100],
+  ['予選','卓1','てるてる',9200,11000,7300],
+  ['予選','卓1','アシエンSS',8100,9000,6400],
+  ['予選','卓1','どこばか',5400,6100,4900],
+  ['予選','卓2','花園美咲',14000,9500,11000],
+  ['予選','卓2','しゃるろって',10200,8800,9600],
+  ['予選','卓2','Fukagami',7700,8200,7100],
+  ['予選','卓2','アオ',6000,5500,5200],
+  ['予選','卓3','ねこみみ',13100,10400,9900],
+  ['予選','卓3','ぽち',9800,9100,8700],
+  ['予選','卓3','まる',8300,7400,7900],
+  ['予選','卓3','しろ',5100,6300,5000]
+];
+
+var RANK6 = [
+  ['順位決定戦','卓1','てるてる',11000,12000,10000],
+  ['順位決定戦','卓1','ぽち',9000,9500,9200],
+  ['順位決定戦','卓1','Fukagami',8000,8500,7900],
+  ['順位決定戦','卓2','しゃるろって',12000,11500,11000],
+  ['順位決定戦','卓2','アシエンSS',10000,9800,9500],
+  ['順位決定戦','卓2','まる',7000,7500,7200]
+];
+
+var FINALS = [
+  ['決勝','卓1','ふろん',15000,14000,16000],
+  ['決勝','卓1','花園美咲',13000,12000,11000],
+  ['決勝','卓1','ねこみみ',10000,11000,9000],
+  ['決勝','卓1','しゃるろって',9000,8000,8500],
+  ['最下位決定戦','卓1','どこばか',12000,11000,10000],
+  ['最下位決定戦','卓1','アオ',9000,9500,9000],
+  ['最下位決定戦','卓1','しろ',8000,7000,7500],
+  ['最下位決定戦','卓1','まる',6000,6500,6200]
+];
+
+// 卓3をまだ入力していない状態（1戦目だけ入っている）
+var QUAL_PLAYING = QUAL12.slice(0, 8).concat(
+  QUAL12.slice(8).map(function (r) { return [r[0], r[1], r[2], r[3], '', '']; })
+);
+
+// 人数を変えた予選をその場で作る（合計は 席の順にきれいに下がる）
+function gen(tables, prefix, cpuOnLast) {
+  var out = [];
+  for (var t = 1; t <= tables; t++) {
+    var seats = cpuOnLast && t === tables ? 3 : 4;
+    for (var p = 1; p <= seats; p++) {
+      out.push(['予選', '卓' + t, prefix + t + '-' + p, 4000 - p * 500, 4000 - p * 400, 4000 - p * 300]);
+    }
+    if (cpuOnLast && t === tables) out.push(['予選', '卓' + t, 'CPU', 9999, 9999, 9999]);
+  }
+  return out;
+}
+
+var SCENES = {
+  s1: { name: '① 予選だけ・卓3が対局中', rows: QUAL_PLAYING },
+  s2: { name: '② 予選が確定 → 順位決定戦（予定）', rows: QUAL12 },
+  s3: { name: '③ 順位決定戦が確定 → 決勝・最下位決定戦（予定）', rows: QUAL12.concat(RANK6) },
+  s4: { name: '④ すべて確定（優勝者あり）', rows: QUAL12.concat(RANK6).concat(FINALS) },
+  s5: { name: '⑤ 8人2卓（N=2）', rows: gen(2, '甲') },
+  s6: { name: '⑥ 16人4卓（N=4）', rows: gen(4, '乙') },
+  s7: { name: '⑦ 11人3卓（卓3にCPU）', rows: gen(3, '丙', true) },
+  // **16人は順位決定戦から誰も上がりません。**（決勝の4席が予選1位で埋まるため）
+  // 印が1つも付かないので、見出しに「ここで順位が決まります」と出ることを確かめます。
+  s8: {
+    name: '⑧ 16人・順位決定戦まで確定（上下へ抜ける人がいない）',
+    rows: gen(4, '丁').concat([
+      ['順位決定戦','卓1','丁1-2',3000,3100,3200],
+      ['順位決定戦','卓1','丁3-2',2900,2900,2900],
+      ['順位決定戦','卓1','丁1-3',2800,2800,2800],
+      ['順位決定戦','卓1','丁3-3',2700,2700,2700],
+      ['順位決定戦','卓2','丁2-2',2600,2600,2600],
+      ['順位決定戦','卓2','丁4-2',2500,2500,2500],
+      ['順位決定戦','卓2','丁2-3',2400,2400,2400],
+      ['順位決定戦','卓2','丁4-3',2300,2300,2300]
+    ])
+  }
+};
+
+var key = (location.hash || '#s4').slice(1);
+if (!SCENES[key]) key = 's4';
+document.getElementById('bar').innerHTML =
+  Object.keys(SCENES).map(function (k) {
+    return '<a href="#' + k + '" onclick="setTimeout(function(){location.reload();},0)">' + k + '</a>';
+  }).join('') + ' → ' + SCENES[key].name;
+</script>
+
+<script src="../assets/script.js"></script>
+
+<script>
+// script.js が用意したコールバックへ、シートの代わりに作り物を渡す
+window.nenekkoBracket({ table: { cols: COLS, rows: R(SCENES[key].rows) } });
+</script>
+</body>
+</html>
